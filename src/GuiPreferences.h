@@ -167,7 +167,7 @@ namespace Qync {
 		 * (e.g. the file is not readable), the preferences will be set to
 		 * defaults.
 		 */
-		explicit GuiPreferences(const QString & fileName = QString());
+		explicit GuiPreferences(const QString & fileName = {});
 
 		/**
 		 * \brief Destroy the QuncGuiPreferences object.

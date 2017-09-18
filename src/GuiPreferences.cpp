@@ -27,7 +27,7 @@ namespace Qync {
 	GuiPreferences::GuiPreferences(const QString & fileName)
 	  : Preferences(fileName) {
 		/* must call this here as well as in base class constructor - when base
-	 * class constructor is called, the QyncGuiPreferences object is not
+	 * class constructor is called, the GuiPreferences object is not
 	 * initialised and therefore load() uses the copy of parseXml() in the base
 	 * class even though it is a virtual method because the copy of parseXml()
 	 * in this class is not yet available. the extra call here ensures load()

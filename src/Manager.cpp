@@ -15,21 +15,19 @@
  * - QDir
  * - QFileInfo
  * - QProcess
- *
- * \todo
- * Nothing.
  */
 
 #include "Manager.h"
-
-#include "Preset.h"
-#include "Process.h"
-#include "Preferences.h"
 
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include <QProcess>
+#include <QStandardPaths>
+
+#include "Preset.h"
+#include "Process.h"
+#include "Preferences.h"
 
 
 namespace Qync {
@@ -69,17 +67,13 @@ namespace Qync {
 		static bool s_initialised = false;
 
 		if(!s_initialised) {
-#if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
-			Manager::s_configPath = QDir::homePath() + "/.qync/";
-#elif defined(Q_OS_DARWIN)
-			Manager::s_configPath = QDir::homePath() + "/.qync/";
-#elif defined(Q_OS_WIN32)
-			Manager::s_configPath = QDir::homePath() + "/.qync/";
-#endif
+			s_configPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+			QDir presetPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "presets/");
 
-			QDir presetPath(Manager::s_configPath + "presets/");
-			if(!presetPath.exists())
-				presetPath.mkpath(Manager::Manager::s_configPath + "presets/");
+			if(!presetPath.exists()) {
+				presetPath.mkpath(s_configPath + "presets/");
+			}
+
 			s_initialised = true;
 		}
 	}

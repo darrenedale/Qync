@@ -67,6 +67,7 @@
 #include <QMetaObject>
 #include <QMetaProperty>
 #include <QApplication>
+#include <QStandardPaths>
 
 #include "Manager.h"
 #include "GuiPreferences.h"
