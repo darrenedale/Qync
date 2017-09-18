@@ -1,0 +1,7 @@
+Add the preset name to the sync dialogue window title so that they can be
+differentiated.
+
+If possible, make it so that a sync cannot be restarted while it is already
+running.
+
+Put all classes in the Qync namespace.

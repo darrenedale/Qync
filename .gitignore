@@ -1,0 +1,4 @@
+build/*
+dist/linux/*.deb
+dist/linux/bin
+

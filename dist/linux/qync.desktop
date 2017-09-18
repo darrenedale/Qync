@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Qync
+Comment=Make backups using rsync
+GenericName=Backup Manager
+Exec=qync
+Terminal=false
+Type=Application
+Icon=qync
+Categories=Application;Qt;Utility;FileTools;Archiving;
+MimeType=
+StartupNotify=true

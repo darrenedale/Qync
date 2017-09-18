@@ -1,0 +1,46 @@
+<RCC>
+    <qresource prefix="/icons/toolbar">
+        <file alias="new">resources/icons/toolbar/new.png</file>
+        <file alias="save">resources/icons/toolbar/save.png</file>
+        <file alias="remove">resources/icons/toolbar/remove.png</file>
+        <file alias="execute">resources/icons/toolbar/execute.png</file>
+        <file alias="simulate">resources/icons/toolbar/simulate.png</file>
+        <file alias="saveas">resources/icons/toolbar/saveas.png</file>
+    </qresource>
+    <qresource prefix="/icons/buttons">
+        <file alias="choosedir">resources/icons/buttons/choosedir.png</file>
+        <file alias="choosefile">resources/icons/buttons/choosefile.png</file>
+        <file alias="close">resources/icons/buttons/close.png</file>
+        <file alias="save">resources/icons/buttons/save.png</file>
+        <file alias="stop">resources/icons/buttons/stop.png</file>
+        <file alias="apply">resources/icons/buttons/apply.png</file>
+        <file alias="toggle_down">resources/icons/buttons/toggle_down.png</file>
+        <file alias="toggle_up">resources/icons/buttons/toggle_up.png</file>
+    </qresource>
+    <qresource prefix="/icons/menu/file">
+        <file alias="execute">resources/icons/menu/file/execute.png</file>
+        <file alias="quit">resources/icons/menu/file/quit.png</file>
+        <file alias="simulate">resources/icons/menu/file/simulate.png</file>
+        <file alias="switch">resources/icons/menu/file/switch.png</file>
+        <file>resources/icons/menu/file/switch2.png</file>
+        <file alias="choosedir">resources/icons/menu/file/choosedir.png</file>
+    </qresource>
+    <qresource prefix="/icons/menu/help">
+        <file alias="about">resources/icons/menu/help/about.png</file>
+        <file alias="aboutqt">resources/icons/menu/help/aboutqt.png</file>
+    </qresource>
+    <qresource prefix="/icons/menu/presets">
+        <file alias="add">resources/icons/menu/presets/new.png</file>
+        <file alias="remove">resources/icons/menu/presets/remove.png</file>
+        <file alias="save">resources/icons/menu/presets/save.png</file>
+        <file alias="import">resources/icons/menu/presets/import.png</file>
+        <file alias="export">resources/icons/menu/presets/export.png</file>
+    </qresource>
+    <qresource prefix="/icons/tabs">
+        <file alias="advanced_settings">resources/icons/tabs/advanced_settings.png</file>
+        <file alias="basic_settings">resources/icons/tabs/basic_settings.png</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file alias="application">resources/icons/application48.png</file>
+    </qresource>
+</RCC>

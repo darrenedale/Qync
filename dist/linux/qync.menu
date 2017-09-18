@@ -1,0 +1,7 @@
+?package(qync):\
+	needs="x11"\
+	section="Utilities"\
+	title="Qync"\
+	command="/usr/bin/qync"\
+	hints="Qt,Backup"\
+	icon="/usr/share/pixmaps/qync.xpm"
