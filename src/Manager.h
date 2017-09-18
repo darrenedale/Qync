@@ -68,16 +68,6 @@ namespace Qync {
 		bool m_doSignals;
 
 		/**
-		 * \brief Initialises class-level data.
-		 *
-		 * This method ensures that all class-level data is initialised and
-		 * that the environment for Qync is available. Specifically, this means
-		 * that the path to presets is set appropriately for the runtime
-		 * platform and that the path exists.
-		 */
-		static void initialiseClass(void);
-
-		/**
 		 * \brief If preferences have been set, dispose of them.
 		 */
 		void disposePrefs(void);

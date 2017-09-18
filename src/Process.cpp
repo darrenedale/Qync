@@ -31,22 +31,17 @@ namespace Qync {
 
 	Process::Process(const QString & cmd, const QStringList & args, const QString & logFile)
 	  : QObject(),
-		 m_process(0),
+		 m_process(nullptr),
 		 m_command(cmd),
 		 m_args(args),
-		 m_logFile(0) {
+		 m_logFile(nullptr) {
 		m_process = new QProcess();
 		m_logFileName = logFile;
 	}
 
 
 	Process::Process(const QString & cmd, const Preset * preset)
-	  : QObject(),
-		 m_process(0),
-		 m_command(cmd),
-		 m_logFile(0) {
-		m_process = new QProcess();
-
+	  : Process(cmd, QStringList(), QString()) {
 		if(preset) {
 			m_logFileName = preset->logFile();
 			m_args = Process::rsyncArguments(preset);
@@ -55,10 +50,8 @@ namespace Qync {
 
 
 	Process::~Process(void) {
-		if(m_process)
-			delete m_process;
+		delete m_process;
 		m_process = nullptr;
-
 		disposeLogFile();
 	}
 
@@ -189,10 +182,10 @@ namespace Qync {
 				disposeLogFile();
 		}
 
-		connect(m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(parseStdout()));
-		connect(m_process, SIGNAL(readyReadStandardError()), this, SLOT(parseStderr()));
-		connect(m_process, SIGNAL(finished(int)), this, SLOT(processFinished()));
-		emit(started());
+		m_stdoutConnection = connect(m_process, &QProcess::readyReadStandardOutput, this, &Process::parseStdout);
+		connect(m_process, &QProcess::readyReadStandardError, this, &Process::parseStderr);
+		connect(m_process, static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &Process::processFinished);
+		Q_EMIT started();
 	}
 
 
@@ -200,8 +193,8 @@ namespace Qync {
 		Q_ASSERT(m_process);
 		if(m_process->state() != QProcess::NotRunning) {
 			m_process->close();
-			emit(interrupted(""));
-			disconnect(m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(parseStdout()));
+			Q_EMIT interrupted("");
+			disconnect(m_stdoutConnection);
 		}
 	}
 
@@ -210,7 +203,7 @@ namespace Qync {
 		Q_ASSERT(m_process);
 
 		//	QString data = m_process->readAllStandardError();
-		//	emit(error(data));
+		//	Q_EMIT error(data));
 	}
 
 
@@ -219,11 +212,13 @@ namespace Qync {
 		//if(m_process->state() == QProcess::NotRunning) return;
 
 		QString data = m_process->readAllStandardOutput();
-		if(m_logFile && m_logFile->isOpen())
+
+		if(m_logFile && m_logFile->isOpen()) {
 			m_logFile->write(data.toUtf8());
+		}
 
 		if(!data.isEmpty()) {
-			emit(standardOutputUpdated(data));
+			Q_EMIT standardOutputUpdated(data);
 			m_outputCache.append(data);
 
 			/* this parses the output of rsync for lines indicating progress */
@@ -237,16 +232,18 @@ namespace Qync {
 
 			for(int i = 0; i < lines.size() - 1; i++) {
 				data = lines.at(i);
-				if(data.isEmpty())
+
+				if(data.isEmpty()) {
 					continue;
+				}
 
 				if(progressLine.indexIn(data) != -1) {
 					qDebug() << "item progress:" << progressLine.cap(1).toInt() << "bytes (" << progressLine.cap(2) << "%)";
 					qDebug() << "overall progress: 100 - " << progressLine.cap(3).toInt() << "* 100 /" << progressLine.cap(4).toInt() << "=" << (100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt());
 
-					emit(itemProgressBytes(progressLine.cap(1).toInt()));
-					emit(itemProgress(progressLine.cap(2).toInt()));
-					emit(overallProgress(100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt()));
+					Q_EMIT itemProgressBytes(progressLine.cap(1).toInt());
+					Q_EMIT itemProgress(progressLine.cap(2).toInt());
+					Q_EMIT overallProgress(100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt());
 				}
 
 				/*			if(data.startsWith(' ')) {
@@ -255,16 +252,18 @@ namespace Qync {
 				//qDebug() << "line items:" << progress;
 
 				if(progress.size() > 1) {
-					emit(itemProgressBytes(progress.at(0).toInt()));
-					emit(itemProgress(progress.at(1).left(progress.at(1).size() - 1).toInt()));
+					Q_EMIT itemProgressBytes(progress.at(0).toInt()));
+					Q_EMIT itemProgress(progress.at(1).left(progress.at(1).size() - 1).toInt()));
 				}
 			}*/
-				else if(data.size() > 1 && 'f' == data.at(1))
-					emit(newItemStarted(data.right(data.size() - 12)));
+				else if(data.size() > 1 && 'f' == data.at(1)) {
+					Q_EMIT newItemStarted(data.right(data.size() - 12));
+				}
 			}
 
-			if(lines.size() > 0)
+			if(lines.size() > 0) {
 				m_outputCache = lines.at(lines.size() - 1);
+			}
 		}
 	}
 
@@ -282,18 +281,18 @@ namespace Qync {
 		Q_ASSERT(m_process);
 
 		disposeLogFile();
-		ExitCode code = (ExitCode) m_process->exitCode();
-		emit(finished(code));
+		ExitCode code = static_cast<ExitCode>(m_process->exitCode());
+		Q_EMIT finished(code);
 
 		switch(code) {
 			case Success:
 			case PartialTransferError:
 			case UnableToWriteLogFile:
-				emit(finished(Process::defaultExitCodeMessage(code)));
+				Q_EMIT finished(Process::defaultExitCodeMessage(code));
 				break;
 
 			case InterruptReceived:
-				emit(interrupted(Process::defaultExitCodeMessage(code)));
+				Q_EMIT interrupted(Process::defaultExitCodeMessage(code));
 				break;
 
 			case SyntaxError:
@@ -312,7 +311,7 @@ namespace Qync {
 			case MaximumDeletionsExceeded:
 			case DataTransmissionTimeout:
 			case ConnectionTimeout:
-				emit(failed(Process::defaultExitCodeMessage(code)));
+				Q_EMIT failed(Process::defaultExitCodeMessage(code));
 				break;
 		}
 	}

@@ -40,7 +40,14 @@ namespace Qync {
 	Manager::Manager(void)
 	  : m_prefs(0),
 		 m_doSignals(true) {
-		Manager::initialiseClass();
+		// ensure presets dir exists
+		QDir presetPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/");
+
+		if(!presetPath.exists()) {
+			presetPath.cdUp();
+			presetPath.mkpath("presets");
+		}
+
 		loadPresets();
 	}
 
@@ -52,30 +59,14 @@ namespace Qync {
 
 
 	QString Manager::configurationDirectoryPath(void) {
-		initialiseClass();
-		return s_configPath;
+		return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 	}
+
 
 	void Manager::disposePrefs(void) {
 		if(m_prefs)
 			delete m_prefs;
 		m_prefs = nullptr;
-	}
-
-
-	void Manager::initialiseClass(void) {
-		static bool s_initialised = false;
-
-		if(!s_initialised) {
-			s_configPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-			QDir presetPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "presets/");
-
-			if(!presetPath.exists()) {
-				presetPath.mkpath(s_configPath + "presets/");
-			}
-
-			s_initialised = true;
-		}
 	}
 
 
@@ -98,7 +89,7 @@ namespace Qync {
 		disposePrefs();
 		Manager::s_rsyncVersionText = QString(); /* force re-read on next call to rsyncVersionText() as binary might have changed */
 		m_prefs = prefs;
-		emit(preferencesChanged());
+		Q_EMIT preferencesChanged();
 		return true;
 	}
 
@@ -148,10 +139,8 @@ namespace Qync {
 				err << tr("The preset was in the list more than once. Each instance of it in the list was removed.");
 			delete preset;
 
-			if(m_doSignals) {
-				emit(presetRemoved());
-				emit(presetsChanged());
-			}
+			Q_EMIT presetRemoved();
+			Q_EMIT presetsChanged();
 
 			switch(err.size()) {
 				case 1:
@@ -198,8 +187,8 @@ namespace Qync {
 			preset->save();
 
 			if(m_doSignals) {
-				emit(presetAdded(preset, i));
-				emit(presetsChanged());
+				Q_EMIT presetAdded(preset, i);
+				Q_EMIT presetsChanged();
 			}
 
 			return true;
@@ -215,21 +204,21 @@ namespace Qync {
 
 
 	void Manager::clearPresets(void) {
-		foreach(Preset * preset, m_presets)
-			if(preset)
-				delete preset;
+		for(Preset * preset : m_presets) {
+			delete preset;
+		}
 
 		m_presets.clear();
 	}
 
 
 	bool Manager::loadPresets(void) {
-		return loadPresets(Manager::s_configPath + "presets/");
+		return loadPresets(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/");
 	}
 
 
 	bool Manager::loadPresets(const QString & path) {
-		m_doSignals = false;
+		QSignalBlocker blocker(this);
 		QDir d(path);
 
 		if(!d.exists()) {
@@ -239,17 +228,19 @@ namespace Qync {
 
 		clearPresets();
 
-		foreach(QString fileName, d.entryList(QDir::Files | QDir::Readable)) {
+		for(const auto & fileName : d.entryList(QDir::Files | QDir::Readable)) {
 			Preset * myPreset = Preset::load(d.absoluteFilePath(fileName));
 
-			if(myPreset)
+			if(myPreset) {
 				addPreset(myPreset);
-			else
+			}
+			else {
 				qDebug() << "failed to load preset from file" << fileName;
+			}
 		}
 
-		m_doSignals = true;
-		emit(presetsChanged());
+		blocker.unblock();
+		Q_EMIT presetsChanged();
 		return true;
 	}
 
@@ -269,7 +260,7 @@ namespace Qync {
 
 		//if(!args.isEmpty()) {
 		Process * p = new Process(m_prefs->rsyncPath(), preset);
-		emit(processStarted(p));
+		Q_EMIT processStarted(p);
 		return p;
 		//}
 
@@ -293,7 +284,7 @@ namespace Qync {
 
 		//if(!args.isEmpty()) {
 		Process * p = new Process(m_prefs->rsyncPath(), preset);
-		emit(processStarted(p));
+		Q_EMIT processStarted(p);
 		return p;
 		//}
 

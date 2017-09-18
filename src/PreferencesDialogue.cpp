@@ -78,7 +78,7 @@ namespace Qync {
 		m_toolBarStyle->addItem(tr("Text Beside Icons"));
 		m_toolBarStyle->addItem(tr("Text Only"));
 
-		connect(m_chooseRsyncPath, SIGNAL(clicked()), this, SLOT(chooseRsyncPath()));
+		connect(m_chooseRsyncPath, &QPushButton::clicked, this, &PreferencesDialogue::chooseRsyncPath);
 
 		QVBoxLayout * vLayout = new QVBoxLayout();
 		QHBoxLayout * hLayout = new QHBoxLayout();
@@ -103,17 +103,17 @@ namespace Qync {
 
 		QPushButton * button = new QPushButton(QIcon(":/icons/buttons/save"), tr("Save"));
 		button->setToolTip(tr("Save the preferences and close the preferences window."));
-		connect(button, SIGNAL(clicked()), this, SLOT(savePreferencesAndClose()));
+		connect(button, &QPushButton::clicked, this, &PreferencesDialogue::savePreferencesAndClose);
 		buttons->addButton(button, QDialogButtonBox::ActionRole);
 
 		button = new QPushButton(QIcon(":/icons/buttons/apply"), tr("Apply"));
 		button->setToolTip(tr("Save the preferences."));
-		connect(button, SIGNAL(clicked()), this, SLOT(savePreferences()));
+		connect(button, &QPushButton::clicked, this, &PreferencesDialogue::savePreferences);
 		buttons->addButton(button, QDialogButtonBox::AcceptRole);
 
 		button = new QPushButton(QIcon(":/icons/buttons/close"), tr("Close"));
 		button->setToolTip(tr("Close the preferences window without saving the preferences."));
-		connect(button, SIGNAL(clicked()), this, SLOT(close()));
+		connect(button, &QPushButton::clicked, this, &PreferencesDialogue::close);
 		buttons->addButton(button, QDialogButtonBox::RejectRole);
 
 		vLayout->addWidget(buttons);

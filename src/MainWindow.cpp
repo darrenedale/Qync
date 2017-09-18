@@ -478,9 +478,10 @@ namespace Qync {
 		if(m_manager) {
 			int i = 0;
 
-			foreach(Preset * preset, m_manager->presets()) {
+			for(Preset * preset : m_manager->presets()) {
 				m_preset->addItem(preset->name());
-				QAction * action = m_presetsMenu->addAction(preset->name(), this, SLOT(showPresetFromMenu()));
+				QAction * action = m_presetsMenu->addAction(preset->name());  //, this, SLOT(showPresetFromMenu()));
+				connect(action, &QAction::triggered, this, &MainWindow::showPresetFromMenu);
 				action->setData(i);
 				i++;
 			}

@@ -100,6 +100,7 @@ namespace Qync {
 		QString m_logFileName;
 		QFile * m_logFile;
 		QString m_outputCache;
+		QMetaObject::Connection m_stdoutConnection;
 
 		void disposeLogFile(void);
 
