@@ -1,44 +1,43 @@
 /**
- * \file QyncPreferencesDialogue.h
+ * \file PreferencesDialogue.h
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
  *
- * \brief Definition of the QyncPreferencesDialogue class.
+ * \brief Definition of the PreferencesDialogue class.
  *
  * \dep
  * - QDialog
- *
- * \todo
- * Nothing.
  */
 
-#ifndef QYNCPREFERENCESDIALOGUE_H
-#define QYNCPREFERENCESDIALOGUE_H
+#ifndef QYNC_PREFERENCESDIALOGUE_H
+#define QYNC_PREFERENCESDIALOGUE_H
 
 #include <QDialog>
 
-class QyncManager;
 class QLineEdit;
 class QToolButton;
 class QCheckBox;
 class QComboBox;
 
+namespace Qync {
 
-/**
- * \class QyncPreferencesDialogue
+	class Manager;
+
+	/**
+ * \class PreferencesDialogue
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
  *
  * \brief The preferences window of the Qync GUI.
  *
- * The QyncPreferencesDialogue class is a QDialog subclass that enables the
+ * The PreferencesDialogue class is a QDialog subclass that enables the
  * user to modify the current application and GUI settings. It is based on the
  * assumption that the preferences object stored in the current application
- * manager is a QyncGuiPreferences object, and therefore is suitable only if
+ * manager is a GuiPreferences object, and therefore is suitable only if
  * used along with the example GUI (or another GUI that uses the
- * QyncGuiPreferences class for its preferences).
+ * GuiPreferences class for its preferences).
  *
  * The dialogue provides access to the rsync path as well as setting the visible
  * toolbars and the style of the toolbars. The modified settings can be applied
@@ -47,13 +46,12 @@ class QComboBox;
  * are set, applied changes are always rememberd between sessions using the
  * application.
  */
-class QyncPreferencesDialogue
-:	public QDialog {
-
-	Q_OBJECT
+	class PreferencesDialogue
+	  : public QDialog {
+		Q_OBJECT
 
 	private:
-		QyncManager * m_manager;
+		Manager * m_manager;
 
 		QLineEdit * m_rsyncPath;
 		QToolButton * m_chooseRsyncPath;
@@ -61,13 +59,13 @@ class QyncPreferencesDialogue
 		QCheckBox * m_synchroniseToolBar;
 		QComboBox * m_toolBarStyle;
 
-	private slots:
+	private Q_SLOTS:
 		/**
 		 * \brief Save the current preferences.
 		 *
 		 * The manager's preferences object is updated.
 		 */
-		void savePreferences( void );
+		void savePreferences(void);
 
 		/**
 		 * \brief Save the current preferences and close the preferences window.
@@ -75,7 +73,7 @@ class QyncPreferencesDialogue
 		 * The manager's preferences object is updated and the preferences
 		 * window is closed.
 		 */
-		void savePreferencesAndClose( void );
+		void savePreferencesAndClose(void);
 
 		/**
 		 * \brief Choose the path to the rsync executable file.
@@ -84,13 +82,13 @@ class QyncPreferencesDialogue
 		 * executable. If the user does not cancel the dialogue, the chosen file
 		 * is set as the text in the rsync path line edit.
 		 */
-		void chooseRsyncPath( void );
+		void chooseRsyncPath(void);
 
 	protected:
 		/**
 		 * \brief Create all the widgets for the preferences window.
 		 */
-		virtual void createWidgets( void );
+		virtual void createWidgets(void);
 
 		/**
 		 * \brief Update all the widgets in the preferences window.
@@ -98,7 +96,7 @@ class QyncPreferencesDialogue
 		 * All the widgets in the preferences window are updated to reflect the
 		 * state of the preferences in the manager.
 		 */
-		virtual void updateWidgets( void );
+		virtual void updateWidgets(void);
 
 	public:
 		/**
@@ -108,12 +106,9 @@ class QyncPreferencesDialogue
 		 * be read.
 		 * \param parent is the parent widget.
 		 */
-		explicit QyncPreferencesDialogue( QyncManager * manager = 0, QWidget *parent = 0 );
+		explicit PreferencesDialogue(Manager * manager = nullptr, QWidget * parent = nullptr);
+	};
 
-	signals:
+}  // namespace Qync
 
-	public slots:
-
-};
-
-#endif // QYNCPREFERENCESDIALOGUE_H
+#endif  // QYNC_PREFERENCESDIALOGUE_H

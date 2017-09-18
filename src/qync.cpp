@@ -18,8 +18,8 @@
  * - add application icons of all sizes to package
  */
 
-#include "QyncManager.h"
-#include "QyncMainWindow.h"
+#include "MainWindow.h"
+#include "Manager.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -144,15 +144,15 @@ OR PERFORMANCE OF THIS SOFTWARE.
 /**
  * \page rsync_license Rsync License
 
-			GNU GENERAL PUBLIC LICENSE
-			   Version 2, June 1991
+						GNU GENERAL PUBLIC LICENSE
+						   Version 2, June 1991
 
  Copyright (C) 1989, 1991 Free Software Foundation, Inc.
-						  675 Mass Ave, Cambridge, MA 02139, USA
- Everyone is permitted to copy and distribute verbatim copies
- of this license document, but changing it is not allowed.
+												  675 Mass Ave, Cambridge, MA
+02139, USA Everyone is permitted to copy and distribute verbatim copies of this
+license document, but changing it is not allowed.
 
-				Preamble
+								Preamble
 
   The licenses for most software are designed to take away your
 freedom to share and change it.  By contrast, the GNU General Public
@@ -202,7 +202,7 @@ patent must be licensed for everyone's free use or not licensed at all.
   The precise terms and conditions for copying, distribution and
 modification follow.
 
-			GNU GENERAL PUBLIC LICENSE
+						GNU GENERAL PUBLIC LICENSE
    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 
   0. This License applies to any program or other work which contains
@@ -238,24 +238,24 @@ of it, thus forming a work based on the Program, and copy and
 distribute such modifications or work under the terms of Section 1
 above, provided that you also meet all of these conditions:
 
-	a) You must cause the modified files to carry prominent notices
-	stating that you changed the files and the date of any change.
+		a) You must cause the modified files to carry prominent notices
+		stating that you changed the files and the date of any change.
 
-	b) You must cause any work that you distribute or publish, that in
-	whole or in part contains or is derived from the Program or any
-	part thereof, to be licensed as a whole at no charge to all third
-	parties under the terms of this License.
+		b) You must cause any work that you distribute or publish, that in
+		whole or in part contains or is derived from the Program or any
+		part thereof, to be licensed as a whole at no charge to all third
+		parties under the terms of this License.
 
-	c) If the modified program normally reads commands interactively
-	when run, you must cause it, when started running for such
-	interactive use in the most ordinary way, to print or display an
-	announcement including an appropriate copyright notice and a
-	notice that there is no warranty (or else, saying that you provide
-	a warranty) and that users may redistribute the program under
-	these conditions, and telling the user how to view a copy of this
-	License.  (Exception: if the Program itself is interactive but
-	does not normally print such an announcement, your work based on
-	the Program is not required to print an announcement.)
+		c) If the modified program normally reads commands interactively
+		when run, you must cause it, when started running for such
+		interactive use in the most ordinary way, to print or display an
+		announcement including an appropriate copyright notice and a
+		notice that there is no warranty (or else, saying that you provide
+		a warranty) and that users may redistribute the program under
+		these conditions, and telling the user how to view a copy of this
+		License.  (Exception: if the Program itself is interactive but
+		does not normally print such an announcement, your work based on
+		the Program is not required to print an announcement.)
 
 These requirements apply to the modified work as a whole.  If
 identifiable sections of that work are not derived from the Program,
@@ -281,22 +281,22 @@ the scope of this License.
 under Section 2) in object code or executable form under the terms of
 Sections 1 and 2 above provided that you also do one of the following:
 
-	a) Accompany it with the complete corresponding machine-readable
-	source code, which must be distributed under the terms of Sections
-	1 and 2 above on a medium customarily used for software interchange; or,
+		a) Accompany it with the complete corresponding machine-readable
+		source code, which must be distributed under the terms of Sections
+		1 and 2 above on a medium customarily used for software interchange; or,
 
-	b) Accompany it with a written offer, valid for at least three
-	years, to give any third party, for a charge no more than your
-	cost of physically performing source distribution, a complete
-	machine-readable copy of the corresponding source code, to be
-	distributed under the terms of Sections 1 and 2 above on a medium
-	customarily used for software interchange; or,
+		b) Accompany it with a written offer, valid for at least three
+		years, to give any third party, for a charge no more than your
+		cost of physically performing source distribution, a complete
+		machine-readable copy of the corresponding source code, to be
+		distributed under the terms of Sections 1 and 2 above on a medium
+		customarily used for software interchange; or,
 
-	c) Accompany it with the information you received as to the offer
-	to distribute corresponding source code.  (This alternative is
-	allowed only for noncommercial distribution and only if you
-	received the program in object code or executable form with such
-	an offer, in accord with Subsection b above.)
+		c) Accompany it with the information you received as to the offer
+		to distribute corresponding source code.  (This alternative is
+		allowed only for noncommercial distribution and only if you
+		received the program in object code or executable form with such
+		an offer, in accord with Subsection b above.)
 
 The source code for a work means the preferred form of the work for
 making modifications to it.  For an executable work, complete source
@@ -401,7 +401,7 @@ make exceptions for this.  Our decision will be guided by the two goals
 of preserving the free status of all derivatives of our free software and
 of promoting the sharing and reuse of software generally.
 
-				NO WARRANTY
+								NO WARRANTY
 
   11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
 FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
@@ -423,9 +423,9 @@ YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
 PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGES.
 
-			 END OF TERMS AND CONDITIONS
+						 END OF TERMS AND CONDITIONS
 
-	Appendix: How to Apply These Terms to Your New Programs
+		Appendix: How to Apply These Terms to Your New Programs
 
   If you develop a new program, and you want it to be of the greatest
 possible use to the public, the best way to achieve this is to make it
@@ -437,31 +437,31 @@ convey the exclusion of warranty; and each file should have at least
 the "copyright" line and a pointer to where the full notice is found.
 
 
-	Copyright (C) 19yy
+		Copyright (C) 19yy
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+		This program is free software; you can redistribute it and/or modify
+		it under the terms of the GNU General Public License as published by
+		the Free Software Foundation; either version 2 of the License, or
+		(at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+		You should have received a copy of the GNU General Public License
+		along with this program; if not, write to the Free Software
+		Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 Also add information on how to contact you by electronic and paper mail.
 
 If the program is interactive, make it output a short notice like this
 when it starts in an interactive mode:
 
-	Gnomovision version 69, Copyright (C) 19yy name of author
-	Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
-	This is free software, and you are welcome to redistribute it
-	under certain conditions; type `show c' for details.
+		Gnomovision version 69, Copyright (C) 19yy name of author
+		Gnomovision comes with ABSOLUTELY NO WARRANTY; for details type `show
+w'. This is free software, and you are welcome to redistribute it under certain
+conditions; type `show c' for details.
 
 The hypothetical commands `show w' and `show c' should show the appropriate
 parts of the General Public License.  Of course, the commands you use may
@@ -557,199 +557,223 @@ are under a BSD licence, or a licence more free than that.
 OpenSSH contains no GPL code.
 
 1)
-	 * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
-	 *                    All rights reserved
-	 *
-	 * As far as I am concerned, the code I have written for this software
-	 * can be used freely for any purpose.  Any derived versions of this
-	 * software must be clearly marked as such, and if the derived work is
-	 * incompatible with the protocol description in the RFC file, it must be
-	 * called by a name other than "ssh" or "Secure Shell".
+		 * Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
+		 *                    All rights reserved
+		 *
+		 * As far as I am concerned, the code I have written for this software
+		 * can be used freely for any purpose.  Any derived versions of this
+		 * software must be clearly marked as such, and if the derived work is
+		 * incompatible with the protocol description in the RFC file, it must
+be
+		 * called by a name other than "ssh" or "Secure Shell".
 
-	[Tatu continues]
-	 *  However, I am not implying to give any licenses to any patents or
-	 * copyrights held by third parties, and the software includes parts that
-	 * are not under my direct control.  As far as I know, all included
-	 * source code is used in accordance with the relevant license agreements
-	 * and can be used freely for any purpose (the GNU license being the most
-	 * restrictive); see below for details.
+		[Tatu continues]
+		 *  However, I am not implying to give any licenses to any patents or
+		 * copyrights held by third parties, and the software includes parts
+that
+		 * are not under my direct control.  As far as I know, all included
+		 * source code is used in accordance with the relevant license
+agreements
+		 * and can be used freely for any purpose (the GNU license being the
+most
+		 * restrictive); see below for details.
 
-	[However, none of that term is relevant at this point in time.  All of
-	these restrictively licenced software components which he talks about
-	have been removed from OpenSSH, i.e.,
+		[However, none of that term is relevant at this point in time.  All of
+		these restrictively licenced software components which he talks about
+		have been removed from OpenSSH, i.e.,
 
-	 - RSA is no longer included, found in the OpenSSL library
-	 - IDEA is no longer included, its use is deprecated
-	 - DES is now external, in the OpenSSL library
-	 - GMP is no longer used, and instead we call BN code from OpenSSL
-	 - Zlib is now external, in a library
-	 - The make-ssh-known-hosts script is no longer included
-	 - TSS has been removed
-	 - MD5 is now external, in the OpenSSL library
-	 - RC4 support has been replaced with ARC4 support from OpenSSL
-	 - Blowfish is now external, in the OpenSSL library
+		 - RSA is no longer included, found in the OpenSSL library
+		 - IDEA is no longer included, its use is deprecated
+		 - DES is now external, in the OpenSSL library
+		 - GMP is no longer used, and instead we call BN code from OpenSSL
+		 - Zlib is now external, in a library
+		 - The make-ssh-known-hosts script is no longer included
+		 - TSS has been removed
+		 - MD5 is now external, in the OpenSSL library
+		 - RC4 support has been replaced with ARC4 support from OpenSSL
+		 - Blowfish is now external, in the OpenSSL library
 
-	[The licence continues]
+		[The licence continues]
 
-	Note that any information and cryptographic algorithms used in this
-	software are publicly available on the Internet and at any major
-	bookstore, scientific library, and patent office worldwide.  More
-	information can be found e.g. at "http://www.cs.hut.fi/crypto".
+		Note that any information and cryptographic algorithms used in this
+		software are publicly available on the Internet and at any major
+		bookstore, scientific library, and patent office worldwide.  More
+		information can be found e.g. at "http://www.cs.hut.fi/crypto".
 
-	The legal status of this program is some combination of all these
-	permissions and restrictions.  Use only at your own responsibility.
-	You will be responsible for any legal consequences yourself; I am not
-	making any claims whether possessing or using this is legal or not in
-	your country, and I am not taking any responsibility on your behalf.
+		The legal status of this program is some combination of all these
+		permissions and restrictions.  Use only at your own responsibility.
+		You will be responsible for any legal consequences yourself; I am not
+		making any claims whether possessing or using this is legal or not in
+		your country, and I am not taking any responsibility on your behalf.
 
 
-					NO WARRANTY
+										NO WARRANTY
 
-	BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-	FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
-	OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-	PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED
-	OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-	MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS
-	TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE
-	PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
-	REPAIR OR CORRECTION.
+		BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+		FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN
+		OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+		PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+		MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK
+AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE
+		PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,
+		REPAIR OR CORRECTION.
 
-	IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-	WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-	REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,
-	INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING
-	OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED
-	TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
-	YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
-	PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
-	POSSIBILITY OF SUCH DAMAGES.
+		IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+		WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+		REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR
+DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT
+LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
+		YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY
+OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
+		POSSIBILITY OF SUCH DAMAGES.
 
 2)
-	The 32-bit CRC compensation attack detector in deattack.c was
-	contributed by CORE SDI S.A. under a BSD-style license.
+		The 32-bit CRC compensation attack detector in deattack.c was
+		contributed by CORE SDI S.A. under a BSD-style license.
 
-	 * Cryptographic attack detector for ssh - source code
-	 *
-	 * Copyright (c) 1998 CORE SDI S.A., Buenos Aires, Argentina.
-	 *
-	 * All rights reserved. Redistribution and use in source and binary
-	 * forms, with or without modification, are permitted provided that
-	 * this copyright notice is retained.
-	 *
-	 * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-	 * WARRANTIES ARE DISCLAIMED. IN NO EVENT SHALL CORE SDI S.A. BE
-	 * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR
-	 * CONSEQUENTIAL DAMAGES RESULTING FROM THE USE OR MISUSE OF THIS
-	 * SOFTWARE.
-	 *
-	 * Ariel Futoransky <futo@core-sdi.com>
-	 * <http://www.core-sdi.com>
+		 * Cryptographic attack detector for ssh - source code
+		 *
+		 * Copyright (c) 1998 CORE SDI S.A., Buenos Aires, Argentina.
+		 *
+		 * All rights reserved. Redistribution and use in source and binary
+		 * forms, with or without modification, are permitted provided that
+		 * this copyright notice is retained.
+		 *
+		 * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+		 * WARRANTIES ARE DISCLAIMED. IN NO EVENT SHALL CORE SDI S.A. BE
+		 * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR
+		 * CONSEQUENTIAL DAMAGES RESULTING FROM THE USE OR MISUSE OF THIS
+		 * SOFTWARE.
+		 *
+		 * Ariel Futoransky <futo@core-sdi.com>
+		 * <http://www.core-sdi.com>
 
 3)
-	ssh-keygen was contributed by David Mazieres under a BSD-style
-	license.
+		ssh-keygen was contributed by David Mazieres under a BSD-style
+		license.
 
-	 * Copyright 1995, 1996 by David Mazieres <dm@lcs.mit.edu>.
-	 *
-	 * Modification and redistribution in source and binary forms is
-	 * permitted provided that due credit is given to the author and the
-	 * OpenBSD project by leaving this copyright notice intact.
+		 * Copyright 1995, 1996 by David Mazieres <dm@lcs.mit.edu>.
+		 *
+		 * Modification and redistribution in source and binary forms is
+		 * permitted provided that due credit is given to the author and the
+		 * OpenBSD project by leaving this copyright notice intact.
 
 4)
-	The Rijndael implementation by Vincent Rijmen, Antoon Bosselaers
-	and Paulo Barreto is in the public domain and distributed
-	with the following license:
+		The Rijndael implementation by Vincent Rijmen, Antoon Bosselaers
+		and Paulo Barreto is in the public domain and distributed
+		with the following license:
 
-	 * @@version 3.0 (December 2000)
-	 *
-	 * Optimised ANSI C code for the Rijndael cipher (now AES)
-	 *
-	 * @@author Vincent Rijmen <vincent.rijmen@esat.kuleuven.ac.be>
-	 * @@author Antoon Bosselaers <antoon.bosselaers@esat.kuleuven.ac.be>
-	 * @@author Paulo Barreto <paulo.barreto@terra.com.br>
-	 *
-	 * This code is hereby placed in the public domain.
-	 *
-	 * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ''AS IS'' AND ANY EXPRESS
-	 * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-	 * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-	 * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE
-	 * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-	 * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-	 * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-	 * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-	 * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-	 * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-	 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+		 * @@version 3.0 (December 2000)
+		 *
+		 * Optimised ANSI C code for the Rijndael cipher (now AES)
+		 *
+		 * @@author Vincent Rijmen <vincent.rijmen@esat.kuleuven.ac.be>
+		 * @@author Antoon Bosselaers <antoon.bosselaers@esat.kuleuven.ac.be>
+		 * @@author Paulo Barreto <paulo.barreto@terra.com.br>
+		 *
+		 * This code is hereby placed in the public domain.
+		 *
+		 * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ''AS IS'' AND ANY EXPRESS
+		 * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+		 * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+		 * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE
+		 * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+		 * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+		 * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+		 * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+		 * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+		 * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+		 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 5)
-	One component of the ssh source code is under a 3-clause BSD license,
-	held by the University of California, since we pulled these parts from
-	original Berkeley code.
+		One component of the ssh source code is under a 3-clause BSD license,
+		held by the University of California, since we pulled these parts from
+		original Berkeley code.
 
-	 * Copyright (c) 1983, 1990, 1992, 1993, 1995
-	 *      The Regents of the University of California.  All rights reserved.
-	 *
-	 * Redistribution and use in source and binary forms, with or without
-	 * modification, are permitted provided that the following conditions
-	 * are met:
-	 * 1. Redistributions of source code must retain the above copyright
-	 *    notice, this list of conditions and the following disclaimer.
-	 * 2. Redistributions in binary form must reproduce the above copyright
-	 *    notice, this list of conditions and the following disclaimer in the
-	 *    documentation and/or other materials provided with the distribution.
-	 * 3. Neither the name of the University nor the names of its contributors
-	 *    may be used to endorse or promote products derived from this software
-	 *    without specific prior written permission.
-	 *
-	 * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
-	 * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-	 * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-	 * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
-	 * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-	 * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-	 * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-	 * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-	 * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-	 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-	 * SUCH DAMAGE.
+		 * Copyright (c) 1983, 1990, 1992, 1993, 1995
+		 *      The Regents of the University of California.  All rights
+reserved.
+		 *
+		 * Redistribution and use in source and binary forms, with or without
+		 * modification, are permitted provided that the following conditions
+		 * are met:
+		 * 1. Redistributions of source code must retain the above copyright
+		 *    notice, this list of conditions and the following disclaimer.
+		 * 2. Redistributions in binary form must reproduce the above copyright
+		 *    notice, this list of conditions and the following disclaimer in
+the
+		 *    documentation and/or other materials provided with the
+distribution.
+		 * 3. Neither the name of the University nor the names of its
+contributors
+		 *    may be used to endorse or promote products derived from this
+software
+		 *    without specific prior written permission.
+		 *
+		 * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS''
+AND
+		 * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+		 * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE
+		 * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE
+LIABLE
+		 * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL
+		 * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+GOODS
+		 * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+		 * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT
+		 * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+WAY
+		 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF
+		 * SUCH DAMAGE.
 
 6)
-	Remaining components of the software are provided under a standard
-	2-term BSD licence with the following names as copyright holders:
+		Remaining components of the software are provided under a standard
+		2-term BSD licence with the following names as copyright holders:
 
-	Markus Friedl
-	Theo de Raadt
-	Niels Provos
-	Dug Song
-	Aaron Campbell
-	Damien Miller
-	Kevin Steves
-	Daniel Kouril
-	Wesley Griffin
-	Per Allansson
-	Nils Nordman
+		Markus Friedl
+		Theo de Raadt
+		Niels Provos
+		Dug Song
+		Aaron Campbell
+		Damien Miller
+		Kevin Steves
+		Daniel Kouril
+		Wesley Griffin
+		Per Allansson
+		Nils Nordman
 
-	 * Redistribution and use in source and binary forms, with or without
-	 * modification, are permitted provided that the following conditions
-	 * are met:
-	 * 1. Redistributions of source code must retain the above copyright
-	 *    notice, this list of conditions and the following disclaimer.
-	 * 2. Redistributions in binary form must reproduce the above copyright
-	 *    notice, this list of conditions and the following disclaimer in the
-	 *    documentation and/or other materials provided with the distribution.
-	 *
-	 * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-	 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-	 * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-	 * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-	 * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-	 * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-	 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-	 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-	 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-	 * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+		 * Redistribution and use in source and binary forms, with or without
+		 * modification, are permitted provided that the following conditions
+		 * are met:
+		 * 1. Redistributions of source code must retain the above copyright
+		 *    notice, this list of conditions and the following disclaimer.
+		 * 2. Redistributions in binary form must reproduce the above copyright
+		 *    notice, this list of conditions and the following disclaimer in
+the
+		 *    documentation and/or other materials provided with the
+distribution.
+		 *
+		 * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+		 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES
+		 * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED.
+		 * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+		 * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT
+		 * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+USE,
+		 * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+		 * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+		 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF
+		 * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------
 $OpenBSD: LICENCE,v 1.16 2003/07/29 18:24:00 markus Exp $
@@ -766,9 +790,9 @@ Malcolm Smith, Ahmad Khalifa, Markus Kuhn, and CORE SDI S.A.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
-Software, and to permit persons to whom the Software is furnished to do so,
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
 subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
@@ -791,11 +815,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * \return 0 on clean exit, non-0 otherwise.
  */
-int main( int argc, char ** argv ) {
+int main(int argc, char ** argv) {
 	QApplication app(argc, argv);
-	qDebug() << app.argc();
-	QyncManager manager;
-	QyncMainWindow win(&manager);
+	Qync::Manager manager;
+	Qync::MainWindow win(&manager);
 	win.show();
 	return app.exec();
 }

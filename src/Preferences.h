@@ -1,10 +1,10 @@
 /**
- * \file QyncPreferences.h
+ * \file Preferences.h
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
  *
- * \brief Definition of the QyncPreferences class.
+ * \brief Definition of the Preferences class.
  *
  * \dep
  * - QString
@@ -15,16 +15,17 @@
  * Nothing.
  */
 
-#ifndef QYNCPREFERENCES_H
-#define QYNCPREFERENCES_H
+#ifndef QYNC_PREFERENCES_H
+#define QYNC_PREFERENCES_H
 
 #include <QString>
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 
+namespace Qync {
 
-/**
- * \class QyncPreferences
+	/**
+ * \class Preferences
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
@@ -56,7 +57,8 @@
  * should call their direct base class implementation to ensure that defaults
  * for core settings are also set.
  */
-class QyncPreferences {
+
+	class Preferences {
 	private:
 		mutable bool m_modified;
 		QString m_fileName;
@@ -80,7 +82,7 @@ class QyncPreferences {
 		 *
 		 * \return The \b bool value.
 		 */
-		static bool parseBooleanText( const QString & b, bool * ok = 0 );
+		static bool parseBooleanText(const QString & b, bool * ok = nullptr);
 
 		/**
 		 * \brief Set the default values for all settings.
@@ -90,7 +92,7 @@ class QyncPreferences {
 		 * Reimplementations should call this base class method to ensure that
 		 * defaults for core settings are also set.
 		 */
-		virtual void setDefaults( void );
+		virtual void setDefaults(void);
 
 		/**
 		 * \brief Read all settings from an XML stream.
@@ -99,7 +101,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were read, \b false otherwise.
 		 */
-		virtual bool parseXmlStream( QXmlStreamReader & xml );
+		virtual bool parseXmlStream(QXmlStreamReader & xml);
 
 		/**
 		 * \brief Parse an arbitrary XML element from a stream.
@@ -114,7 +116,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were read, \b false otherwise.
 		 */
-		virtual bool parseXmlElement( QXmlStreamReader & xml );
+		virtual bool parseXmlElement(QXmlStreamReader & xml);
 
 		/**
 		 * \brief Read all the core settings from an XML stream.
@@ -123,7 +125,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were read, \b false otherwise.
 		 */
-		bool parseCorePreferencesXml( QXmlStreamReader & xml );
+		bool parseCorePreferencesXml(QXmlStreamReader & xml);
 
 		/**
 		 * \brief Write all settings to an XML stream.
@@ -132,7 +134,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were written, \b false otherwise.
 		 */
-		virtual bool emitXmlStream( QXmlStreamWriter & xml ) const;
+		virtual bool emitXmlStream(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write all settings to an XML stream.
@@ -148,7 +150,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were written, \b false otherwise.
 		 */
-		virtual bool emitXmlElements( QXmlStreamWriter & xml ) const;
+		virtual bool emitXmlElements(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write all the core settings to an XML stream.
@@ -157,7 +159,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were written, \b false otherwise.
 		 */
-		bool emitCorePreferencesXml( QXmlStreamWriter & xml ) const;
+		bool emitCorePreferencesXml(QXmlStreamWriter & xml) const;
 
 	public:
 		/**
@@ -171,12 +173,12 @@ class QyncPreferences {
 		 * (e.g. the file is not readable), the preferences will be set to
 		 * defaults.
 		 */
-		explicit QyncPreferences( const QString & fileName = QString() );
+		explicit Preferences(const QString & fileName = QString());
 
 		/**
-		 * \brief Destroy the QyncPreferences object.
+		 * \brief Destroy the Preferences object.
 		 */
-		virtual ~QyncPreferences( void ) {}
+		virtual ~Preferences(void) {}
 
 		/**
 		 * \brief Save the settings to the internally stored file.
@@ -186,7 +188,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were saved, \b false otherwise.
 		 */
-		bool save( void ) const;
+		bool save(void) const;
 
 		/**
 		 * \brief Save the settings to a named file.
@@ -198,7 +200,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were saved, \b false otherwise.
 		 */
-		bool saveAs( const QString & fileName );
+		bool saveAs(const QString & fileName);
 
 		/**
 		 * \brief Save a copy of the settings to a named file.
@@ -210,7 +212,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were saved, \b false otherwise.
 		 */
-		bool saveCopyAs( const QString & fileName ) const;
+		bool saveCopyAs(const QString & fileName) const;
 
 		/**
 		 * \brief (Re)load the settings from the internally stored file.
@@ -220,7 +222,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were loaded, \b false otherwise.
 		 */
-		bool load( void );
+		bool load(void);
 
 		/**
 		 * \brief Load settings from a named file.
@@ -232,14 +234,14 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the settings were loaded, \b false otherwise.
 		 */
-		bool loadFrom( const QString & fileName );
+		bool loadFrom(const QString & fileName);
 
 		/**
 		 *\brief Get the path to the rsync command.
 		 *
 		 * \return The path to the rsync command.
 		 */
-		QString rsyncPath( void ) const;
+		QString rsyncPath(void) const;
 
 		/**
 		 *\brief Set the path to the rsync command.
@@ -248,7 +250,7 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the path was set, \b false otherwise.
 		 */
-		bool setRsyncPath( const QString & path );
+		bool setRsyncPath(const QString & path);
 
 		/**
 		 * \brief Check whether the path to the rsync command is valid.
@@ -258,8 +260,9 @@ class QyncPreferences {
 		 *
 		 * \return \b true if the path is valid, \b false otherwise.
 		 */
-		bool rsyncPathIsValid( void ) const;
+		bool rsyncPathIsValid(void) const;
+	};
 
-};
+}  // namespace Qync
 
-#endif // QYNCPREFERENCES_H
+#endif  // QYNC_PREFERENCES_H

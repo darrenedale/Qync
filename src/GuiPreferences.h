@@ -1,10 +1,10 @@
 /**
- * \file QyncGuiPreferences.h
+ * \file GuiPreferences.h
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
  *
- * \brief Definition of the QyncGuiPreferences class.
+ * \brief Definition of the GuiPreferences class.
  *
  * \dep
  * - QyncPreferences.h
@@ -16,18 +16,19 @@
  * Nothing.
  */
 
-#ifndef QYNCGUIPREFERENCES_H
-#define QYNCGUIPREFERENCES_H
+#ifndef QYNC_GUIPREFERENCES_H
+#define QYNC_GUIPREFERENCES_H
 
-#include "QyncPreferences.h"
+#include "Preferences.h"
 
 #include <QString>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
+namespace Qync {
 
-/**
- * \class QyncGuiPreferences
+	/**
+ * \class GuiPreferences
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
@@ -35,7 +36,7 @@
  * \brief A class representing application preferences including GUI
  * preferences.
  *
- * This is an extension of the QyncPreferences class to record preferences for
+ * This is an extension of the Preferences class to record preferences for
  * the following GUI-related items:
  * - whether or not the presets toolbar is shown
  * - whether or not the synchronise toolbar is shown
@@ -46,8 +47,8 @@
  *   - Icons with text beside
  *   - Whatever style the current visual theme suggests
  */
-class QyncGuiPreferences
-:	public QyncPreferences {
+	class GuiPreferences
+	  : public Preferences {
 	private:
 		bool m_presetsToolbar;
 		bool m_syncToolbar;
@@ -71,7 +72,7 @@ class QyncGuiPreferences
 		 *
 		 * \return The toolbar button style.
 		 */
-		static Qt::ToolButtonStyle parseToolButtonStyleText( const QString & style, bool * ok = 0 );
+		static Qt::ToolButtonStyle parseToolButtonStyleText(const QString & style, bool * ok = nullptr);
 
 		/**
 		 * \brief Set the default values for all settings.
@@ -81,7 +82,7 @@ class QyncGuiPreferences
 		 * for \ref QyncPreferences::setDefaults() for the defaults for
 		 * settings governed by that class.
 		 */
-		virtual void setDefaults( void );
+		virtual void setDefaults(void);
 
 		/**
 		 * \brief Read an element from an XML stream.
@@ -94,7 +95,7 @@ class QyncGuiPreferences
 		 *
 		 * \return \b true if the settings were read, \b false otherwise.
 		 */
-		virtual bool parseXmlElement( QXmlStreamReader & xml );
+		virtual bool parseXmlElement(QXmlStreamReader & xml);
 
 		/**
 		 * \brief Read all the GUI settings from an XML stream.
@@ -103,7 +104,7 @@ class QyncGuiPreferences
 		 *
 		 * \return \b true if the settings were read, \b false otherwise.
 		 */
-		bool parseGuiPreferencesXml( QXmlStreamReader & xml );
+		bool parseGuiPreferencesXml(QXmlStreamReader & xml);
 
 		/**
 		 * \brief Write all settings to an XML stream.
@@ -116,7 +117,7 @@ class QyncGuiPreferences
 		 *
 		 * \return \b true if the settings were written, \b false otherwise.
 		 */
-		virtual bool emitXmlElements( QXmlStreamWriter & xml ) const;
+		virtual bool emitXmlElements(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write all GUI settings to an XML stream.
@@ -125,7 +126,7 @@ class QyncGuiPreferences
 		 *
 		 * \return \b true if the settings were written, \b false otherwise.
 		 */
-		bool emitGuiPreferencesXml( QXmlStreamWriter & xml ) const;
+		bool emitGuiPreferencesXml(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write the prests toolbar setting to an XML stream.
@@ -134,7 +135,7 @@ class QyncGuiPreferences
 		 *
 		 * \return \b true if the setting was written, \b false otherwise.
 		 */
-		bool emitPresetsToolbarXml( QXmlStreamWriter & xml ) const;
+		bool emitPresetsToolbarXml(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write the synchronise toolbar setting to an XML stream.
@@ -143,7 +144,7 @@ class QyncGuiPreferences
 		 *
 		 * \return \b true if the setting was written, \b false otherwise.
 		 */
-		bool emitSynchroniseToolbarXml( QXmlStreamWriter & xml ) const;
+		bool emitSynchroniseToolbarXml(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write the toolbar button style setting to an XML stream.
@@ -152,7 +153,7 @@ class QyncGuiPreferences
 		 *
 		 * \return \b true if the setting was written, \b false otherwise.
 		 */
-		bool emitToolBarButtonStyleXml( QXmlStreamWriter & xml ) const;
+		bool emitToolBarButtonStyleXml(QXmlStreamWriter & xml) const;
 
 	public:
 		/**
@@ -166,12 +167,12 @@ class QyncGuiPreferences
 		 * (e.g. the file is not readable), the preferences will be set to
 		 * defaults.
 		 */
-		explicit QyncGuiPreferences( const QString & fileName = QString() );
+		explicit GuiPreferences(const QString & fileName = QString());
 
 		/**
 		 * \brief Destroy the QuncGuiPreferences object.
 		 */
-		virtual ~QyncGuiPreferences( void ) {}
+		virtual ~GuiPreferences(void) {}
 
 		/**
 		 * \brief Check whether the presets toolbar should be shown.
@@ -179,7 +180,7 @@ class QyncGuiPreferences
 		 * \return \b true if the presets toolbar should be shown, \b false
 		 * if not.
 		 */
-		bool showPresetsToolBar( void ) const;
+		bool showPresetsToolBar(void) const;
 
 		/**
 		 * \brief Check whether the synchronise toolbar should be shown.
@@ -187,14 +188,14 @@ class QyncGuiPreferences
 		 * \return \b true if the synchronise toolbar should be shown, \b false
 		 * if not.
 		 */
-		bool showSynchroniseToolBar( void ) const;
+		bool showSynchroniseToolBar(void) const;
 
 		/**
 		 * \brief Set whether the presets toolbar should be shown.
 		 *
 		 * \param show indicates whether the presets toolbar should be shown.
 		 */
-		void setShowPresetsToolBar( bool show );
+		void setShowPresetsToolBar(bool show);
 
 		/**
 		 * \brief Set whether the synchronise toolbar should be shown.
@@ -202,7 +203,7 @@ class QyncGuiPreferences
 		 * \param show indicates whether the synchronise toolbar should be
 		 * shown.
 		 */
-		void setShowSynchroniseToolBar( bool show );
+		void setShowSynchroniseToolBar(bool show);
 
 		/**
 		 * \brief Get the display style for buttons in the toolbar.
@@ -214,7 +215,7 @@ class QyncGuiPreferences
 		 *
 		 * \return The display style for toolbar buttons.
 		 */
-		Qt::ToolButtonStyle toolBarButtonStyle( void ) const;
+		Qt::ToolButtonStyle toolBarButtonStyle(void) const;
 
 		/**
 		 * \brief Set the display style for buttons in the toolbar.
@@ -228,7 +229,9 @@ class QyncGuiPreferences
 		 *
 		 * \return \b true if the style was set, \b false otherwise.
 		 */
-		bool setToolBarButtonStyle( const Qt::ToolButtonStyle & style );
-};
+		bool setToolBarButtonStyle(const Qt::ToolButtonStyle & style);
+	};
 
-#endif // QYNCGUIPREFERENCES_H
+}  // namespace Qync
+
+#endif  // QYNC_GUIPREFERENCES_H

@@ -1,10 +1,10 @@
 /**
- * \file QyncManager.h
+ * \file Manager.h
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
  *
- * \brief Definition of the QyncManager class.
+ * \brief Definition of the Manager class.
  *
  * \dep
  * - QObject
@@ -12,13 +12,10 @@
  * - QString
  * - QStringList
  * - QProcess
- *
- * \todo
- * Nothing.
  */
 
-#ifndef QYNCMANAGER_H
-#define QYNCMANAGER_H
+#ifndef QYNC_MANAGER_H
+#define QYNC_MANAGER_H
 
 #include <QObject>
 #include <QList>
@@ -26,20 +23,21 @@
 #include <QStringList>
 #include <QProcess>
 
-class QyncPreset;
-class QyncProcess;
-class QyncPreferences;
+namespace Qync {
 
+	class Preset;
+	class Process;
+	class Preferences;
 
-/**
- * \class QyncManager
+	/**
+ * \class Manager
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
  *
  * \brief Manages core application functionality for Qync.
  *
- * The QyncManager keeps a set of presets and preferences for the application
+ * The Manager keeps a set of presets and preferences for the application
  * and acts as a central point around which the user interface can operate,
  * whatever type of iterface that happens to be. It provides controlled access
  * to the core resources of the application - presets, preferences - and
@@ -54,18 +52,17 @@ class QyncPreferences;
  * preferences as XML, and the presets folder stores each preset in its own
  * XML file.
  */
-class QyncManager
-:	public QObject {
-
-	Q_OBJECT
+	class Manager
+	  : public QObject {
+		Q_OBJECT
 
 	private:
 		static QString s_rsyncVersionText;
 		static QString s_configPath;
 
-		QyncPreferences * m_prefs;
+		Preferences * m_prefs;
 		mutable QString m_lastError;
-		QList<QyncPreset *> m_presets;
+		QList<Preset *> m_presets;
 
 		/* internal flag to (temporarily) switch off signal emission */
 		bool m_doSignals;
@@ -78,12 +75,12 @@ class QyncManager
 		 * that the path to presets is set appropriately for the runtime
 		 * platform and that the path exists.
 		 */
-		static void initialiseClass( void );
+		static void initialiseClass(void);
 
 		/**
 		 * \brief If preferences have been set, dispose of them.
 		 */
-		void disposePrefs( void );
+		void disposePrefs(void);
 
 	protected:
 		/**
@@ -96,18 +93,18 @@ class QyncManager
 		 * description of what went wrong. They need not reset it if they
 		 * succeed as long as the clearly indicate success.
 		 */
-		void setLastError( const QString & err ) const;
+		void setLastError(const QString & err) const;
 
 	public:
 		/**
 		 * \brief Create a new manager.
 		 */
-		 QyncManager( void );
+		Manager(void);
 
 		/**
 		 * \brief Destroy the manager.
 		 */
-		~QyncManager( void );
+		~Manager(void);
 
 		/**
 		 * \brief Provides the path to the configuration directory.
@@ -117,7 +114,7 @@ class QyncManager
 		 *
 		 * \return The configuration directory path.
 		 */
-		static QString configurationDirectoryPath( void );
+		static QString configurationDirectoryPath(void);
 
 		/**
 		 * \brief Get an explanation of what caused the last failed operation.
@@ -132,7 +129,7 @@ class QyncManager
 		 *
 		 * \return An explanation of the cause for the last error.
 		 */
-		QString lastError( void ) const;
+		QString lastError(void) const;
 
 		/**
 		 * \brief Get the version text of the rsync binary.
@@ -143,14 +140,14 @@ class QyncManager
 		 * \return The version text, or a null string if the rsync binary is
 		 * not valid.
 		 */
-		QString rsyncVersionText( void );
+		QString rsyncVersionText(void);
 
 		/**
 		 * \brief Get the application preferences.
 		 *
 		 * \return the application preferences.
 		 */
-		const QyncPreferences * preferences( void ) const;
+		const Preferences * preferences(void) const;
 
 		/**
 		 * \brief Set the application preferences.
@@ -163,14 +160,14 @@ class QyncManager
 		 *
 		 * \return \b true if the preferences were set, \b false otherwise.
 		 */
-		bool setPreferences( QyncPreferences * prefs );
+		bool setPreferences(Preferences * prefs);
 
 		/**
 		 * \brief Get the number of presets stored in the manager.
 		 *
 		 * \return The number of presets.
 		 */
-		int presetCount( void ) const;
+		int presetCount(void) const;
 
 		/**
 		  * \brief Retrieve the presets stored in the manager.
@@ -181,7 +178,7 @@ class QyncManager
 		  * \return the presets (or an empty set if the manager does not have
 		  * any presets stored.
 		  */
-		QList<QyncPreset *> presets( void ) const;
+		QList<Preset *> presets(void) const;
 
 		/**
 		  * \brief Retrieve an indexed preset from the manager.
@@ -197,7 +194,7 @@ class QyncManager
 		  * \return the preset at the index provided, or \b null if the
 		  * index is out of bounds.
 		  */
-		QyncPreset * preset( int index ) const;
+		Preset * preset(int index) const;
 
 		/**
 		  * \brief Remove an indexed preset from the collection stored in the
@@ -220,7 +217,7 @@ class QyncManager
 		  * \return \b true if the preset was removed from the collection,
 		  * \b false otherwise.
 		  */
-		bool removePreset( int index );
+		bool removePreset(int index);
 
 		/**
 		  * \brief Remove a known preset from the collection stored in the
@@ -241,7 +238,7 @@ class QyncManager
 		  * \return \b true if the preset was removed from the collection,
 		  * \b false otherwise.
 		  */
-		bool removePreset( QyncPreset * preset );
+		bool removePreset(Preset * preset);
 
 		/**
 		  * \brief Insert a preset into the collection stored in the manager.
@@ -257,7 +254,7 @@ class QyncManager
 		  *
 		  * \return \b \c true if the preset was added, \b \c false otherwise.
 		  */
-		bool insertPreset( QyncPreset * preset, int index = -1 );
+		bool insertPreset(Preset * preset, int index = -1);
 
 		/**
 		  * \brief Add a preset to the end of the collection stored in the
@@ -270,7 +267,7 @@ class QyncManager
 		  *
 		  * \return \b \c true if the preset was added, \b \c false otherwise.
 		  */
-		bool addPreset( QyncPreset * preset );
+		bool addPreset(Preset * preset);
 
 		/**
 		  * \brief Remove all presets stored in the manager.
@@ -280,7 +277,7 @@ class QyncManager
 		  * the call will be deleted, so any pointers to presets retrieved using
 		  * preset() or presets() will be invalid.
 		  */
-		void clearPresets( void );
+		void clearPresets(void);
 
 		/**
 		 * \brief Run a simulation of a preset.
@@ -301,7 +298,7 @@ class QyncManager
 		 * \return A pointer to a process to simulate the preset, or a \b null
 		 * pointer if the preset cannot be simulated.
 		 */
-		QyncProcess * simulate( int i ) const;
+		Process * simulate(int i) const;
 
 		/**
 		 * \brief Run a simulation of a preset.
@@ -323,7 +320,7 @@ class QyncManager
 		 * \return A pointer to a process to simulate the preset, or a \b null
 		 * pointer if the preset cannot be simulated.
 		 */
-		QyncProcess * simulate( const QyncPreset * preset ) const;
+		Process * simulate(const Preset * preset) const;
 
 		/**
 		 * \brief Execute of a preset.
@@ -342,7 +339,7 @@ class QyncManager
 		 * \return A pointer to a process to execute the preset, or a \b null
 		 * pointer if the preset cannot be executed.
 		 */
-		QyncProcess * execute( int i ) const;
+		Process * execute(int i) const;
 
 		/**
 		 * \brief Execute a preset.
@@ -361,9 +358,9 @@ class QyncManager
 		 * \return A pointer to a process to execute the preset, or a \b null
 		 * pointer if the preset cannot be executed.
 		 */
-		QyncProcess * execute( const QyncPreset * preset ) const;
+		Process * execute(const Preset * preset) const;
 
-	public slots:
+	public Q_SLOTS:
 		/**
 		 * \brief Load the presets from the default location.
 		 *
@@ -373,7 +370,7 @@ class QyncManager
 		 *
 		 * return \b true if the presets were loaded, \b false otherwise.
 		 */
-		bool loadPresets( void );
+		bool loadPresets(void);
 
 		/**
 		 * \brief Load the presets from a specified location.
@@ -386,9 +383,9 @@ class QyncManager
 		 *
 		 * return \b true if the presets were loaded, \b false otherwise.
 		 */
-		bool loadPresets( const QString & path );
+		bool loadPresets(const QString & path);
 
-	signals:
+	Q_SIGNALS:
 		/**
 		 * \brief Emitted when a preset has been added.
 		 *
@@ -399,7 +396,7 @@ class QyncManager
 		 * When emitted, this signal is always emitted before presetsChanged(),
 		 * never after.
 		 */
-		void presetAdded( QyncPreset * preset, int index );
+		void presetAdded(Preset * preset, int index);
 
 		/**
 		 * \brief Emitted when a preset has been removed.
@@ -407,7 +404,7 @@ class QyncManager
 		 * When emitted, this signal is always emitted before presetsChanged(),
 		 * never after.
 		 */
-		void presetRemoved( void );
+		void presetRemoved(void);
 
 		/**
 		 * \brief Emitted when a preset has been removed.
@@ -415,12 +412,12 @@ class QyncManager
 		 * When emitted with either presetAdded() or presetRemoved(), this
 		 * signal is always emitted after the other, never before.
 		 */
-		void presetsChanged( void );
+		void presetsChanged(void);
 
 		/**
 		 * \brief Emitted when the application preferences have changed.
 		 */
-		void preferencesChanged( void );
+		void preferencesChanged(void);
 
 		/**
 		 * \brief Emitted when a process has been started.
@@ -440,7 +437,9 @@ class QyncManager
 		 * receives this signal, that the process may never get started and that
 		 * the process may never emit any signals at all.
 		 */
-		void processStarted( QyncProcess * process ) const;
-};
+		void processStarted(Process * process) const;
+	};
 
-#endif // QYNCMANAGER_H
+}  // namespace Qync
+
+#endif  // QYNC_MANAGER_H

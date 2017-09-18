@@ -15,8 +15,8 @@
  * \todo
  * Nothing.
  */
-#ifndef QYNCPROCESSDIALOGUE_H
-#define QYNCPROCESSDIALOGUE_H
+#ifndef QYNC_PROCESSDIALOGUE_H
+#define QYNC_PROCESSDIALOGUE_H
 
 #include "common.h"
 
@@ -24,7 +24,6 @@
 #include <QString>
 #include <QTextEdit>
 
-class QyncProcess;
 class QCloseEvent;
 class QLabel;
 class QProgressBar;
@@ -32,9 +31,12 @@ class QProcess;
 class QDialogButtonBox;
 class QPushButton;
 
+namespace Qync {
 
-/**
- * \class QyncProcessDialogue
+	class Process;
+
+	/**
+ * \class ProcessDialogue
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
@@ -49,31 +51,30 @@ class QPushButton;
  * is currently being processed, how close to completion it is, and how close to
  * completion the whole process is.
  */
-class QyncProcessDialogue
-: public QDialog {
-
-	Q_OBJECT
+	class ProcessDialogue
+	  : public QDialog {
+		Q_OBJECT
 
 	private:
-		QyncProcess * m_process;
+		Process * m_process;
 		QString m_outputCache;
 
 		QLabel * m_itemName;
 		QProgressBar * m_itemProgress;
 		QProgressBar * m_overallProgress;
-        QPushButton * m_toggleDetailsButton;
-        QTextEdit * m_output;
+		QPushButton * m_toggleDetailsButton;
+		QTextEdit * m_output;
 		QDialogButtonBox * m_buttons;
 		QPushButton * m_stopButton;
-        QPushButton * m_saveButton;
+		QPushButton * m_saveButton;
 
-		void createWidgets( void );
+		void createWidgets(void);
 
 #if defined(QYNC_DEBUG)
 		QTextEdit * m_stdout;
 #endif
 
-	private slots:
+	private Q_SLOTS:
 		/**
 		 * \brief Update the captured standard output stream with some text.
 		 *
@@ -84,7 +85,7 @@ class QyncProcessDialogue
 		 * \note This slot is only available for debugging purposes. It does not
 		 * do anything in release code.
 		 */
-		void updateStdout( const QString & s );
+		void updateStdout(const QString & s);
 
 	protected:
 		/**
@@ -94,25 +95,25 @@ class QyncProcessDialogue
 		 *
 		 * The dialogue is closed as normal and is scheduled for deletion.
 		 */
-		virtual void closeEvent( QCloseEvent * e );
+		virtual void closeEvent(QCloseEvent * e) override;
 
 	public:
 		/**
-		 * \brief Create a new QyncProcessDialogue
+		 * \brief Create a new ProcessDialogue
 		 *
 		 * \param process is the process to monitor.
 		 * \param parent is the parent widget.
 		 */
-		explicit QyncProcessDialogue( QyncProcess * process, QWidget * parent = 0 );
+		explicit ProcessDialogue(Process * process, QWidget * parent = nullptr);
 
 		/**
-		 * \brief Destroy the QyncProcessDialogue
+		 * \brief Destroy the ProcessDialogue
 		 */
-		virtual ~QyncProcessDialogue( void );
+		virtual ~ProcessDialogue(void);
 
 	signals:
 
-	private slots:
+	private Q_SLOTS:
 		/**
 		 * \brief Updates the item progress.
 		 *
@@ -120,7 +121,7 @@ class QyncProcessDialogue
 		 *
 		 * The current item progress bar is updated to the value provided.
 		 */
-		void updateItemProgress( int pc );
+		void updateItemProgress(int pc);
 
 		/**
 		 * \brief Changes the current item in progress.
@@ -129,7 +130,7 @@ class QyncProcessDialogue
 		 *
 		 * The current item line edit is updated to show the new item path.
 		 */
-		void updateItemInProgress( const QString & item );
+		void updateItemInProgress(const QString & item);
 
 		/**
 		 * \brief Updates the overall progress.
@@ -138,7 +139,7 @@ class QyncProcessDialogue
 		 *
 		 * The overall progress bar is updated to the value provided.
 		 */
-		void updateOverallProgress( int pc );
+		void updateOverallProgress(int pc);
 
 		/**
 		 * \brief Save the current content of the output widget.
@@ -147,14 +148,14 @@ class QyncProcessDialogue
 		 * the dialogue, the file chosen in overwritten with the content of
 		 * the output text edit.
 		 */
-		void saveOutput( void );
+		void saveOutput(void);
 
 		/**
 		 * \brief Indicate to the dialogue that the process has started.
 		 *
 		 * The progress widgets are reset and the stop button is enabled.
 		 */
-		void processStarted( void );
+		void processStarted(void);
 
 		/**
 		 * \brief Indicate to the dialogue that the process has successfully
@@ -163,7 +164,7 @@ class QyncProcessDialogue
 		 * The progress widgets are maxed out, and the stop button is disabled.
 		 * and the save button is enabled.
 		 */
-		void processFinished( const QString & msg = QString() );
+		void processFinished(const QString & msg = {});
 
 		/**
 		 * \brief Indicate to the dialogue that the process was interrupted.
@@ -171,7 +172,7 @@ class QyncProcessDialogue
 		 * The progress widgets are maxed out, and the stop button is disabled.
 		 * and the save button is enabled.
 		 */
-		void processInterrupted( const QString & msg = QString() );
+		void processInterrupted(const QString & msg = {});
 
 		/**
 		 * \brief Indicate to the dialogue that the process has unsuccessfully
@@ -182,7 +183,7 @@ class QyncProcessDialogue
 		 * The progress widgets are maxed out, and the stop button is disabled.
 		 * and the save button is enabled.
 		 */
-		void processFailed( const QString & msg = QString() );
+		void processFailed(const QString & msg = {});
 
 		/**
 		 * \brief Show an error message.
@@ -191,30 +192,32 @@ class QyncProcessDialogue
 		 *
 		 * The error message is shown in a warning dialogue.
 		 */
-		void showError( const QString & err );
+		void showError(const QString & err);
 
-	public slots:
-        /**
+	public Q_SLOTS:
+		/**
          * \brief Toggle the state of the detailed info text.
          *
          * If it is currently visible the detailed info text will be hidden; if
          * it is currently hiddent it will be made visible.
          */
-        void toggleDetailedText( void );
+		void toggleDetailedText(void);
 
-        /**
+		/**
          * \brief Show the detailed info text.
          *
          * The detailed info text widget will be made visible.
          */
-        void showDetailedText( void );
+		void showDetailedText(void);
 
-        /**
+		/**
          * \brief Hide the detailed info text.
          *
          * The detailed info text widget will be hidden.
          */
-        void hideDetailedText( void );
-};
+		void hideDetailedText(void);
+	};
 
-#endif // QYNCPROCESSDIALOGUE_H
+}  // namespace Qync
+
+#endif  // QYNC_PROCESSDIALOGUE_H

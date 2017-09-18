@@ -1,23 +1,28 @@
-HEADERS += src/QyncMainWindow.h \
-    src/QyncManager.h \
-    src/QyncPreset.h \
-    src/common.h \
-    src/QyncProcess.h \
-    src/QyncProcessDialogue.h \
-    src/QyncPreferences.h \
-    src/QyncPreferencesDialogue.h \
-    src/QyncGuiPreferences.h
+QT += widgets
+CONFIG += c++14
 
-SOURCES += src/QyncMainWindow.cpp \
-    src/QyncManager.cpp \
-    src/QyncPreset.cpp \
-    qync.cpp \
-    src/QyncProcess.cpp \
-    src/QyncProcessDialogue.cpp \
-    src/QyncPreferences.cpp \
-    src/QyncPreferencesDialogue.cpp \
+HEADERS += \
+    src/common.h \
+    src/MainWindow.h \
+    src/GuiPreferences.h \
+    src/Manager.h \
+    src/Preferences.h \
+    src/PreferencesDialogue.h \
+    src/Preset.h \
+    src/Process.h \
+    src/ProcessDialogue.h
+
+SOURCES += \
+	src/qync.cpp \
     src/common.cpp \
-    src/QyncGuiPreferences.cpp
+    src/MainWindow.cpp \
+    src/GuiPreferences.cpp \
+    src/Manager.cpp \
+    src/Preferences.cpp \
+    src/PreferencesDialogue.cpp \
+    src/Preset.cpp \
+    src/Process.cpp \
+    src/ProcessDialogue.cpp
 
 RESOURCES += resources/icons.qrc
 

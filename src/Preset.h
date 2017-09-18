@@ -16,17 +16,18 @@
  * Nothing.
  */
 
-#ifndef QYNCPRESET_H
-#define QYNCPRESET_H
+#ifndef QYNC_PRESET_H
+#define QYNC_PRESET_H
 
 #include <QObject>
 #include <QString>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
+namespace Qync {
 
-/**
- * \class QyncPreset
+	/**
+ * \class Preset
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
@@ -72,32 +73,31 @@
  * stream to and from a file (load(), loadFrom(), save(), saveAs(),
  * saveCopyAs()).
  */
-class QyncPreset
-:	public QObject {
+	class Preset
+	  : public QObject {
+		Q_OBJECT
+		Q_PROPERTY(bool preserveTime READ preserveTime WRITE setPreserveTime)
+		Q_PROPERTY(bool preservePermissions READ preservePermissions WRITE setPreservePermissions)
+		Q_PROPERTY(bool preserveOwner READ preserveOwner WRITE setPreserveOwner)
+		Q_PROPERTY(bool preserveGroup READ preserveGroup WRITE setPreserveGroup)
 
-	Q_OBJECT
-	Q_PROPERTY(bool preserveTime READ preserveTime WRITE setPreserveTime)
-	Q_PROPERTY(bool preservePermissions READ preservePermissions WRITE setPreservePermissions)
-	Q_PROPERTY(bool preserveOwner READ preserveOwner WRITE setPreserveOwner)
-	Q_PROPERTY(bool preserveGroup READ preserveGroup WRITE setPreserveGroup)
+		Q_PROPERTY(bool windowsCompatability READ windowsCompatability WRITE setWindowsCompatability)
+		Q_PROPERTY(bool honourDeletions READ honourDeletions WRITE setHonourDeletions)
 
-	Q_PROPERTY(bool windowsCompatability READ windowsCompatability WRITE setWindowsCompatability)
-	Q_PROPERTY(bool honourDeletions READ honourDeletions WRITE setHonourDeletions)
+		Q_PROPERTY(bool alwaysCompareChecksums READ alwaysCompareChecksums WRITE setAlwaysCompareChecksums)
+		Q_PROPERTY(bool preserveDevices READ preserveDevices WRITE setPreserveDevices)
+		Q_PROPERTY(bool keepPartialTransfers READ keepPartialTransfers WRITE setKeepPartialTransfers)
+		Q_PROPERTY(bool copySymlinksAsSymlinks READ copySymlinksAsSymlinks WRITE setCopySymlinksAsSymlinks)
+		Q_PROPERTY(bool makeBackups READ makeBackups WRITE setMakeBackups)
 
-	Q_PROPERTY(bool alwaysCompareChecksums READ alwaysCompareChecksums WRITE setAlwaysCompareChecksums)
-	Q_PROPERTY(bool preserveDevices READ preserveDevices WRITE setPreserveDevices)
-	Q_PROPERTY(bool keepPartialTransfers READ keepPartialTransfers WRITE setKeepPartialTransfers)
-	Q_PROPERTY(bool copySymlinksAsSymlinks READ copySymlinksAsSymlinks WRITE setCopySymlinksAsSymlinks)
-	Q_PROPERTY(bool makeBackups READ makeBackups WRITE setMakeBackups)
+		Q_PROPERTY(bool useTransferCompression READ useTransferCompression WRITE setUseTransferCompression)
+		Q_PROPERTY(bool onlyUpdateExistingEntries READ onlyUpdateExistingEntries WRITE setOnlyUpdateExistingEntries)
+		Q_PROPERTY(bool dontUpdateExistingEntries READ dontUpdateExistingEntries WRITE setDontUpdateExistingEntries)
+		Q_PROPERTY(bool dontMapUsersAndGroups READ dontMapUsersAndGroups WRITE setDontMapUsersAndGroups)
+		Q_PROPERTY(bool copyHardlinksAsHardlinks READ copyHardlinksAsHardlinks WRITE setCopyHardlinksAsHardlinks)
+		Q_PROPERTY(bool showItemisedChanges READ showItemisedChanges WRITE setShowItemisedChanges)
 
-	Q_PROPERTY(bool useTransferCompression READ useTransferCompression WRITE setUseTransferCompression)
-	Q_PROPERTY(bool onlyUpdateExistingEntries READ onlyUpdateExistingEntries WRITE setOnlyUpdateExistingEntries)
-	Q_PROPERTY(bool dontUpdateExistingEntries READ dontUpdateExistingEntries WRITE setDontUpdateExistingEntries)
-	Q_PROPERTY(bool dontMapUsersAndGroups READ dontMapUsersAndGroups WRITE setDontMapUsersAndGroups)
-	Q_PROPERTY(bool copyHardlinksAsHardlinks READ copyHardlinksAsHardlinks WRITE setCopyHardlinksAsHardlinks)
-	Q_PROPERTY(bool showItemisedChanges READ showItemisedChanges WRITE setShowItemisedChanges)
-
-	Q_PROPERTY(QString logFile READ logFile WRITE setLogFile)
+		Q_PROPERTY(QString logFile READ logFile WRITE setLogFile)
 
 	private:
 		mutable bool m_modified;
@@ -134,7 +134,7 @@ class QyncPreset
 		/**
 		 * \brief Set all settings to default values.
 		 */
-		void setDefaultProperties( void );
+		void setDefaultProperties(void);
 
 	protected:
 		/**
@@ -145,7 +145,7 @@ class QyncPreset
 		 * \return \b true if the preset was written to the stream, \b false
 		 * otherwise.
 		 */
-		bool emitXml( QXmlStreamWriter & xml ) const;
+		bool emitXml(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write the name of the preset to an XML stream.
@@ -155,7 +155,7 @@ class QyncPreset
 		 * \return \b true if the name of the preset was written to the stream,
 		 * \b false otherwise.
 		 */
-		bool emitNameXml( QXmlStreamWriter & xml ) const;
+		bool emitNameXml(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write the preset source to an XML stream.
@@ -165,7 +165,7 @@ class QyncPreset
 		 * \return \b true if the preset source was written to the stream,
 		 * \b false otherwise.
 		 */
-		bool emitSourceXml( QXmlStreamWriter & xml ) const;
+		bool emitSourceXml(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write the preset destination to an XML stream.
@@ -175,7 +175,7 @@ class QyncPreset
 		 * \return \b true if the preset destination was written to the stream,
 		 * \b false otherwise.
 		 */
-		bool emitDestinationXml( QXmlStreamWriter & xml ) const;
+		bool emitDestinationXml(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Write the preset properties to an XML stream.
@@ -189,7 +189,7 @@ class QyncPreset
 		 * \return \b true if the preset properties were written to the stream,
 		 * \b false otherwise.
 		 */
-		bool emitPropertiesXml( QXmlStreamWriter & xml ) const;
+		bool emitPropertiesXml(QXmlStreamWriter & xml) const;
 
 		/**
 		 * \brief Read the preset from an XML stream.
@@ -199,7 +199,7 @@ class QyncPreset
 		 * \return \c true if the preset was read from the stream, \b false
 		 * otherwise.
 		 */
-		bool parseXml( QXmlStreamReader & xml );
+		bool parseXml(QXmlStreamReader & xml);
 
 		/**
 		 * \brief Read the properties for the preset from an XML stream.
@@ -209,7 +209,7 @@ class QyncPreset
 		 * \return \c true if the properties for the preset were read from the
 		 * stream, \b false otherwise.
 		 */
-		bool parsePropertiesXml( QXmlStreamReader & xml );
+		bool parsePropertiesXml(QXmlStreamReader & xml);
 
 		/**
 		 * \brief Read an individual property for the preset from an XML stream.
@@ -219,37 +219,37 @@ class QyncPreset
 		 * \return \c true if the property for the preset was read from the
 		 * stream, \b false otherwise.
 		 */
-		bool parsePropertyXml( QXmlStreamReader & xml );
+		bool parsePropertyXml(QXmlStreamReader & xml);
 
 	public:
 		/**
-		 * \brief Create a new QyncPreset.
+		 * \brief Create a new Preset.
 		 *
 		 * \param name is the name for the new preset.
 		 */
-		explicit QyncPreset( const QString & name = QString() );
+		explicit Preset(const QString & name = QString());
 
 		/**
-		 * \brief Load a QyncPreset from a file.
+		 * \brief Load a Preset from a file.
 		 *
 		 * \param fileName is the path to the file to load.
 		 *
-		 * If the file is a valid QyncPreset file, the file is loaded and a new
-		 * QyncPreset object is returned. If not, no QyncPreset is returned. If
+		 * If the file is a valid Preset file, the file is loaded and a new
+		 * Preset object is returned. If not, no Preset is returned. If
 		 * successful, the returned preset is owned by the calling code, and it
 		 * is responsible for the destruction of the preset at the appropriate
 		 * time.
 		 *
 		 * \return A new preset, or \b null if one could not be loaded.
 		 */
-		static QyncPreset * load( const QString & fileName );
+		static Preset * load(const QString & fileName);
 
 		/**
 		 * \brief Save the preset to its internally stored file name.
 		 *
 		 * \return \b true if the preset file was saved, \b false otherwise.
 		 */
-		bool save( void ) const;
+		bool save(void) const;
 
 		/**
 		 * \brief Save the preset to a new file.
@@ -261,7 +261,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the preset file was saved, \b false otherwise.
 		 */
-		bool saveAs( const QString & fileName );
+		bool saveAs(const QString & fileName);
 
 		/**
 		 * \brief Save a copy of the preset to a new file.
@@ -273,7 +273,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the preset file was saved, \b false otherwise.
 		 */
-		bool saveCopyAs( const QString & fileName ) const;
+		bool saveCopyAs(const QString & fileName) const;
 
 		/**
 		 * \brief Set the name of the preset.
@@ -282,14 +282,14 @@ class QyncPreset
 		 *
 		 * Presets do not need to have unique names.
 		 */
-		void setName( const QString & name );
+		void setName(const QString & name);
 
 		/**
 		 * \brief Get the name of the preset.
 		 *
 		 * \return The name of the preset.
 		 */
-		QString name( void ) const;
+		QString name(void) const;
 
 		/**
 		 * \brief Set the file name of the preset.
@@ -298,14 +298,14 @@ class QyncPreset
 		 *
 		 * Setting the file name does not automatically save the preset.
 		 */
-		void setFileName( const QString & fileName );
+		void setFileName(const QString & fileName);
 
 		/**
 		 * \brief Get the file name of the preset.
 		 *
 		 * \return The current path to the file for the preset.
 		 */
-		QString fileName( void ) const;
+		QString fileName(void) const;
 
 		/**
 		 * \brief Set the source file or directory.
@@ -314,7 +314,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the source was set, \b false otherwise.
 		 */
-		bool setSource( const QString & source );
+		bool setSource(const QString & source);
 
 		/**
 		 * \brief Set the destination file or directory.
@@ -323,7 +323,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the destination was set, \b false otherwise.
 		 */
-		bool setDestination( const QString & dest );
+		bool setDestination(const QString & dest);
 
 		/**
 		 * \brief Set whether or not file timestamps should be preserved.
@@ -332,7 +332,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setPreserveTime( bool preserve );
+		bool setPreserveTime(bool preserve);
 
 		/**
 		 * \brief Set whether or not file permissions should be preserved.
@@ -342,7 +342,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setPreservePermissions( bool preserve );
+		bool setPreservePermissions(bool preserve);
 
 		/**
 		 * \brief Set whether or not file ownership should be preserved.
@@ -351,7 +351,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setPreserveOwner( bool preserve );
+		bool setPreserveOwner(bool preserve);
 
 		/**
 		 * \brief Set whether or not file group ownership should be preserved.
@@ -361,7 +361,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setPreserveGroup( bool preserve );
+		bool setPreserveGroup(bool preserve);
 
 		/**
 		 * \brief Set whether or not Windows compatability should be used.
@@ -375,7 +375,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setWindowsCompatability( bool compatible );
+		bool setWindowsCompatability(bool compatible);
 
 		/**
 		 * \brief Set whether or not deletions in the source directory tree
@@ -389,7 +389,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setHonourDeletions( bool honour );
+		bool setHonourDeletions(bool honour);
 
 		/**
 		 * \brief Set whether or not to use checksums to compare source and
@@ -403,7 +403,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setAlwaysCompareChecksums( bool checksums );
+		bool setAlwaysCompareChecksums(bool checksums);
 
 		/**
 		 * \brief Set whether or not device files should be preserved as such.
@@ -413,7 +413,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setPreserveDevices( bool preserve );
+		bool setPreserveDevices(bool preserve);
 
 		/**
 		 * \brief Set whether or not partially-transferred items should be kept.
@@ -423,7 +423,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setKeepPartialTransfers( bool keep );
+		bool setKeepPartialTransfers(bool keep);
 
 		/**
 		 * \brief Set whether or not symbolic links should be kept as such.
@@ -436,7 +436,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setCopySymlinksAsSymlinks( bool links );
+		bool setCopySymlinksAsSymlinks(bool links);
 
 		/**
 		 * \brief Set whether or not backups of the destination tree should be
@@ -450,7 +450,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setMakeBackups( bool backup );
+		bool setMakeBackups(bool backup);
 
 		/**
 		 * \brief Set whether or not to use transfer compression.
@@ -463,7 +463,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setUseTransferCompression( bool compress );
+		bool setUseTransferCompression(bool compress);
 
 		/**
 		 * \brief Set whether or not only existing destination entries should
@@ -480,7 +480,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setOnlyUpdateExistingEntries( bool onlyExisting );
+		bool setOnlyUpdateExistingEntries(bool onlyExisting);
 
 		/**
 		 * \brief Set whether or not to ignore entries that already exist on
@@ -496,7 +496,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setDontUpdateExistingEntries( bool noExisting );
+		bool setDontUpdateExistingEntries(bool noExisting);
 
 		/**
 		 * \brief Set whether or not to use UID and GID to username and group
@@ -514,7 +514,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setDontMapUsersAndGroups( bool dontMap );
+		bool setDontMapUsersAndGroups(bool dontMap);
 
 		/**
 		 * \brief Set whether or not hard links should be kept as such.
@@ -527,7 +527,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setCopyHardlinksAsHardlinks( bool links );
+		bool setCopyHardlinksAsHardlinks(bool links);
 
 		/**
 		 * \brief Set whether or not an itemised list of changes should be
@@ -538,7 +538,7 @@ class QyncPreset
 		 *
 		 * \return \b true if the setting was set, \b false otherwise.
 		 */
-		bool setShowItemisedChanges( bool itemise );
+		bool setShowItemisedChanges(bool itemise);
 
 		/**
 		 * \brief Set the log file.
@@ -550,21 +550,21 @@ class QyncPreset
 		 *
 		 * \return \b true if the log file was set, \c false otherwise.
 		 */
-		bool setLogFile( const QString & fileName );
+		bool setLogFile(const QString & fileName);
 
 		/**
 		 * \brief Get the source location.
 		 *
 		 * \return The source.
 		 */
-		QString source( void ) const;
+		QString source(void) const;
 
 		/**
 		 * \brief Get the destination location.
 		 *
 		 * \return The destination.
 		 */
-		QString destination( void ) const;
+		QString destination(void) const;
 
 		/**
 		 * \brief Get whether file timestamps should be preserved.
@@ -572,7 +572,7 @@ class QyncPreset
 		 * \return \b true if timestamps should be preserved, \b false
 		 * otherwise.
 		 */
-		bool preserveTime( void ) const;
+		bool preserveTime(void) const;
 
 		/**
 		 * \brief Get whether file permissions should be preserved.
@@ -580,7 +580,7 @@ class QyncPreset
 		 * \return \b true if permissions should be preserved, \b false
 		 * otherwise.
 		 */
-		bool preservePermissions( void ) const;
+		bool preservePermissions(void) const;
 
 		/**
 		 * \brief Get whether file ownership should be preserved.
@@ -588,7 +588,7 @@ class QyncPreset
 		 * \return \b true if ownership should be preserved, \b false
 		 * otherwise.
 		 */
-		bool preserveOwner( void ) const;
+		bool preserveOwner(void) const;
 
 		/**
 		 * \brief Get whether file group ownership should be preserved.
@@ -596,7 +596,7 @@ class QyncPreset
 		 * \return \b true if group ownership should be preserved, \b false
 		 * otherwise.
 		 */
-		bool preserveGroup( void ) const;
+		bool preserveGroup(void) const;
 
 		/**
 		 * \brief Get whether Windows compatability should be used.
@@ -604,7 +604,7 @@ class QyncPreset
 		 * \return \b true if Windows compatability should be used, \b false
 		 * otherwise.
 		 */
-		bool windowsCompatability( void ) const;
+		bool windowsCompatability(void) const;
 
 		/**
 		 * \brief Get whether source tree deletions should be honoured.
@@ -612,7 +612,7 @@ class QyncPreset
 		 * \return \b true if source tree deletions should be honoured, \b false
 		 * otherwise.
 		 */
-		bool honourDeletions( void ) const;
+		bool honourDeletions(void) const;
 
 		/**
 		 * \brief Get whether entry checksums should always be used.
@@ -620,7 +620,7 @@ class QyncPreset
 		 * \return \b true if entry checksums should always be used, \b false
 		 * otherwise.
 		 */
-		bool alwaysCompareChecksums( void ) const;
+		bool alwaysCompareChecksums(void) const;
 
 		/**
 		 * \brief Get whether or device files should be preserved.
@@ -628,7 +628,7 @@ class QyncPreset
 		 * \return \b true if device files should be preserved, \b false
 		 * otherwise.
 		 */
-		bool preserveDevices( void ) const;
+		bool preserveDevices(void) const;
 
 		/**
 		 * \brief Get whether partial transfers should be kept.
@@ -636,7 +636,7 @@ class QyncPreset
 		 * \return \b true if partial transfers should be kept, \b false
 		 * otherwise.
 		 */
-		bool keepPartialTransfers( void ) const;
+		bool keepPartialTransfers(void) const;
 
 		/**
 		 * \brief Get whether symbolic links should be copied as symbolic
@@ -645,7 +645,7 @@ class QyncPreset
 		 * \return \b true if symbolic links should be copied as symbolic links,
 		 * \b false otherwise.
 		 */
-		bool copySymlinksAsSymlinks( void ) const;
+		bool copySymlinksAsSymlinks(void) const;
 
 		/**
 		 * \brief Get whether destination tree backups should be made.
@@ -653,7 +653,7 @@ class QyncPreset
 		 * \return \b true if destination tree backups should be made, \b false
 		 * otherwise.
 		 */
-		bool makeBackups( void ) const;
+		bool makeBackups(void) const;
 
 		/**
 		 * \brief Get whether transfer compression should be used.
@@ -661,7 +661,7 @@ class QyncPreset
 		 * \return \b true if transfer compression should be used, \b false
 		 * otherwise.
 		 */
-		bool useTransferCompression( void ) const;
+		bool useTransferCompression(void) const;
 
 		/**
 		 * \brief Get whether only existing destination entries should be
@@ -670,7 +670,7 @@ class QyncPreset
 		 * \return \b true if only existing destination should be updated,
 		 * \b false otherwise.
 		 */
-		bool onlyUpdateExistingEntries( void ) const;
+		bool onlyUpdateExistingEntries(void) const;
 
 		/**
 		 * \brief Get whether entries that already exist on the destination
@@ -679,7 +679,7 @@ class QyncPreset
 		 * \return \b true if entries that already exist on the destination
 		 * will be ignored.
 		 */
-		bool dontUpdateExistingEntries( void ) const;
+		bool dontUpdateExistingEntries(void) const;
 
 		/**
 		 * \brief Get whether UID and GID mapping should be suppressed.
@@ -687,7 +687,7 @@ class QyncPreset
 		 * \return \b true if UID and GID mapping should be suppressed, \b false
 		 * otherwise.
 		 */
-		bool dontMapUsersAndGroups( void ) const;
+		bool dontMapUsersAndGroups(void) const;
 
 		/**
 		 * \brief Get whether hard links should be copied as hard links.
@@ -695,7 +695,7 @@ class QyncPreset
 		 * \return \b true if hard links should be copied as hard links,
 		 * \b false otherwise.
 		 */
-		bool copyHardlinksAsHardlinks( void ) const;
+		bool copyHardlinksAsHardlinks(void) const;
 
 		/**
 		 * \brief Get whether a list of itemised changes should be generated.
@@ -704,14 +704,16 @@ class QyncPreset
 		 * \b false
 		 * otherwise.
 		 */
-		bool showItemisedChanges( void ) const;
+		bool showItemisedChanges(void) const;
 
 		/**
 		 * \brief Get the log file.
 		 *
 		 * \return The path to the log file.
 		 */
-		QString logFile( void ) const;
-};
+		QString logFile(void) const;
+	};
 
-#endif // QYNCPRESET_H
+}  // namespace Qync
+
+#endif  // QYNC_PRESET_H
