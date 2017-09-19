@@ -1,33 +1,22 @@
 /**
- * \file common.h
+ * \file common.cpp
  * \author Darren Hatherley
  * \date 13th December, 2013
  * \version 0.9.5
  *
- * \brief Defines some macros, types and functions that are available throughout
- * the application.
- *
- * All common functions are defined in the Qync namespace.
+ * \brief Qync common functions implementation file.
  *
  * \dep
- * - QXmlStreamReader
+ * - common.h
  *
  * \todo
  * Nothing.
  */
 
-#ifndef COMMON_H
-#define COMMON_H
+#include "functions.h"
 
+#include <QDebug>
 #include <QXmlStreamReader>
-
-//#define QYNC_DEBUG
-
-#define QYNC_APP_NAME "Qync"
-#define QYNC_VERSION_STRING "0.9.5"
-#define QYNC_VERSION_DATE "13th December, 2013"
-
-#define QYNC_URL "http://www.equituk.net/"
 
 /**
  * \namespace Qync
@@ -39,6 +28,7 @@
  * of the global namespace.
  */
 namespace Qync {
+
 
 	/**
 	 * \brief Completely parses an XML element.
@@ -57,7 +47,27 @@ namespace Qync {
 	 * they don't recognise without each class's XML stream parser having to
 	 * reimplement its own means of ignoring such elements.
 	 */
-	void parseUnknownElementXml( QXmlStreamReader & xml );
-};
+	void parseUnknownElementXml(QXmlStreamReader & xml) {
+		Q_ASSERT(xml.isStartElement());
 
-#endif // COMMON_H
+		qDebug() << "discarding unrecognised XML element" << xml.name();
+
+		while(!xml.atEnd()) {
+			xml.readNext();
+
+			if(xml.isEndElement()) {
+				break;
+			}
+
+			if(xml.isCharacters()) {
+				continue;
+			}
+
+			if(xml.isStartElement()) {
+				parseUnknownElementXml(xml);
+			}
+		}
+	}
+
+
+}  // namespace Qync

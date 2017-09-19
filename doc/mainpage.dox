@@ -1,0 +1,88 @@
+/**
+ * \mainpage
+ *
+ * Qync is a front end for the \b rsync utility. rsync is a command-line tool
+ * that synchronises parts of filesystems - either an individual file or a
+ * directory tree - between two locations (a source and a destination), one of
+ * which may be remote (i.e. a networked server). Probably the most common use
+ * case for rsync is to synchronise two local directories, the destination
+ * being used as a backup of the source. Because rsync only copies files and
+ * directories that have meen modified since the last time the backup was
+ * updated, and because it can be set to compress data in transit, it is very
+ * useful as a fast and resource efficient backup tool, particularly for large
+ * quantities of data and particularly when that data is being transferred over
+ * a network.
+ *
+ * <h2>Architecture</h2>
+ * The Qync application is built on a modular architecture. At its core is a
+ * manager class (\ref QyncManager) that provides access to program features
+ * such as presets, and enables the rsync process to be launched. The manager
+ * class also ensures that the core functionality of the application is
+ * separated from the user interface, so that it is possible to build different
+ * interfaces around the core manager class.
+ *
+ * Any rsync process launched is wrapped in a process class (\ref QyncProcess)
+ * that provides the ability to start, interrupt and monitor the progress of the
+ * rsync process. The process class emits a number of useful signals that can be
+ * used to provide feedback to the end user.
+ *
+ * Presets are represented as instances of the \ref QyncPreset class. All
+ * presets that are saved are completely administered by the manager - the
+ * manager ensures that all presets stored are saved to disk and loaded each
+ * time the program is started. The preset class can also be used by front ends
+ * to build custom settings for the manager to run.
+ *
+ * Finally, a base class is provided for managing application preferences
+ * (\ref QyncPreferences). The base class provides only the core preference
+ * settings required for the manager to do its job - currently this is just the
+ * path to the rsync executable file. The majority of its features are designed
+ * to enable the base class to be extended to provide other settings for the
+ * various possible user interfaces. For example, the \ref QyncGuiPreferences
+ * class extends the base class to provide preferences relating to the visual
+ * appearance of the GUI. The base class is structured such that a minimum of
+ * reimplementation and duplication is required when extending the preferences.
+ *
+ * <h2>Graphical User Interface</h2>
+ * An example front end is provided with the Qync application. The Qync GUI
+ * makes it easy to use rsync for most operations. As well as simply providing
+ * easy access to most of rsync's features, it offers the user the ability to
+ * save presets so that s/he can easily recall frequently-used rsync settings
+ * and execute them without having to enter the settings every time.
+ *
+ * The example user interface is provided by the \ref QyncMainWindow,
+ * \ref QyncProcessDialogue and \ref QyncPreferencesDialogue classes. The main
+ * window class is the main interface through which the user interacts with the
+ * program. It provedes the user with facilities to manage his/her presets and
+ * with the ability to alter and execute rsync with arbitrary parameters. The
+ * main window is responsible for spawning instances of other user interface
+ * elements, such as the process dialogue, which provides the user with the
+ * ability to monitor and manage a running rsync process, and the preferences
+ * dialogue, which allows the user to alter the his/her settings for the user
+ * interface.
+ *
+ * <h2>Linux, Unix and OSX</h2>
+ * These versions of Qync depend upon the rsync tool already being installed.
+ * For the most part, rsync will be installed by default. If not, use your
+ * package manager to install the rsync package.
+ *
+ * <h2>Windows</h2>
+ * The Windows version of Qync uses the cwrsync tool, a port of the rsync source
+ * code to Windows, which in turn uses the cygwin linux-like environment for
+ * Windows, OpenSSH and PuTTY. The licenses for these software components can
+ * be found on the following pages:
+ * - \ref cwrsync_license
+ * - \ref rsync_license
+ * - \ref cygwin_license
+ * - \ref openssh_license
+ * - \ref putty_license
+ *
+ * The licenses can also be found in the doc directory of an installation on
+ * Windows.
+ *
+ * The source code for rsync and PuTTY can be found in the src directory. Cygwin
+ * and OpenSSH are larger projects, and their source can be found on their
+ * websites:
+ * - <a href="http://cygwin.com/cvs.html">cygwin</a>
+ *   (http://cygwin.com/cvs.html)
+ * - <a href="http://www.openssh.com/">OpenSSH</a> (http://www.openssh.com/)
+ */

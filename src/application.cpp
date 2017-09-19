@@ -17,7 +17,7 @@
  * - QProcess
  */
 
-#include "Manager.h"
+#include "application.h"
 
 #include <QDebug>
 #include <QDir>
@@ -25,21 +25,61 @@
 #include <QProcess>
 #include <QStandardPaths>
 
-#include "Preset.h"
-#include "Process.h"
-#include "Preferences.h"
+#include "preset.h"
+#include "process.h"
+#include "preferences.h"
+
+
+#define QYNC_APP_NAME "Qync"
+#define QYNC_APP_DISPLAY_NAME "Qync"
+#define QYNC_APP_VERSION_STRING "0.9.5"
+#define QYNC_APP_VERSION_DATE "13th December, 2013"
+#define QYNC_APP_BUILD_ID "<undefined>"
+#define QYNC_APP_URL "http://www.equituk.net/"
 
 
 namespace Qync {
 
+	/**
+	 * \class Application
+	 * \author Darren Edale
+	 * \date September 2017
+	 * \version 0.9.5
+	 *
+	 * \brief Manages core application functionality for Qync.
+	 *
+	 * The Manager keeps a set of presets and preferences for the application
+	 * and acts as a central point around which the user interface can operate,
+	 * whatever type of iterface that happens to be. It provides controlled access
+	 * to the core resources of the application - presets, preferences - and
+	 * provides a means by which instances of the rsync process can be spawned.
+	 *
+	 * The class aslo provides a number of signals that enable the user interface
+	 * to be kept informed of important events such as when presets are changed,
+	 * when the preferences change and when a process is spawned.
+	 *
+	 * The manager stores all of its configuration details in a hidden directory
+	 * in the user's home directory. The \b preferences file stores the application
+	 * preferences as XML, and the presets folder stores each preset in its own
+	 * XML file.
+	 */
 
-	QString Manager::s_rsyncVersionText;
-	QString Manager::s_configPath;
+	QString Application::s_rsyncVersionText;
+	QString Application::s_configPath;
 
 
-	Manager::Manager(void)
-	  : m_prefs(0),
-		 m_doSignals(true) {
+	Application::Application(int & argc, char ** argv)
+	  : QApplication(argc, argv),
+		 m_prefs{} {
+		setApplicationName(QYNC_APP_NAME);
+		setApplicationDisplayName(QYNC_APP_DISPLAY_NAME);
+		setApplicationVersion(QYNC_APP_VERSION_STRING);
+		setOrganizationName("BitCraft");
+		setOrganizationDomain("bitcraft.eu");
+		setProperty("ReleaseDate", QYNC_APP_VERSION_DATE);
+		setProperty("BuildId", QYNC_APP_BUILD_ID);
+		setProperty("ApplicationWebsite", QYNC_APP_URL);
+
 		// ensure presets dir exists
 		QDir presetPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/");
 
@@ -52,59 +92,50 @@ namespace Qync {
 	}
 
 
-	Manager::~Manager(void) {
+	Application::~Application(void) {
 		clearPresets();
-		disposePrefs();
 	}
 
 
-	QString Manager::configurationDirectoryPath(void) {
+	QString Application::configurationDirectoryPath(void) {
 		return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 	}
 
 
-	void Manager::disposePrefs(void) {
-		if(m_prefs)
-			delete m_prefs;
-		m_prefs = nullptr;
-	}
-
-
-	void Manager::setLastError(const QString & err) const {
+	void Application::setLastError(const QString & err) const {
 		m_lastError = err;
 	}
 
 
-	QString Manager::lastError(void) const {
+	QString Application::lastError(void) const {
 		return m_lastError;
 	}
 
 
-	const Preferences * Manager::preferences(void) const {
-		return m_prefs;
+	const Preferences * Application::preferences(void) const {
+		return m_prefs.get();
 	}
 
 
-	bool Manager::setPreferences(Preferences * prefs) {
-		disposePrefs();
-		Manager::s_rsyncVersionText = QString(); /* force re-read on next call to rsyncVersionText() as binary might have changed */
-		m_prefs = prefs;
+	bool Application::setPreferences(Preferences * prefs) {
+		Application::s_rsyncVersionText = QString(); /* force re-read on next call to rsyncVersionText() as binary might have changed */
+		m_prefs.reset(prefs);
 		Q_EMIT preferencesChanged();
 		return true;
 	}
 
 
-	int Manager::presetCount(void) const {
+	int Application::presetCount(void) const {
 		return m_presets.size();
 	}
 
 
-	QList<Preset *> Manager::presets(void) const {
+	QList<Preset *> Application::presets(void) const {
 		return m_presets;
 	}
 
 
-	Preset * Manager::preset(int index) const {
+	Preset * Application::preset(int index) const {
 		if(index < 0 || index >= m_presets.size()) {
 			qDebug() << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
 			return 0;
@@ -114,7 +145,7 @@ namespace Qync {
 	}
 
 
-	bool Manager::removePreset(int index) {
+	bool Application::removePreset(int index) {
 		if(index < 0 || index >= m_presets.size()) {
 			qDebug() << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
 			setLastError(tr("The preset at position %1 in the list could not be found.").arg(index));
@@ -125,12 +156,12 @@ namespace Qync {
 	}
 
 
-	bool Manager::removePreset(Preset * preset) {
+	bool Application::removePreset(Preset * preset) {
 		if(m_presets.contains(preset)) {
 			QStringList err;
 			QFileInfo f(preset->fileName());
 
-			if(f.exists() && f.absoluteFilePath().startsWith(Manager::s_configPath + "presets/")) {
+			if(f.exists() && f.absoluteFilePath().startsWith(Application::s_configPath + "presets/")) {
 				if(!QFile::remove(f.absoluteFilePath()))
 					err << tr("The file for the preset could not be deleted from disk. It will reappear next time your presets are reloaded.");
 			}
@@ -163,7 +194,7 @@ namespace Qync {
 	}
 
 
-	bool Manager::insertPreset(Preset * preset, int i) {
+	bool Application::insertPreset(Preset * preset, int i) {
 		if(preset && !m_presets.contains(preset)) {
 			if(i < 0 || i > m_presets.size())
 				i = m_presets.size();
@@ -172,9 +203,9 @@ namespace Qync {
 			QFileInfo f(preset->fileName());
 
 			/* if the file is not in the presets dir, give it a new filename */
-			if(!f.absoluteFilePath().startsWith(Manager::s_configPath + "presets/")) {
+			if(!f.absoluteFilePath().startsWith(Application::s_configPath + "presets/")) {
 				QString fileName;
-				QDir presetDir(Manager::s_configPath + "presets/");
+				QDir presetDir(Application::s_configPath + "presets/");
 				int index = 0;
 
 				do {
@@ -185,11 +216,8 @@ namespace Qync {
 			}
 
 			preset->save();
-
-			if(m_doSignals) {
-				Q_EMIT presetAdded(preset, i);
-				Q_EMIT presetsChanged();
-			}
+			Q_EMIT presetAdded(preset, i);
+			Q_EMIT presetsChanged();
 
 			return true;
 		}
@@ -198,12 +226,12 @@ namespace Qync {
 	}
 
 
-	bool Manager::addPreset(Preset * preset) {
+	bool Application::addPreset(Preset * preset) {
 		return insertPreset(preset, -1);
 	}
 
 
-	void Manager::clearPresets(void) {
+	void Application::clearPresets(void) {
 		for(Preset * preset : m_presets) {
 			delete preset;
 		}
@@ -212,12 +240,12 @@ namespace Qync {
 	}
 
 
-	bool Manager::loadPresets(void) {
+	bool Application::loadPresets(void) {
 		return loadPresets(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/");
 	}
 
 
-	bool Manager::loadPresets(const QString & path) {
+	bool Application::loadPresets(const QString & path) {
 		QSignalBlocker blocker(this);
 		QDir d(path);
 
@@ -245,16 +273,18 @@ namespace Qync {
 	}
 
 
-	Process * Manager::simulate(int i) const {
+	Process * Application::simulate(int i) const {
 		if(i < 0 || i > m_presets.size())
 			return 0;
 		return simulate(preset(i));
 	}
 
 
-	Process * Manager::simulate(const Preset * preset) const {
-		if(!preset || !m_prefs)
+	Process * Application::simulate(const Preset * preset) const {
+		if(!preset || !m_prefs) {
 			return 0;
+		}
+
 		//QStringList args = Process::rsyncArguments(preset, QStringList("--dry-run"));
 		//qDebug() << "command: " << m_prefs->rsyncPath() << args;
 
@@ -269,14 +299,14 @@ namespace Qync {
 	}
 
 
-	Process * Manager::execute(int i) const {
+	Process * Application::execute(int i) const {
 		if(i < 0 || i > m_presets.size())
 			return 0;
 		return execute(preset(i));
 	}
 
 
-	Process * Manager::execute(const Preset * preset) const {
+	Process * Application::execute(const Preset * preset) const {
 		if(!preset || !m_prefs)
 			return 0;
 		//QStringList args = Process::rsyncArguments(preset);
@@ -293,16 +323,16 @@ namespace Qync {
 	}
 
 
-	QString Manager::rsyncVersionText(void) {
-		if(m_prefs && Manager::s_rsyncVersionText.isEmpty()) {
+	QString Application::rsyncVersionText(void) {
+		if(m_prefs && Application::s_rsyncVersionText.isEmpty()) {
 			QProcess p(this);
 			//qDebug() << ("starting process: " + m_prefs->rsyncPath() + " --version");
 			p.start(m_prefs->rsyncPath(), QStringList() << "--version", QIODevice::ReadOnly | QIODevice::Text);
 			p.waitForFinished();
-			Manager::s_rsyncVersionText = p.readAll();
+			Application::s_rsyncVersionText = p.readAll();
 		}
 
-		return Manager::s_rsyncVersionText;
+		return Application::s_rsyncVersionText;
 	}
 
 

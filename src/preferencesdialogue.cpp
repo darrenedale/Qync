@@ -30,11 +30,11 @@
  * Nothing.
  */
 
-#include "PreferencesDialogue.h"
+#include "preferencesdialogue.h"
 
-#include "Manager.h"
-#include "GuiPreferences.h"
-#include "common.h"
+#include "application.h"
+#include "guipreferences.h"
+#include "functions.h"
 
 #include <QString>
 #include <QLineEdit>
@@ -55,9 +55,8 @@
 namespace Qync {
 
 
-	PreferencesDialogue::PreferencesDialogue(Manager * manager, QWidget * parent)
-	  : QDialog(parent),
-		 m_manager(manager) {
+	PreferencesDialogue::PreferencesDialogue(QWidget * parent)
+	  : QDialog(parent) {
 		createWidgets();
 		updateWidgets();
 	}
@@ -122,10 +121,7 @@ namespace Qync {
 
 
 	void PreferencesDialogue::updateWidgets(void) {
-		if(!m_manager)
-			return;
-
-		const GuiPreferences * p = dynamic_cast<const GuiPreferences *>(m_manager->preferences());
+		const GuiPreferences * p = dynamic_cast<const GuiPreferences *>(qyncApp->preferences());
 
 		if(p) {
 			m_rsyncPath->setText(p->rsyncPath());
@@ -156,16 +152,13 @@ namespace Qync {
 			}
 		}
 		else {
-			QMessageBox::warning(this, tr("%1 Warning").arg(QYNC_APP_NAME), tr("There are no preferences to edit."), QMessageBox::Ok);
+			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("There are no preferences to edit."), QMessageBox::Ok);
 			close();
 		}
 	}
 
 
 	void PreferencesDialogue::savePreferences(void) {
-		if(!m_manager)
-			return;
-
 		GuiPreferences * p = new GuiPreferences();
 
 		p->setRsyncPath(m_rsyncPath->text());
@@ -195,12 +188,12 @@ namespace Qync {
 				break;
 		}
 
-		if(m_manager->setPreferences(p)) {
-			if(!p->saveAs(Manager::configurationDirectoryPath() + "guipreferences"))
-				QMessageBox::warning(this, tr("%1 Warnng").arg(QYNC_APP_NAME), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(QYNC_APP_NAME), QMessageBox::Ok);
+		if(qyncApp->setPreferences(p)) {
+			if(!p->saveAs(Application::configurationDirectoryPath() + "guipreferences"))
+				QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
 		}
 		else {
-			QMessageBox::warning(this, tr("%1 Warnng").arg(QYNC_APP_NAME), tr("Your preferences could not be applied."), QMessageBox::Ok);
+			QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences could not be applied."), QMessageBox::Ok);
 			delete p;
 		}
 	}
@@ -219,7 +212,7 @@ namespace Qync {
 			if(f.exists() && f.isFile() && f.isExecutable())
 				m_rsyncPath->setText(fileName);
 			else
-				QMessageBox::warning(this, tr("%1 Warning").arg(QYNC_APP_NAME), tr("%1 is not a valid path to an rsync executable.").arg(fileName), QMessageBox::Ok);
+				QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("%1 is not a valid path to an rsync executable.").arg(fileName), QMessageBox::Ok);
 		}
 	}
 

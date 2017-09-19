@@ -15,8 +15,8 @@
  * - QProcess
  */
 
-#include "Preferences.h"
-#include "common.h"
+#include "preferences.h"
+#include "functions.h"
 
 #include <QDebug>
 #include <QDir>

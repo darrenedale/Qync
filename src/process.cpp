@@ -17,8 +17,8 @@
  * - Consider whether to re-introduce parsing of stderr.
  */
 
-#include "Process.h"
-#include "Preset.h"
+#include "process.h"
+#include "preset.h"
 
 #include <QDebug>
 #include <QProcess>

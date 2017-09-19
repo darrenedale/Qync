@@ -14,10 +14,12 @@
  * - QProcess
  */
 
-#ifndef QYNC_MANAGER_H
-#define QYNC_MANAGER_H
+#ifndef QYNC_APPLICATION_H
+#define QYNC_APPLICATION_H
 
-#include <QObject>
+#include <memory>
+
+#include <QApplication>
 #include <QList>
 #include <QString>
 #include <QStringList>
@@ -29,72 +31,20 @@ namespace Qync {
 	class Process;
 	class Preferences;
 
-	/**
- * \class Manager
- * \author Darren Hatherley
- * \date 13th December, 2013
- * \version 0.9.5
- *
- * \brief Manages core application functionality for Qync.
- *
- * The Manager keeps a set of presets and preferences for the application
- * and acts as a central point around which the user interface can operate,
- * whatever type of iterface that happens to be. It provides controlled access
- * to the core resources of the application - presets, preferences - and
- * provides a means by which instances of the rsync process can be spawned.
- *
- * The class aslo provides a number of signals that enable the user interface
- * to be kept informed of important events such as when presets are changed,
- * when the preferences change and when a process is spawned.
- *
- * The manager stores all of its configuration details in a hidden directory
- * in the user's home directory. The \b preferences file stores the application
- * preferences as XML, and the presets folder stores each preset in its own
- * XML file.
- */
-	class Manager
-	  : public QObject {
+	class Application
+	  : public QApplication {
 		Q_OBJECT
-
-	private:
-		static QString s_rsyncVersionText;
-		static QString s_configPath;
-
-		Preferences * m_prefs;
-		mutable QString m_lastError;
-		QList<Preset *> m_presets;
-
-		/* internal flag to (temporarily) switch off signal emission */
-		bool m_doSignals;
-
-		/**
-		 * \brief If preferences have been set, dispose of them.
-		 */
-		void disposePrefs(void);
-
-	protected:
-		/**
-		 * \brief Set the text that describes the last error.
-		 *
-		 * \param err is the error description.
-		 *
-		 * Methods that indicate success or failure must use this method if
-		 * they indicate failure so that the end user can be presented with a
-		 * description of what went wrong. They need not reset it if they
-		 * succeed as long as the clearly indicate success.
-		 */
-		void setLastError(const QString & err) const;
 
 	public:
 		/**
 		 * \brief Create a new manager.
 		 */
-		Manager(void);
+		Application(int & argc, char ** argv);
 
 		/**
 		 * \brief Destroy the manager.
 		 */
-		~Manager(void);
+		~Application(void);
 
 		/**
 		 * \brief Provides the path to the configuration directory.
@@ -428,8 +378,32 @@ namespace Qync {
 		 * the process may never emit any signals at all.
 		 */
 		void processStarted(Process * process) const;
+
+	protected:
+		/**
+		 * \brief Set the text that describes the last error.
+		 *
+		 * \param err is the error description.
+		 *
+		 * Methods that indicate success or failure must use this method if
+		 * they indicate failure so that the end user can be presented with a
+		 * description of what went wrong. They need not reset it if they
+		 * succeed as long as the clearly indicate success.
+		 */
+		void setLastError(const QString & err) const;
+
+
+	private:
+		static QString s_rsyncVersionText;
+		static QString s_configPath;
+
+		std::unique_ptr<Preferences> m_prefs;
+		mutable QString m_lastError;
+		QList<Preset *> m_presets;
 	};
 
 }  // namespace Qync
 
-#endif  // QYNC_MANAGER_H
+#define qyncApp (static_cast<Qync::Application *>(QApplication::instance()))
+
+#endif  // QYNC_APPLICATION_H

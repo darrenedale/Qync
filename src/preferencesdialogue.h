@@ -51,8 +51,6 @@ namespace Qync {
 		Q_OBJECT
 
 	private:
-		Manager * m_manager;
-
 		QLineEdit * m_rsyncPath;
 		QToolButton * m_chooseRsyncPath;
 		QCheckBox * m_presetsToolBar;
@@ -106,7 +104,7 @@ namespace Qync {
 		 * be read.
 		 * \param parent is the parent widget.
 		 */
-		explicit PreferencesDialogue(Manager * manager = nullptr, QWidget * parent = nullptr);
+		explicit PreferencesDialogue(QWidget * parent = nullptr);
 	};
 
 }  // namespace Qync

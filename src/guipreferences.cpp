@@ -15,8 +15,8 @@
  * Nothing.
  */
 
-#include "GuiPreferences.h"
-#include "common.h"
+#include "guipreferences.h"
+#include "functions.h"
 
 #include <QDebug>
 

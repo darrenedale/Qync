@@ -22,8 +22,8 @@
  * Nothing.
  */
 
-#include "Preset.h"
-#include "common.h"
+#include "preset.h"
+#include "functions.h"
 
 #include <QDebug>
 #include <QDir>

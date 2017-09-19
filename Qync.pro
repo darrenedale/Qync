@@ -2,31 +2,31 @@ QT += widgets
 CONFIG += c++14
 
 HEADERS += \
-    src/common.h \
-    src/MainWindow.h \
-    src/GuiPreferences.h \
-    src/Manager.h \
-    src/Preferences.h \
-    src/PreferencesDialogue.h \
-    src/Preset.h \
-    src/Process.h \
-    src/ProcessDialogue.h
+    src/functions.h \
+    src/application.h \
+    src/guipreferences.h \
+    src/mainwindow.h \
+    src/preferences.h \
+    src/preferencesdialogue.h \
+    src/preset.h \
+    src/process.h \
+    src/processdialogue.h
 
 SOURCES += \
 	src/qync.cpp \
-    src/common.cpp \
-    src/MainWindow.cpp \
-    src/GuiPreferences.cpp \
-    src/Manager.cpp \
-    src/Preferences.cpp \
-    src/PreferencesDialogue.cpp \
-    src/Preset.cpp \
-    src/Process.cpp \
-    src/ProcessDialogue.cpp
+    src/functions.cpp \
+    src/application.cpp \
+    src/guipreferences.cpp \
+    src/mainwindow.cpp \
+    src/preferences.cpp \
+    src/preferencesdialogue.cpp \
+    src/preset.cpp \
+    src/process.cpp \
+    src/processdialogue.cpp
 
 RESOURCES += resources/icons.qrc
 
-OTHER_FILES += dist/linux/qync.desktop \
+DISTFILES += dist/linux/qync.desktop \
     dist/linux/qync.menu \
     dist/linux/man/man1/qync.1 \
     dist/linux/doc/qync/copyright \
@@ -35,4 +35,13 @@ OTHER_FILES += dist/linux/qync.desktop \
     doc/cwrsync-license.txt \
     doc/license.txt \
     todo.txt \
-    dist/linux/qync.desktop
+    doc/mainpage.dox \
+    doc/license_cwrsync.dox \
+    doc/license_rsync.dox \
+    doc/license_cygwin.dox \
+    doc/license_openssh.dox \
+    doc/license_putty.dox
+
+FORMS += \
+    ui/processdialogue.ui \
+    ui/mainwindow.ui

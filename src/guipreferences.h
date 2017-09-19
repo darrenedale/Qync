@@ -19,7 +19,7 @@
 #ifndef QYNC_GUIPREFERENCES_H
 #define QYNC_GUIPREFERENCES_H
 
-#include "Preferences.h"
+#include "preferences.h"
 
 #include <QString>
 #include <QXmlStreamReader>
