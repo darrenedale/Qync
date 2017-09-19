@@ -261,30 +261,18 @@ namespace Qync {
 
 	protected:
 		/**
-			 * \brief Set the manager used by the main window.
-			 *
-			 * \param manager is the manager for the main window.
-			 *
-			 * The manager is used to provide the application functionality
-			 * controlled by the window. The window does not take ownership of the
-			 * manager as a manager may be used by more than one interface. The
-			 * creator of the manager is responsible for its timely destruction.
-			 */
-		bool setManager(Manager * manager);
-
-		/**
-			 * \brief Disconnect the manager's signals from the window's slots.
-			 */
+		 * \brief Disconnect the manager's signals from the window's slots.
+		 */
 		void disconnectApplication(void);
 
 		/**
-			 * \brief Connect the manager's signals to the window's slots.
-			 */
+		 * \brief Connect the manager's signals to the window's slots.
+		 */
 		void connectApplication(void);
 
 	private:
 		std::unique_ptr<Ui::MainWindow> m_ui;
-		PreferencesDialogue * m_prefsWindow;
+		std::unique_ptr<PreferencesDialogue> m_prefsWindow;
 
 		QMenu * m_presetsMenu;
 
