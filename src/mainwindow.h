@@ -36,12 +36,6 @@ namespace Qync {
 		virtual ~MainWindow(void);
 
 	public Q_SLOTS:
-		/**
-		 * \brief Refresh the presets combo box.
-		 *
-		 * The list of presets in the combo box is discarded and it is
-		 * repopulated with the set of presets queried from the manager.
-		 */
 		void refreshPresets(void);
 
 		/**
@@ -94,30 +88,11 @@ namespace Qync {
 		 */
 		void switchSourceAndDestination(void);
 
-		/**
-		 * \brief Save the current settings to the currently-selected preset.
-		 *
-		 * The current preset is retrieved from the manager and updated with
-		 * the settings set in all the widgets in the window.
-		 */
 		void saveSettingsToCurrentPreset(void);
 
-		/**
-		 * \brief Remove the currently selected preset.
-		 *
-		 * The current preset is removed from the manager. This triggers a
-		 * refresh of the presets list.
-		 */
 		void removeCurrentPreset(void);
-
-		/**
-		 * \brief Create a new preset.
-		 *
-		 * A dialogue box is presented for the user to enter a name for the
-		 * new preset. If the dialogue is not cancelled, a new preset is
-		 * created using the current settings and added to the manager.
-		 */
 		void newPresetFromSettings(void);
+		void newPreset(bool fill = false);
 
 		/**
 		 * \brief Import a preset from a file.
@@ -151,21 +126,8 @@ namespace Qync {
 		 */
 		void showPreferences(void);
 
-		/**
-		 * \brief Start a simulation based on the current settings.
-		 *
-		 * The manager is requested to start a simulation with the current
-		 * settings.
-		 */
 		void simulate(void);
-
-		/**
-		 * \brief Start rsync based on the current settings.
-		 *
-		 * The manager is requested to start a full execution of rsync with the
-		 * current settings.
-		 */
-		void execute(void);
+		void synchronise(void);
 
 		/**
 		 * \brief Show the about Qync dialogue.
@@ -180,43 +142,10 @@ namespace Qync {
 		 */
 		void aboutRsync(void);
 
-
 	private Q_SLOTS:
-		/**
-		 * \brief Show the details of a preset selected from the menu.
-		 *
-		 * The preset is determined by examining the action that sent the
-		 * signal. The index of the preset is stored in the action's data. The
-		 * preset is fetched from the manager and the widgets in the window
-		 * are updated to reflect the settings in the preset.
-		 */
 		void showPresetFromMenu(void);
-
-		/**
-		 * \brief Show the details of a preset from the manager.
-		 *
-		 * \param index is the index of the preset to show.
-		 *
-		 * The preset is fetched from the manager and the widgets in the window
-		 * are updated to reflect the settings in the preset.
-		 */
 		void showPreset(int index);
-
-		/**
-		 * \brief (Re)read the preferences from the manager.
-		 *
-		 * This slot essentially makes the visual appearance of the GUI match
-		 * the settings stored in the manager's preferences object.
-		 */
 		void readPreferences(void);
-
-		/**
-		 * \brief Ensure that the check boxes for only syncing existing
-		 * entries and ignoring existing entries are kept mutually exclusive.
-		 */
-		//		void syncIgnoreExistingToOnlyExisting(void);
-		//		void syncOnlyExistingToIgnoreExisting(void);
-
 
 	protected:
 		/**
@@ -230,6 +159,10 @@ namespace Qync {
 		void connectApplication(void);
 
 	private:
+		static const int UpdateEverything;
+		static const int OnlyUpdateExisting;
+		static const int DontUpdateExisting;
+
 		/**
 		 * \brief Fill a preset with the current settings.
 		 */

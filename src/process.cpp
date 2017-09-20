@@ -25,6 +25,9 @@
 #include <QFile>
 #include <QRegExp>
 
+#include "application.h"
+#include "preferences.h"
+
 
 namespace Qync {
 
@@ -38,12 +41,12 @@ namespace Qync {
 	 * \brief Wraps the rsync process.
 	 *
 	 * The QProcess for the rsync command is wrapped inside an object of this class.
-	 * The command, arguments and optional log file are set in the constructor and
-	 * cannot later be modified - this is intended as a read-only class that is
-	 * provided by the manager to represent processes and as such the manager
-	 * exercises complete control over its attributes. The command, arguments and
-	 * log file name are accessible with the command(), arguments() and logFile()
-	 * methods.
+	 * The command, arguments and optional log file are set in the constructor from
+	 * the Preset object provided, and cannot later be modified - this is intended
+	 * as a read-only class that is provided by the application to represent processes
+	 * and as such the manager exercises complete control over its attributes. The
+	 * command, arguments and log file name are accessible with the command(),
+	 * arguments() and logFile() methods.
 	 *
 	 * The start() method starts the command. and the stop() method interrupts the
 	 * processing of the command. The actual QProcess can be retrieved with the
@@ -79,97 +82,175 @@ namespace Qync {
 	 */
 
 
-	Process::Process(const QString & cmd, const QStringList & args, const QString & logFile)
-	  : QObject(),
-		 m_process(nullptr),
-		 m_command(cmd),
-		 m_args(args),
-		 m_logFile(nullptr) {
-		m_process = new QProcess();
-		m_logFileName = logFile;
+	/**
+	 * \brief Create a new Process.
+	 *
+	 * \param preset is the preset from which to create the process.
+	 *
+	 * The Preset is neither owned nor consumed. The calling code retains
+	 * responsibility for its timely destruction.
+	 *
+	 * The rsync command to run is gathered directly from the application
+	 * preferences.
+	 */
+	Process::Process(const Preset * preset)
+	  : Process(qyncApp->preferences()->rsyncPath(), preset) {
 	}
 
 
+	/**
+	 * \brief Create a new Process.
+	 *
+	 * \param cmd is the path to the rsync command to run.
+	 * \param preset is the preset from which to create the process.
+	 *
+	 * The Preset is neither owned nor consumed. The calling code retains
+	 * responsibility for its timely destruction.
+	 */
 	Process::Process(const QString & cmd, const Preset * preset)
-	  : Process(cmd, QStringList(), QString()) {
+	  : QObject(),
+		 m_process(std::make_unique<QProcess>()),
+		 m_command(cmd) {
 		if(preset) {
 			m_logFileName = preset->logFile();
-			m_args = Process::rsyncArguments(preset);
+			m_args = rsyncArguments(preset);
 		}
 	}
 
 
-	Process::~Process(void) {
-		delete m_process;
-		m_process = nullptr;
-		disposeLogFile();
-	}
+	/**
+	 * \brief Destroy the Process.
+	 */
+	Process::~Process(void) = default;
 
 
+	/**
+	 * \brief Build a set of rsync arguments.
+	 *
+	 * \param preset is the preset from which to build the arguments.
+	 * \param forceOptions is a set of extra rsync arguments to add to the
+	 * returned list.
+	 *
+	 * Given a Preset object, this method will produce the set of
+	 * arguments for \b rsync that correstponds to the settings in the
+	 * preset. The list of arguments returned is suitable for use as
+	 * the \b args parameter for a call to QProcess::start();
+	 *
+	 * It is possible to force the use of certain \b rsync arguments using
+	 * the forceOptions parameter. Any options in this list are inserted
+	 * into the returned list, even if this means an argument appears in the
+	 * list more than once.
+	 *
+	 *\return A list of arguments.
+	 */
 	QStringList Process::rsyncArguments(const Preset * preset, const QStringList & forceOptions) {
+		if(!preset) {
+			qCritical() << __PRETTY_FUNCTION__ << "null Preset provided";
+			return {};
+		}
+
 		if(preset->source().isEmpty()) {
-			qDebug() << "source is empty";
-			return QStringList();
+			qCritical() << __PRETTY_FUNCTION__ << "Preset's source is empty";
+			return {};
 		}
 
 		if(preset->destination().isEmpty()) {
-			qDebug() << "destination is empty";
-			return QStringList();
+			qCritical() << __PRETTY_FUNCTION__ << "Preset's destination is empty";
+			return {};
 		}
 
 		QStringList args(forceOptions);
-		args << "--recursive"
-			  << "--progress"
-			  << "--verbose";
+		args.push_back("--recursive");
+		args.push_back("--progress");
+		args.push_back("--verbose");
 
 		/* basic settings */
-		if(preset->preserveTime())
-			args << "--times";
-		if(preset->preservePermissions())
-			args << "--perms";
-		if(preset->preserveOwner())
-			args << "--owner";
-		if(preset->preserveGroup())
-			args << "--group";
+		if(preset->preserveTime()) {
+			args.push_back("--times");
+		}
 
-		if(preset->windowsCompatability())
-			args << "--modify-window=1";
-		if(preset->honourDeletions())
-			args << "--delete";
+		if(preset->preservePermissions()) {
+			args.push_back("--perms");
+		}
+
+		if(preset->preserveOwner()) {
+			args.push_back("--owner");
+		}
+
+		if(preset->preserveGroup()) {
+			args.push_back("--group");
+		}
+
+		if(preset->windowsCompatability()) {
+			args.push_back("--modify-window=1");
+		}
+
+		if(preset->honourDeletions()) {
+			args.push_back("--delete");
+		}
 
 		/* advanced settings */
-		if(preset->alwaysCompareChecksums())
-			args << "--checksum";
-		if(preset->preserveDevices())
-			args << "--devices";
-		if(preset->keepPartialTransfers())
-			args << "--partial";
-		if(preset->copySymlinksAsSymlinks())
-			args << "--links";
-		if(preset->makeBackups())
-			args << "--backup";
+		if(preset->alwaysCompareChecksums()) {
+			args.push_back("--checksum");
+		}
 
-		if(preset->useTransferCompression())
-			args << "--compress";
-		if(preset->onlyUpdateExistingEntries())
-			args << "--existing";
-		if(preset->dontUpdateExistingEntries())
-			args << "--ignore-existing";
-		if(preset->dontMapUsersAndGroups())
-			args << "--numeric-ids";
-		if(preset->copyHardlinksAsHardlinks())
-			args << "--hard-links";
-		if(preset->showItemisedChanges())
-			args << "--itemize-changes";
+		if(preset->preserveDevices()) {
+			args.push_back("--devices");
+		}
+
+		if(preset->keepPartialTransfers()) {
+			args.push_back("--partial");
+		}
+
+		if(preset->copySymlinksAsSymlinks()) {
+			args.push_back("--links");
+		}
+
+		if(preset->makeBackups()) {
+			args.push_back("--backup");
+		}
+
+		if(preset->useTransferCompression()) {
+			args.push_back("--compress");
+		}
+
+		if(preset->onlyUpdateExistingEntries()) {
+			args.push_back("--existing");
+		}
+
+		if(preset->dontUpdateExistingEntries()) {
+			args.push_back("--ignore-existing");
+		}
+
+		if(preset->dontMapUsersAndGroups()) {
+			args.push_back("--numeric-ids");
+		}
+
+		if(preset->copyHardlinksAsHardlinks()) {
+			args.push_back("--hard-links");
+		}
+
+		if(preset->showItemisedChanges()) {
+			args.push_back("--itemize-changes");
+		}
 
 		/* source and dest */
-		args << preset->source();
-		args << preset->destination();
+		args.push_back(preset->source());
+		args.push_back(preset->destination());
 
 		return args;
 	}
 
 
+	/**
+	 * \brief Provides a default explanation of an exit code.
+	 *
+	 * \param code is the exit code to explain.
+	 *
+	 * The explanation will be a null string if the code is not valid.
+	 *
+	 * \return The explanation.
+	 */
 	QString Process::defaultExitCodeMessage(const Process::ExitCode & code) {
 		static QHash<Process::ExitCode, QString> s_messages;
 
@@ -200,45 +281,71 @@ namespace Qync {
 	}
 
 
-	QProcess * Process::process(void) {
-		return m_process;
-	}
+	/**
+	 * \fn Process::process(void)
+	 * \brief Retrieve the actual process object.
+	 *
+	 * The process object can be \b null if the process has yet to be
+	 * started. It usually remains non-null after the process has finished
+	 * but this is not guaranteed.
+	 *
+	 * \return The process.
+	 */
 
 
-	QString Process::command(void) const {
-		return m_command;
-	}
+	/**
+	 * \fn Process::command(void) const
+	 * \brief Retrieve the \b rsync program path.
+	 *
+	 * \return The \b rsync path.
+	 */
 
 
-	QStringList Process::arguments(void) const {
-		return m_args;
-	}
+	/**
+	 * \fn Process::arguments(void) const
+	 * \brief Retrieve the \b rsync arguments.
+	 *
+	 * \return The arguments.
+	 */
 
 
-	QString Process::logFile(void) const {
-		return m_logFileName;
-	}
+	/**
+	 * \fn Process::logFile(void) const
+	 * \brief Retrieve the output log file path.
+	 *
+	 * \return The output log file path.
+	 */
 
 
+	/**
+	 * \brief Start the process.
+	 *
+	 * Once the process has started, the started() signal will be emitted
+	 * and other progress and information signals will start to be emitted.
+	 */
 	void Process::start(void) {
 		Q_ASSERT(m_process);
 		m_process->start(m_command, m_args);
 
 		if(!m_logFileName.isEmpty()) {
-			m_logFile = new QFile(m_logFileName);
-			m_logFile->open(QIODevice::WriteOnly);
-
-			if(!m_logFile->isOpen())
-				disposeLogFile();
+			m_logFile.setFileName(m_logFileName);
+			m_logFile.open(QIODevice::WriteOnly);
 		}
 
-		m_stdoutConnection = connect(m_process, &QProcess::readyReadStandardOutput, this, &Process::parseStdout);
-		connect(m_process, &QProcess::readyReadStandardError, this, &Process::parseStderr);
-		connect(m_process, static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &Process::processFinished);
+		m_stdoutConnection = connect(m_process.get(), &QProcess::readyReadStandardOutput, this, &Process::parseStdout);
+		connect(m_process.get(), &QProcess::readyReadStandardError, this, &Process::parseStderr);
+		connect(m_process.get(), static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &Process::processFinished);
 		Q_EMIT started();
 	}
 
 
+	/**
+	 * \brief Attempt to stop the process.
+	 *
+	 * If the process has been started, this will attempt to interrupt it.
+	 * If the attempt is successful, the interrupted() signal will be
+	 * emitted. No error messages will be generated by a call to this slot.
+	 */
 	void Process::stop(void) {
 		Q_ASSERT(m_process);
 		if(m_process->state() != QProcess::NotRunning) {
@@ -263,8 +370,8 @@ namespace Qync {
 
 		QString data = m_process->readAllStandardOutput();
 
-		if(m_logFile && m_logFile->isOpen()) {
-			m_logFile->write(data.toUtf8());
+		if(m_logFile.isOpen()) {
+			m_logFile.write(data.toUtf8());
 		}
 
 		if(!data.isEmpty()) {
@@ -318,19 +425,9 @@ namespace Qync {
 	}
 
 
-	void Process::disposeLogFile(void) {
-		if(m_logFile) {
-			m_logFile->close();
-			delete m_logFile;
-			m_logFile = nullptr;
-		}
-	}
-
-
 	void Process::processFinished(void) {
 		Q_ASSERT(m_process);
-
-		disposeLogFile();
+		m_logFile.close();
 		ExitCode code = static_cast<ExitCode>(m_process->exitCode());
 		Q_EMIT finished(code);
 

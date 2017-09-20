@@ -15,15 +15,40 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>2</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
-     <widget class="QComboBox" name="presets"/>
+     <widget class="QComboBox" name="presets">
+      <property name="toolTip">
+       <string>Choose a preset from your saved set.</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QTabWidget" name="settingsTab">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Advanced synchronisation settings.&lt;/p&gt;&lt;p&gt;Changing these settings is only for users who are reasonably familiar with rsync.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="basicSettings">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Basic synchronisation settings.&lt;/p&gt;&lt;p&gt;The &lt;span style=&quot; font-style:italic;&quot;&gt;source&lt;/span&gt; and &lt;span style=&quot; font-style:italic;&quot;&gt;destination&lt;/span&gt; are required. The other settings here are optional, but are used often.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <attribute name="icon">
         <iconset theme="preferences-other">
          <normaloff>.</normaloff>.</iconset>
@@ -39,13 +64,23 @@
             <property name="text">
              <string>Source</string>
             </property>
+            <property name="buddy">
+             <cstring>source</cstring>
+            </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="source"/>
+           <widget class="QLineEdit" name="source">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The source for rsync. This is the file or directory that you wish to synchronise.&lt;/p&gt;&lt;p&gt;The path must contain a trailing &lt;span style=&quot; font-weight:600;&quot;&gt;/&lt;/span&gt; if it is a directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
           </item>
           <item row="0" column="2">
            <widget class="QToolButton" name="chooseSource">
+            <property name="toolTip">
+             <string>Choose an existing directory for the source.</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -60,13 +95,23 @@
             <property name="text">
              <string>Destination</string>
             </property>
+            <property name="buddy">
+             <cstring>destination</cstring>
+            </property>
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="destination"/>
+           <widget class="QLineEdit" name="destination">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The destination for rsync. This is where you wish to synchronise your files to.&lt;/p&gt;&lt;p&gt;The path must contain a trailing &lt;span style=&quot; font-weight:600;&quot;&gt;/&lt;/span&gt; if it is a directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
           </item>
           <item row="1" column="2">
            <widget class="QToolButton" name="chooseDestination">
+            <property name="toolTip">
+             <string>Choose an existing directory for the destination.</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -86,6 +131,9 @@
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
             <widget class="QCheckBox" name="preserveTime">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make sure destination files or directories have the same timestamps as their sources.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Time</string>
              </property>
@@ -93,6 +141,9 @@
            </item>
            <item row="0" column="1">
             <widget class="QCheckBox" name="preserveOwner">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make sure destination files or directories have the same owner as their sources.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;See also mapping of UID/GID values in &lt;/span&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Advanced Settings&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Owner</string>
              </property>
@@ -100,6 +151,9 @@
            </item>
            <item row="1" column="0">
             <widget class="QCheckBox" name="preservePermissions">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make sure destination files or directories have the same access permissions as their sources.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Permissions</string>
              </property>
@@ -107,6 +161,9 @@
            </item>
            <item row="1" column="1">
             <widget class="QCheckBox" name="preserveGroup">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make sure destination files or directories have the same group as their sources.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;See also mapping of UID/GID values in &lt;/span&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;Advanced Settings&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Group</string>
              </property>
@@ -126,6 +183,9 @@
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QCheckBox" name="windowsCompatible">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Windows &lt;span style=&quot; font-style:italic;&quot;&gt;FAT&lt;/span&gt; filesystems only store file modification times to a precision of 2s. Using this setting will force rsync to consider two entries to have been modified at the same time if their modification times differ by less than 2s.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Windows compatible</string>
              </property>
@@ -133,6 +193,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="honourDeletions">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Using this setting will ask rsync to remove files from the destination that have been removed from the source.&lt;/p&gt;&lt;p&gt;Only files deleted from within the filesystem tree specified for the source will be affected on the destination (i.e. destination files that are in a different filesystem tree will not be affected).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="text">
               <string>Honour deletions</string>
              </property>
@@ -166,72 +229,128 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
+         <layout class="QHBoxLayout" name="includeLayout" stretch="0,1">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="includeLabel">
+            <property name="text">
+             <string>Synchronise</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="includeInSynchronisation">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choose what to synchronise:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Everything&lt;/span&gt; means everything from the source is synchronised with the destination. Files in the source that do not exist at the destination will be created, and files that already exist will be updated.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Only files and directories already present at the destination&lt;/span&gt; means any file in the source that is not already present in the destination will be ignored, but any files in the source that are already present in the destination will be updated in the destination&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Only files and directories that are not present at the destination&lt;/span&gt; means any file in the source that is already present in the destination will be ignored, but any files in the source that are not present in the destination will be copied to the destination&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>everything</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>only files and directories already present at the destination</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>only files and directories that are not present at the destination</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QGridLayout" name="advancedSettingsGrid">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="alwaysCompareChecksums">
-            <property name="text">
-             <string>Always compare checksums</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="compressInTransit">
-            <property name="text">
-             <string>Compress files in transit</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="preserveDevices">
-            <property name="text">
-             <string>Preserve devices</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QCheckBox" name="onlyUpdateExisting">
-            <property name="text">
-             <string>Only update existing files</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="keepPartialFiles">
-            <property name="text">
-             <string>Keep partially transferred files</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="dontMapUidGid">
-            <property name="text">
-             <string>Don't map UID/GID values</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QCheckBox" name="symlinksAsSymlinks">
-            <property name="text">
-             <string>Copy symlinks as synlinks</string>
-            </property>
-           </widget>
-          </item>
           <item row="3" column="1">
            <widget class="QCheckBox" name="hardlinksAsHardlinks">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Source files and directories that are hard links will be created as hard links at the destination.&lt;/p&gt;&lt;p&gt;If this option is not selected, source files and directories that are hard links will be created as regular (independent) files and directories at the destination. If hard links &lt;span style=&quot; font-style:italic;&quot;&gt;are&lt;/span&gt; preserved, the target of the link will remain exactly as it was in the source. This means that if the target of the link is absolute, or is relative but points to a target outside the source tree, the hard link may become invalid.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Copy hardlinks as hardlinks</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="dontMapUidGid">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When transferring files, just use the numeric user and group IDs for the destination files.&lt;/p&gt;&lt;p&gt;If this is not set, rsync will use the user and group names of the source files to try to map to the same user and group on the destination filesystem (i.e. it will try to find the user &amp;quot;john&amp;quot; on the destination for a file on the source owned by &amp;quot;john&amp;quot;, even if they have different UIDs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Don't map UID/GID values</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="preserveDevices">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Source files that are special device files will be created as special device files at the destination.&lt;/p&gt;&lt;p&gt;If this option is not selected, source files that are device files will be created as regular files at the destination.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Preserve devices</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="compressInTransit">
+            <property name="toolTip">
+             <string>In transit, file data will be compressed to save bandwidth.</string>
+            </property>
+            <property name="text">
+             <string>Compress files in transit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="symlinksAsSymlinks">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Source files and directories that are symbolic links will be created as symbolic links at the destination.&lt;/p&gt;&lt;p&gt;If this option is not selected, source files and directories that are symbolic links will be created as regular (independent) files and directories at the destination. If symbolic links &lt;span style=&quot; font-style:italic;&quot;&gt;are&lt;/span&gt; preserved, the target of the link will remain exactly as it was in the source. This means that if the target of the link is absolute, or is relative but points to a target outside the source tree, the symbolic link may become invalid.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Copy symlinks as synlinks</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
            <widget class="QCheckBox" name="makeBackups">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make backups of destination files that are overwritten.&lt;/p&gt;&lt;p&gt;Any file at the destination that is overwritten by a file from the source (or is removed as a result of the absence of the equivalent file at the source) is first backed up. The backup will have the same name as the original file with &lt;span style=&quot; font-weight:600;&quot;&gt;~&lt;/span&gt; appended.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Make backups</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="alwaysCompareChecksums">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the checksum of source and desination files rather than their size and modification time to decide which files need to be updated.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Always compare checksums</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="keepPartialFiles">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Files that are only partially transferred are usually deleted. Enabling this option means that files only partially transferred to the destination are not removed, which should make subsequent synchronisations faster.&lt;/p&gt;&lt;p&gt;Note that retaining partial files can be problematic if the destination is intended to be used &lt;span style=&quot; font-style:italic;&quot;&gt;as-live&lt;/span&gt; rather than as a backup.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Keep partially transferred files</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
            <widget class="QCheckBox" name="itemisedChanges">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show details about the specific changes being made to each file or directory.&lt;/p&gt;&lt;p&gt;You will only see this content if you expand the &lt;span style=&quot; font-style:italic;&quot;&gt;Details&lt;/span&gt; section in the progress dialogue for the synchronisation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Show itemised changes</string>
             </property>
@@ -246,13 +365,23 @@
             <property name="text">
              <string>Log file</string>
             </property>
+            <property name="buddy">
+             <cstring>logFile</cstring>
+            </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="logFile"/>
+           <widget class="QLineEdit" name="logFile">
+            <property name="placeholderText">
+             <string>path to the log file to create.</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QToolButton" name="chooseLogFile">
+            <property name="toolTip">
+             <string>Choose the log file.</string>
+            </property>
             <property name="text">
              <string/>
             </property>
@@ -374,10 +503,16 @@
    <property name="text">
     <string>About</string>
    </property>
+   <property name="toolTip">
+    <string>Show details about Qync.</string>
+   </property>
   </action>
   <action name="actionAboutRsync">
    <property name="text">
     <string>About rsync</string>
+   </property>
+   <property name="toolTip">
+    <string>Show details about rsync.</string>
    </property>
   </action>
   <action name="actionSave">
@@ -388,6 +523,9 @@
    <property name="text">
     <string>Save</string>
    </property>
+   <property name="toolTip">
+    <string>Save the current settings to the selected preset.</string>
+   </property>
   </action>
   <action name="actionSaveAs">
    <property name="icon">
@@ -396,6 +534,9 @@
    </property>
    <property name="text">
     <string>Save as</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the current settings as a new preset with a new name.</string>
    </property>
   </action>
   <action name="actionRemove">
@@ -406,15 +547,32 @@
    <property name="text">
     <string>Remove</string>
    </property>
+   <property name="toolTip">
+    <string>Remove the selected preset.</string>
+   </property>
   </action>
   <action name="actionImport">
+   <property name="icon">
+    <iconset theme="document-import" resource="../resources/icons.qrc">
+     <normaloff>:/icons/menu/presets/import</normaloff>:/icons/menu/presets/import</iconset>
+   </property>
    <property name="text">
     <string>Import</string>
    </property>
+   <property name="toolTip">
+    <string>Load a preset from a previously exported file.</string>
+   </property>
   </action>
   <action name="actionExport">
+   <property name="icon">
+    <iconset theme="document-export" resource="../resources/icons.qrc">
+     <normaloff>:/icons/menu/presets/export</normaloff>:/icons/menu/presets/export</iconset>
+   </property>
    <property name="text">
     <string>Export</string>
+   </property>
+   <property name="toolTip">
+    <string>Save a preset to a separate file.</string>
    </property>
   </action>
   <action name="actionChooseSource">
@@ -425,6 +583,9 @@
    <property name="text">
     <string>Choose source folder</string>
    </property>
+   <property name="toolTip">
+    <string>Choose source folder.</string>
+   </property>
   </action>
   <action name="actionChooseDestination">
    <property name="icon">
@@ -434,10 +595,16 @@
    <property name="text">
     <string>Choose destination folder</string>
    </property>
+   <property name="toolTip">
+    <string>Choose destination folder.</string>
+   </property>
   </action>
   <action name="actionSwitchSourceDestination">
    <property name="text">
     <string>Switch source and destination</string>
+   </property>
+   <property name="toolTip">
+    <string>Switch source and destination.</string>
    </property>
   </action>
   <action name="actionSimulate">
@@ -448,6 +615,9 @@
    <property name="text">
     <string>Simulate</string>
    </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Perform a dry-run (simulation) of synchronisation using the current settings.&lt;/p&gt;&lt;p&gt;This can be useful to test settings to see if they are viable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
   </action>
   <action name="actionSync">
    <property name="icon">
@@ -456,6 +626,9 @@
    </property>
    <property name="text">
     <string>Synchronise</string>
+   </property>
+   <property name="toolTip">
+    <string>Run rsync with the current settings.</string>
    </property>
   </action>
   <action name="actionPreferences">
@@ -466,6 +639,9 @@
    <property name="text">
     <string>Preferences</string>
    </property>
+   <property name="toolTip">
+    <string>Edit the application preferences.</string>
+   </property>
   </action>
   <action name="actionQuit">
    <property name="icon">
@@ -475,6 +651,9 @@
    <property name="text">
     <string>Quit</string>
    </property>
+   <property name="toolTip">
+    <string>Eqit Qync.</string>
+   </property>
   </action>
   <action name="actionNew">
    <property name="icon">
@@ -483,6 +662,9 @@
    </property>
    <property name="text">
     <string>New</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new preset.</string>
    </property>
   </action>
  </widget>
@@ -513,8 +695,8 @@
    <slot>chooseLogFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>683</x>
-     <y>267</y>
+     <x>688</x>
+     <y>302</y>
     </hint>
     <hint type="destinationlabel">
      <x>706</x>
@@ -654,7 +836,7 @@
    <sender>actionNew</sender>
    <signal>triggered()</signal>
    <receiver>Qync::MainWindow</receiver>
-   <slot>addNewPreset()</slot>
+   <slot>newPreset()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -702,7 +884,7 @@
    <sender>actionRemove</sender>
    <signal>triggered()</signal>
    <receiver>Qync::MainWindow</receiver>
-   <slot>removePreset()</slot>
+   <slot>removeCurrentPreset()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -809,11 +991,12 @@
   <slot>about()</slot>
   <slot>aboutQt()</slot>
   <slot>aboutRsync()</slot>
-  <slot>addNewPreset()</slot>
+  <slot>newPreset()</slot>
   <slot>removeCurrentPreset()</slot>
   <slot>saveSettingsToCurrentPreset()</slot>
   <slot>newPresetFromSettings()</slot>
   <slot>simulate()</slot>
   <slot>synchronise()</slot>
+  <slot>onIncludeInSynchronisationChanged(int)</slot>
  </slots>
 </ui>

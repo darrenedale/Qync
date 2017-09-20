@@ -62,8 +62,8 @@ namespace Qync {
 	 * \param process is the process to monitor.
 	 * \param parent is the parent widget.
 	 *
-	 * The provided process is not owned. The caller retains ownership and
-	 * responsibility for its timely deletion.
+	 * The provided process is owned and will be deleted when the dialogue is
+	 * destroyed.
 	 */
 	ProcessDialogue::ProcessDialogue(Process * process, QWidget * parent)
 	  : QDialog(parent),
@@ -71,23 +71,21 @@ namespace Qync {
 		 m_ui{new Ui::ProcessDialogue},
 		 m_saveButton{nullptr},
 		 m_abortButton{nullptr} {
-		qDebug() << __PRETTY_FUNCTION__;
 		m_ui->setupUi(this);
 
 		/* keep refs to these from the UI because we dis/enable them at various points */
 		m_saveButton = m_ui->controls->button(QDialogButtonBox::Save);
 		m_abortButton = m_ui->controls->button(QDialogButtonBox::Abort);
 
-		connect(m_process, &Process::started, this, &ProcessDialogue::onProcessStarted);
-		connect(m_process, static_cast<void (Process::*)(QString)>(&Process::finished), this, &ProcessDialogue::onProcessFinished);
-		connect(m_process, &Process::interrupted, this, &ProcessDialogue::onProcessInterrupted);
-		connect(m_process, &Process::failed, this, &ProcessDialogue::onProcessFailed);
-		connect(m_process, &Process::itemProgress, this, &ProcessDialogue::updateItemProgress);
-		connect(m_process, &Process::overallProgress, this, &ProcessDialogue::updateOverallProgress);
-		connect(m_process, &Process::newItemStarted, this, &ProcessDialogue::updateItemInProgress);
-		connect(m_process, &Process::error, this, &ProcessDialogue::showError);
+		connect(m_process.get(), &Process::started, this, &ProcessDialogue::onProcessStarted);
+		connect(m_process.get(), static_cast<void (Process::*)(QString)>(&Process::finished), this, &ProcessDialogue::onProcessFinished);
+		connect(m_process.get(), &Process::interrupted, this, &ProcessDialogue::onProcessInterrupted);
+		connect(m_process.get(), &Process::failed, this, &ProcessDialogue::onProcessFailed);
+		connect(m_process.get(), &Process::itemProgress, this, &ProcessDialogue::updateItemProgress);
+		connect(m_process.get(), &Process::overallProgress, this, &ProcessDialogue::updateOverallProgress);
+		connect(m_process.get(), &Process::newItemStarted, this, &ProcessDialogue::updateItemInProgress);
+		connect(m_process.get(), &Process::error, this, &ProcessDialogue::showError);
 		connect(m_ui->detailsButton, &QPushButton::clicked, this, &ProcessDialogue::toggleDetailedText);
-		qDebug() << __PRETTY_FUNCTION__ << "done";
 	}
 
 
@@ -99,7 +97,6 @@ namespace Qync {
 		if(m_process) {
 			m_process->disconnect(this);
 			m_ui->detailsButton->disconnect(this);
-			delete m_process;
 		}
 
 		m_process = nullptr;

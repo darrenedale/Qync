@@ -7,11 +7,10 @@
  * \brief Declaration of the Manager class.
  *
  * \dep
- * - QObject
+ * - memory
+ * - QApplication
  * - QList
  * - QString
- * - QStringList
- * - QProcess
  */
 
 #ifndef QYNC_APPLICATION_H
@@ -22,8 +21,6 @@
 #include <QApplication>
 #include <QList>
 #include <QString>
-#include <QStringList>
-#include <QProcess>
 
 namespace Qync {
 
@@ -36,269 +33,41 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		/**
-		 * \brief Create a new manager.
-		 */
 		Application(int & argc, char ** argv);
-
-		/**
-		 * \brief Destroy the manager.
-		 */
 		~Application(void);
 
-		/**
-		 * \brief Provides the path to the configuration directory.
-		 *
-		 * The configuration directory is the directory where components in
-		 * the application can store their configuration files.
-		 *
-		 * \return The configuration directory path.
-		 */
-		static QString configurationDirectoryPath(void);
+		static QString configurationPath(void);
+		static QString presetsPath(void);
 
-		/**
-		 * \brief Get an explanation of what caused the last failed operation.
-		 *
-		 * The description is suitable for presentation to the end user. It is
-		 * only valid immediately after an operation failed. Any subsequent
-		 * successful operations do not necessarily reset the last error so
-		 * you may not rely on the return value of this method being an empty or
-		 * null string as an indicator of success or failure. You must always
-		 * check the return values of method calls if you are interested in
-		 * their success or otherwise.
-		 *
-		 * \return An explanation of the cause for the last error.
-		 */
 		QString lastError(void) const;
-
-		/**
-		 * \brief Get the version text of the rsync binary.
-		 *
-		 * The version text is the text output when the command \b rsync
-		 * \b --version is issued.
-		 *
-		 * \return The version text, or a null string if the rsync binary is
-		 * not valid.
-		 */
 		QString rsyncVersionText(void);
 
-		/**
-		 * \brief Get the application preferences.
-		 *
-		 * \return the application preferences.
-		 */
 		const Preferences * preferences(void) const;
-
-		/**
-		 * \brief Set the application preferences.
-		 *
-		 * \param prefs is the new set of application preferences.
-		 *
-		 * If the preferences are successfully set, the preferencesChanged()
-		 * signal is emitted. On success, the preferences object passed to this
-		 * is consumed. On failure, it is not.
-		 *
-		 * \return \b true if the preferences were set, \b false otherwise.
-		 */
 		bool setPreferences(Preferences * prefs);
 
-		/**
-		 * \brief Get the number of presets stored in the manager.
-		 *
-		 * \return The number of presets.
-		 */
-		int presetCount(void) const;
+		inline int presetCount(void) const {
+			return m_presets.size();
+		}
 
-		/**
-		  * \brief Retrieve the presets stored in the manager.
-		  *
-		  * The pointers in the set returned are still owned by the manager.
-		  * Your code may not delete any of them.
-		  *
-		  * \return the presets (or an empty set if the manager does not have
-		  * any presets stored.
-		  */
-		QList<Preset *> presets(void) const;
+		inline const QList<Preset *> presets(void) const {
+			return m_presets;
+		}
 
-		/**
-		  * \brief Retrieve an indexed preset from the manager.
-		  *
-		  * \param index is the index of the preset to retrieve.
-		  *
-		  * Indices are 0-based. If the index is found to be out of bounds,
-		  * a null pointer will be returned.
-		  *
-		  * The pointer returned is still owned by the manager. Your code
-		  * may not delete it.
-		  *
-		  * \return the preset at the index provided, or \b null if the
-		  * index is out of bounds.
-		  */
 		Preset * preset(int index) const;
-
-		/**
-		  * \brief Remove an indexed preset from the collection stored in the
-		  * manager.
-		  *
-		  * \param index is index of the preset to remove.
-		  *
-		  * Indices are 0-based. If the index is found to be out of bounds,
-		  * no action will be taken.
-		  *
-		  * If the index is within bounds the preset at that index is removed
-		  * from the collection and deleted.
-		  *
-		  * If this method returns \b true, one or more pointers in a
-		  * previously retrieved set from presets() is invalid, and existing
-		  * indices may not be valid. For this reason, all presets retrieved
-		  * from the manager prior to a successful call to this method must be
-		  * considered invalid.
-		  *
-		  * \return \b true if the preset was removed from the collection,
-		  * \b false otherwise.
-		  */
 		bool removePreset(int index);
-
-		/**
-		  * \brief Remove a known preset from the collection stored in the
-		  * manager.
-		  *
-		  * \param preset is the preset to remove.
-		  *
-		  * If the preset is in the collection, it is removed and deleted. If
-		  * not, it is untouched. If this method returns \b true the pointer
-		  * passed in is no longer valid.
-		  *
-		  * If this method returns \b true, the pointer passed in is no longer
-		  * valid, along with one or more pointers in any previously retrieved
-		  * set from presets(), and existing indices may not be valid. For this
-		  * reason, all presets retrieved from the manager prior to a successful
-		  * call to this method must be considered invalid.
-		  *
-		  * \return \b true if the preset was removed from the collection,
-		  * \b false otherwise.
-		  */
 		bool removePreset(Preset * preset);
-
-		/**
-		  * \brief Insert a preset into the collection stored in the manager.
-		  *
-		  * \param preset is the preset to add.
-		  * \param index is the index at which to add it.
-		  *
-		  * Indices are 0-based. If an index is found to be out of bounds,
-		  * the preset will be added to the end of the collection.
-		  *
-		  * The manager takes ownership of the preset and will delete it at
-		  * the appropriate time.
-		  *
-		  * \return \b \c true if the preset was added, \b \c false otherwise.
-		  */
 		bool insertPreset(Preset * preset, int index = -1);
 
-		/**
-		  * \brief Add a preset to the end of the collection stored in the
-		  * manager.
-		  *
-		  * \param preset is the preset to add.
-		  *
-		  * The manager takes ownership of the preset and will delete it at
-		  * the appropriate time.
-		  *
-		  * \return \b \c true if the preset was added, \b \c false otherwise.
-		  */
-		bool addPreset(Preset * preset);
+		inline bool addPreset(Preset * preset) {
+			return insertPreset(preset, -1);
+		}
 
-		/**
-		  * \brief Remove all presets stored in the manager.
-		  *
-		  * All presets will be removed and the manager will end up containing
-		  * no presets. All presets that were contained in the manager before
-		  * the call will be deleted, so any pointers to presets retrieved using
-		  * preset() or presets() will be invalid.
-		  */
 		void clearPresets(void);
 
-		/**
-		 * \brief Run a simulation of a preset.
-		 *
-		 * \param i is the index of the preset to simulate.
-		 *
-		 * The preset identified by its index is used to create a QyncProcess
-		 * object that will simulate the preset. A simulation is a dry-run of
-		 * rsync that performs all operations set up in the preset without
-		 * actually modifying anything on disk or on a remote server.
-		 *
-		 * The process created is released by the manager. The calling code is
-		 * responsible for its management, including deleting it when it is no
-		 * longer required.
-		 *
-		 * If the index is out of bounds, \b null will be returned.
-		 *
-		 * \return A pointer to a process to simulate the preset, or a \b null
-		 * pointer if the preset cannot be simulated.
-		 */
 		Process * simulate(int i) const;
-
-		/**
-		 * \brief Run a simulation of a preset.
-		 *
-		 * \param preset is the preset to simulate.
-		 *
-		 * The preset need not be one stored in the manager. It is used to
-		 * create a QyncProcess object that will simulate the preset. A
-		 * simulation is a dry-run of \b rsync that performs all operations set
-		 * up in the preset without actually modifying anything on disk or on a
-		 * remote server.
-		 *
-		 * The process created is released by the manager. The calling code is
-		 * responsible for its management, including deleting it when it is no
-		 * longer required. Similarly, the preset passed in is not consumed by
-		 * the manager and it is up to its creator to ensure it is deleted
-		 * at the appropriate time.
-		 *
-		 * \return A pointer to a process to simulate the preset, or a \b null
-		 * pointer if the preset cannot be simulated.
-		 */
 		Process * simulate(const Preset * preset) const;
-
-		/**
-		 * \brief Execute of a preset.
-		 *
-		 * \param i is the index of the preset to execute.
-		 *
-		 * The preset identified by its index is used to create a QyncProcess
-		 * object that will execute the preset.
-		 *
-		 * The process created is released by the manager. The calling code is
-		 * responsible for its management, including deleting it when it is no
-		 * longer required.
-		 *
-		 * If the index is out of bounds, \b null will be returned.
-		 *
-		 * \return A pointer to a process to execute the preset, or a \b null
-		 * pointer if the preset cannot be executed.
-		 */
-		Process * execute(int i) const;
-
-		/**
-		 * \brief Execute a preset.
-		 *
-		 * \param preset is the preset to execute.
-		 *
-		 * The preset need not be one stored in the manager. It is used to
-		 * create a QyncProcess object that will execute the preset.
-		 *
-		 * The process created is released by the manager. The calling code is
-		 * responsible for its management, including deleting it when it is no
-		 * longer required. Similarly, the preset passed in is not consumed by
-		 * the manager and it is up to its creator to ensure it is deleted
-		 * at the appropriate time.
-		 *
-		 * \return A pointer to a process to execute the preset, or a \b null
-		 * pointer if the preset cannot be executed.
-		 */
-		Process * execute(const Preset * preset) const;
+		Process * synchronise(int i) const;
+		Process * synchronise(const Preset * preset) const;
 
 	public Q_SLOTS:
 		/**
@@ -396,6 +165,7 @@ namespace Qync {
 	private:
 		static QString s_rsyncVersionText;
 		static QString s_configPath;
+		static QString s_presetsPath;
 
 		std::unique_ptr<Preferences> m_prefs;
 		mutable QString m_lastError;

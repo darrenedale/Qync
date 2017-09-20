@@ -27,6 +27,8 @@
  * - functions.h
  *
  * \todo use QIcon::fromTheme() wherever possible
+ * \todo convert includeInSynchronisation in .ui file to a custom subclass of
+ * QComboBox
  */
 
 #include "mainwindow.h"
@@ -118,6 +120,12 @@ namespace Qync {
 	 */
 
 
+	/* indices of items in includeInSynchronisation combo */
+	const int MainWindow::UpdateEverything = 0;
+	const int MainWindow::OnlyUpdateExisting = 1;
+	const int MainWindow::DontUpdateExisting = 2;
+
+
 	/**
 	 * \brief Create a new QyncMainWindow.
 	 *
@@ -139,7 +147,7 @@ namespace Qync {
 		setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
 
-		GuiPreferences * newPrefs = new GuiPreferences(Application::configurationDirectoryPath() + "guipreferences");
+		GuiPreferences * newPrefs = new GuiPreferences(Application::configurationPath() + "/guipreferences");
 		qyncApp->setPreferences(newPrefs);
 
 		//		createWidgets();
@@ -158,226 +166,14 @@ namespace Qync {
 	MainWindow::~MainWindow(void) = default;
 
 
-	//	void MainWindow::createWidgets(void) {
-	//		static bool done = false;
-
-	//		if(!done) {
-	//			done = true;
-	//			QLabel * myLabel;
-	//			m_preset = new QComboBox();
-	//			m_ui->presets->setMinimumWidth(150);
-	//			m_ui->presets->setToolTip(tr("Choose a preset from your saved set."));
-	//			connect(m_preset, SIGNAL(currentIndexChanged(int)), this, SLOT(showPreset(int)));
-
-	//			m_preserveTime = new QCheckBox(tr("Time"));
-	//			m_preservePerms = new QCheckBox(tr("Permissions"));
-	//			m_preserveOwner = new QCheckBox(tr("Owner"));
-	//			m_preserveGroup = new QCheckBox(tr("Group"));
-
-	//			m_ui->preserveTime->setToolTip(tr("Make sure destination files or directories have the same timestamps as their sources."));
-	//			m_ui->preservePermissions->setToolTip(tr("Make sure destination files or directories have the same access permissions as their sources."));
-	//			m_ui->preserveOwner->setToolTip(tr("Make sure destination files or directories have the same owner as their sources. (See also mapping of UID/GID values in Advanced Settings.)"));
-	//			m_ui->preserveGroup->setToolTip(tr("Make sure destination files or directories have the same group as their sources. (See also mapping of UID/GID values in Advanced Settings.)"));
-
-	//			m_windowsCompatible = new QCheckBox(tr("Windows Compatible"));
-	//			m_deleteOnServer = new QCheckBox(tr("Honour Deletions"));
-
-	//			m_ui->windowsCompatible->setToolTip(tr("Windows FAT filesystems only store file modification times to a precision of 2s. Using this setting will force rsync to consider two entries to have been modified at the same time if their modification times differ by less than 2s."));
-	//			m_ui->honourDeletions->setToolTip(tr("Using this setting will ask rsync to remove files from the destination that have been removed from the source. Only files deleted from within the source tree specified for the source will be affected on the destination."));
-
-	//			m_alwaysChecksum = new QCheckBox(tr("Always compare checksums"));
-	//			m_preserveDevices = new QCheckBox(tr("Preserve devices"));
-	//			m_keepParitalTransfers = new QCheckBox(tr("Keep partially transferred files"));
-	//			m_symlinksAsSymlinks = new QCheckBox(tr("Copy symlinks as symlinks"));
-	//			m_makeBackups = new QCheckBox(tr("Make backups"));
-
-	//			m_compressInTransit = new QCheckBox(tr("Compress files in transit"));
-	//			m_onlyUpdateExisting = new QCheckBox(tr("Only update existing files"));
-	//			m_dontUpdateExisting = new QCheckBox(tr("Don't update existing files"));
-	//			m_dontMapUidGid = new QCheckBox(tr("Don't map UID/GID values"));
-	//			m_copyHardlinksAsHardlinks = new QCheckBox(tr("Copy hardlinks as hardlinks"));
-	//			m_showItemisedChanges = new QCheckBox(tr("Show itemised changes"));
-
-	//			m_ui->alwaysCompareChecksums->setToolTip(tr("Use the checksum of source and desination files rather than their size and modification time to decide which files need to be updated."));
-	//			m_ui->preserveDevices->setToolTip(tr("Source files that are special device files will be created as special device files at the destination. If this option is not selected, source files that are device files will be created as regular files at the destination."));
-	//			m_ui->keepPartialFiles->setToolTip(tr(""));
-	//			m_ui->symlinksAsSymlinks->setToolTip(tr("Source files and directories that are symbolic links will be created as symbolic links at the destination.\n\nIf this option is not selected, source files and directories that are symbolic links will be created as regular files at the destination."));
-	//			m_ui->makeBackups->setToolTip(tr("Make sure destination files or directories have the same timestamps as their sources."));
-
-	//			m_ui->compressInTransit->setToolTip(tr("In transit, file data will be compressed to save bandwidth."));
-	//			m_ui->onlyUpdateExisting->setToolTip(tr("Only files and directories that already exist at the destination will be updated; new source files and directories will not be created at the destination."));
-	//			m_dontUpdateExisting->setToolTip(tr("Files and directories that already exist at the destination will be ignored; only new source files and directories will be created at the destination."));
-	//			m_ui->dontMapUidGid->setToolTip(tr("Use the source UID and GID values for destination files and directories rather than attempting to find the UID and GID of a matching named user/group on the destination."));
-	//			m_ui->hardlinksAsHardlinks->setToolTip(tr("Source files that are hard links will be created as hard links at the destination.\n\nIf this option is not selected, source files that are hard links will be created as regular files at the destination."));
-	//			m_ui->itemisedChanges->setToolTip(tr(""));
-	//			connect(m_onlyUpdateExisting, SIGNAL(toggled(bool)), this, SLOT(syncIgnoreExistingToOnlyExisting()));
-	//			connect(m_dontUpdateExisting, SIGNAL(toggled(bool)), this, SLOT(syncOnlyExistingToIgnoreExisting()));
-
-	//			m_source = new QLineEdit();
-	//			m_ui->source->setToolTip(tr("The source for rsync. It must contain a trailing <b>/</b> if it is a directory."));
-	//			m_dest = new QLineEdit();
-	//			m_ui->destination->setToolTip(tr("The destination for rsync. It must contain a trailing <b>/</b> if it is a directory."));
-
-	//			m_chooseSourceDir = new QToolButton();
-	//			m_chooseDestinationDir = new QToolButton();
-	//			m_chooseSourceDir->setIcon(QIcon(":/icons/buttons/choosedir"));
-	//			m_chooseDestinationDir->setIcon(QIcon(":/icons/buttons/choosedir"));
-	//			m_chooseSourceDir->setToolTip(tr("Choose an existing directory for the source."));
-	//			m_chooseDestinationDir->setToolTip(tr("Choose an existing directory for the destination."));
-	//			connect(m_chooseSourceDir, SIGNAL(clicked()), this, SLOT(chooseSourceDirectory()));
-	//			connect(m_chooseDestinationDir, SIGNAL(clicked()), this, SLOT(chooseDestinationDirectory()));
-
-	//			m_chooseSourceFile = new QToolButton();
-	//			m_chooseDestinationFile = new QToolButton();
-	//			m_chooseSourceFile->setIcon(QIcon(":/icons/buttons/choosefile"));
-	//			m_chooseDestinationFile->setIcon(QIcon(":/icons/buttons/choosefile"));
-	//			m_chooseSourceFile->setToolTip(tr("Choose an existing file for the source."));
-	//			m_chooseDestinationFile->setToolTip(tr("Choose an existing file for the destination."));
-	//			connect(m_chooseSourceFile, SIGNAL(clicked()), this, SLOT(chooseSourceFile()));
-	//			connect(m_chooseDestinationFile, SIGNAL(clicked()), this, SLOT(chooseDestinationFile()));
-
-	//			m_logFile = new QLineEdit();
-	//			m_chooseLogFile = new QToolButton();
-	//			m_chooseLogFile->setIcon(QIcon(":/icons/buttons/choosefile"));
-	//			m_chooseLogFile->setToolTip(tr("Choose the log file."));
-	//			connect(m_chooseLogFile, SIGNAL(clicked()), this, SLOT(chooseLogFile()));
-
-	//			m_ui->presetsToolbar = new QToolBar("Presets");
-	//			m_ui->presetsToolbar->addWidget(myLabel = new QLabel(tr("Presets")));
-	//			myLabel->setBuddy(m_preset);
-	//			m_ui->presetsToolbar->addWidget(m_preset);
-
-	//			m_savePresetAction = m_ui->presetsToolbar->addAction(QIcon::fromTheme("document-save", QIcon(":icons/toolbar/save")), "Save", this, SLOT(saveSettingsToCurrentPreset()));
-	//			m_savePresetAction->setToolTip(tr("Save the current settings to the selected preset."));
-
-	//			m_savePresetAsAction = m_ui->presetsToolbar->addAction(QIcon::fromTheme("document-save-as", QIcon(":icons/toolbar/saveas")), "Save As", this, SLOT(newPresetFromSettings()));
-	//			m_savePresetAsAction->setToolTip(tr("Save the current settings as a new preset."));
-
-	//			m_removePresetAction = m_ui->presetsToolbar->addAction(QIcon::fromTheme("user-trash", QIcon(":icons/toolbar/remove")), "Remove", this, SLOT(removeCurrentPreset()));
-	//			m_removePresetAction->setToolTip(tr("Remove the selected preset."));
-
-	//			addToolBar(m_ui->presetsToolbar);
-
-	//			m_ui->synchroniseToolbar = new QToolBar("Synchronise");
-
-	//			m_menuFileSimulate = m_ui->synchroniseToolbar->addAction(QIcon::fromTheme("document-edit-verify", QIcon(":icons/toolbar/simulate")), "Simulate", this, SLOT(simulate()));
-	//			m_menuFileSimulate->setToolTip(tr("Perform a dry-run (simulation) of the current settings."));
-
-	//			m_menuFileExecute = m_ui->synchroniseToolbar->addAction(QIcon::fromTheme("system-run", QIcon(":icons/toolbar/execute")), "Sync", this, SLOT(execute()));
-	//			m_menuFileExecute->setToolTip(tr("Run rsync with the current settings."));
-
-	//			addToolBar(m_ui->synchroniseToolbar);
-
-	//			QMenu * menu = new QMenu(tr("File"));
-	//			m_menuFileChooseSource = menu->addAction(QIcon::fromTheme("folder", QIcon(":icons/menu/file/choosedir")), tr("Choose source folder"), this, SLOT(chooseSourceDirectory()));
-	//			m_menuFileChooseDest = menu->addAction(QIcon::fromTheme("folder", QIcon(":icons/menu/file/choosedir")), tr("Choose destination folder"), this, SLOT(chooseDestinationDirectory()));
-	//			m_menuFileSwitchSourceAndDest = menu->addAction(QIcon::fromTheme("", QIcon(":icons/menu/file/switch")), tr("Switch source and destination"), this, SLOT(switchSourceAndDestination()));
-	//			menu->addSeparator();
-	//			menu->addAction(m_menuFileSimulate);
-	//			menu->addAction(m_menuFileExecute);
-	//			menu->addSeparator();
-	//			menu->addAction(QIcon::fromTheme("configure", QIcon(":icons/menu/file/preferences")), tr("Preferences"), this, SLOT(showPreferences()));
-	//			menu->addSeparator();
-	//			m_menuFileQuit = menu->addAction(QIcon::fromTheme("application-exit", QIcon(":icons/menu/file/quit")), tr("Quit"), this, SLOT(close()));
-	//			m_menuFileQuit->setMenuRole(QAction::QuitRole); /* OSX only */
-	//			menuBar()->addMenu(menu);
-
-	//			menu = new QMenu(tr("Presets"));
-	//			m_ui->menuMyPresets = new QMenu(tr("My Presets"));
-	//			menu->addMenu(m_ui->menuMyPresets);
-	//			menu->addSeparator();
-	//			menu->addAction(m_savePresetAction);
-	//			menu->addAction(m_savePresetAsAction);
-	//			menu->addAction(m_removePresetAction);
-	//			menu->addSeparator();
-	//			menu->addAction(QIcon::fromTheme("document-import", QIcon(":/icons/menu/presets/import")), tr("Import..."), this, SLOT(importPreset()));
-	//			menu->addAction(QIcon::fromTheme("document-export", QIcon(":/icons/menu/presets/export")), tr("Export..."), this, SLOT(exportPreset()));
-	//			menuBar()->addMenu(menu);
-
-	//			menu = new QMenu(tr("Help"));
-	//			QAction * action = menu->addAction(QIcon::fromTheme("help-about", QIcon(":/icons/menu/help/about")), tr("About"), this, SLOT(about()));
-	//			action->setMenuRole(QAction::AboutRole); /* OSX only */
-	//			action = menu->addAction(QIcon(":/icons/menu/help/aboutqt"), tr("About Qt"), qApp, SLOT(aboutQt()));
-	//			action->setMenuRole(QAction::AboutQtRole); /* OSX only */
-	//			menu->addAction(QIcon(":/icons/menu/help/aboutrsync"), tr("About rsync"), this, SLOT(aboutRsync()));
-	//			menuBar()->addMenu(menu);
-
-	//			QTabWidget * container = new QTabWidget();
-	//			QVBoxLayout * vLayout = new QVBoxLayout();
-	//			QGridLayout * gLayout = new QGridLayout();
-	//			gLayout->addWidget(myLabel = new QLabel(tr("Source")), 0, 0);
-	//			myLabel->setBuddy(m_source);
-	//			gLayout->addWidget(m_source, 0, 1);
-	//			gLayout->addWidget(m_chooseSourceDir, 0, 2);
-	//			gLayout->addWidget(m_chooseSourceFile, 0, 3);
-
-	//			gLayout->addWidget(myLabel = new QLabel(tr("Destination")), 1, 0);
-	//			myLabel->setBuddy(m_dest);
-	//			gLayout->addWidget(m_dest, 1, 1);
-	//			gLayout->addWidget(m_chooseDestinationDir, 1, 2);
-	//			gLayout->addWidget(m_chooseDestinationFile, 1, 3);
-
-	//			vLayout->addLayout(gLayout);
-
-	//			QGroupBox * group = new QGroupBox(tr("Preserve"));
-	//			gLayout = new QGridLayout();
-	//			gLayout->addWidget(m_preserveTime, 0, 0);
-	//			gLayout->addWidget(m_preservePerms, 1, 0);
-	//			gLayout->addWidget(m_preserveOwner, 0, 1);
-	//			gLayout->addWidget(m_preserveGroup, 1, 1);
-
-	//			group->setLayout(gLayout);
-	//			vLayout->addWidget(group);
-
-	//			group = new QGroupBox();
-	//			gLayout = new QGridLayout();
-	//			gLayout->addWidget(m_windowsCompatible, 0, 0);
-	//			gLayout->addWidget(m_deleteOnServer, 0, 1);
-	//			group->setLayout(gLayout);
-	//			vLayout->addWidget(group);
-
-	//			vLayout->addStretch(2);
-
-	//			QWidget * page = new QWidget();
-	//			page->setLayout(vLayout);
-
-	//			container->addTab(page, QIcon::fromTheme("preferences-other", QIcon(":/icons/tabs/basic_settings")), tr("Basic Settings"));
-
-	//			gLayout = new QGridLayout();
-	//			gLayout->addWidget(m_alwaysChecksum, 0, 0);
-	//			gLayout->addWidget(m_preserveDevices, 1, 0);
-	//			gLayout->addWidget(m_onlyUpdateExisting, 2, 0);
-	//			gLayout->addWidget(m_keepParitalTransfers, 3, 0);
-	//			gLayout->addWidget(m_symlinksAsSymlinks, 4, 0);
-	//			gLayout->addWidget(m_makeBackups, 5, 0);
-
-	//			gLayout->addWidget(m_compressInTransit, 0, 1);
-	//			gLayout->addWidget(m_dontUpdateExisting, 2, 1);
-	//			gLayout->addWidget(m_dontMapUidGid, 3, 1);
-	//			gLayout->addWidget(m_copyHardlinksAsHardlinks, 4, 1);
-	//			gLayout->addWidget(m_showItemisedChanges, 5, 1);
-
-	//			QHBoxLayout * hLayout = new QHBoxLayout();
-	//			hLayout->addWidget(myLabel = new QLabel(tr("Log file")));
-	//			myLabel->setBuddy(m_logFile);
-	//			hLayout->addWidget(m_logFile);
-	//			hLayout->addWidget(m_chooseLogFile);
-	//			gLayout->addLayout(hLayout, 6, 0, 1, 2, Qt::AlignLeft);
-
-	//			vLayout = new QVBoxLayout();
-	//			vLayout->addLayout(gLayout);
-	//			vLayout->addStretch(2);
-
-	//			page = new QWidget();
-	//			page->setLayout(vLayout);
-
-	//			container->addTab(page, QIcon::fromTheme("preferences-system", QIcon(":/icons/tabs/advanced_settings")), tr("Advanced Settings"));
-
-	//			setCentralWidget(container);
-	//		}
-	//	}
-
-
+	/**
+	 * \brief Show the details of a preset selected from the menu.
+	 *
+	 * The preset is determined by examining the action that sent the
+	 * signal. The index of the preset is stored in the action's data. The
+	 * preset is fetched from the manager and the widgets in the window
+	 * are updated to reflect the settings in the preset.
+	 */
 	void MainWindow::showPresetFromMenu(void) {
 		QAction * action = qobject_cast<QAction *>(sender());
 
@@ -398,10 +194,24 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Show the details of a preset from the manager.
+	 *
+	 * \param index is the index of the preset to show.
+	 *
+	 * The preset is fetched from the manager and the widgets in the window
+	 * are updated to reflect the settings in the preset.
+	 */
 	void MainWindow::showPreset(int index) {
-		/* NOTE index can be > last preset in manager because the combo box has
+		/* NOTE index can be > last preset in app because the combo box has
 	   <New Preset> empty item as its last index */
-		if(index >= 0 && index < qyncApp->presetCount()) {
+		if(0 == index && -1 == m_ui->presets->itemData(0).toInt()) {
+			/* <New Preset> chosen */
+			m_ui->actionRemove->setEnabled(false);
+			return;
+		}
+
+		if(0 <= index && qyncApp->presetCount() > index) {
 			Preset * preset = qyncApp->preset(index);
 			Q_ASSERT_X(preset, "MainWindow::showPreset(int)", "Manager provided null preset");
 			m_ui->preserveTime->setChecked(preset->preserveTime());
@@ -419,8 +229,17 @@ namespace Qync {
 			m_ui->makeBackups->setChecked(preset->makeBackups());
 
 			m_ui->compressInTransit->setChecked(preset->useTransferCompression());
-			m_ui->onlyUpdateExisting->setChecked(preset->onlyUpdateExistingEntries());
-			//			m_dontUpdateExisting->setChecked(preset->dontUpdateExistingEntries());
+
+			if(preset->onlyUpdateExistingEntries()) {
+				m_ui->includeInSynchronisation->setCurrentIndex(OnlyUpdateExisting);
+			}
+			else if(preset->dontUpdateExistingEntries()) {
+				m_ui->includeInSynchronisation->setCurrentIndex(DontUpdateExisting);
+			}
+			else {
+				m_ui->includeInSynchronisation->setCurrentIndex(UpdateEverything);
+			}
+
 			m_ui->dontMapUidGid->setChecked(preset->dontMapUsersAndGroups());
 			m_ui->hardlinksAsHardlinks->setChecked(preset->copyHardlinksAsHardlinks());
 			m_ui->itemisedChanges->setChecked(preset->showItemisedChanges());
@@ -432,12 +251,15 @@ namespace Qync {
 
 			m_ui->actionRemove->setEnabled(true);
 		}
-		else {
-			m_ui->actionRemove->setEnabled(false);
-		}
 	}
 
 
+	/**
+	 * \brief (Re)read the preferences from the manager.
+	 *
+	 * This slot essentially makes the visual appearance of the GUI match
+	 * the settings stored in the manager's preferences object.
+	 */
 	void MainWindow::readPreferences(void) {
 		const GuiPreferences * prefs = dynamic_cast<const GuiPreferences *>(qyncApp->preferences());
 
@@ -451,20 +273,6 @@ namespace Qync {
 	}
 
 
-	//	void MainWindow::syncIgnoreExistingToOnlyExisting(void) {
-	//		if(m_ui->onlyUpdateExisting->isChecked()) {
-	//			m_dontUpdateExisting->setChecked(false);
-	//		}
-	//	}
-
-
-	//	void MainWindow::syncOnlyExistingToIgnoreExisting(void) {
-	//		if(m_dontUpdateExisting->isChecked()) {
-	//			m_ui->onlyUpdateExisting->setChecked(false);
-	//		}
-	//	}
-
-
 	void MainWindow::disconnectApplication(void) {
 		qyncApp->disconnect(this);
 	}
@@ -476,21 +284,30 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Refresh the presets combo box.
+	 *
+	 * The list of presets in the combo box is discarded and it is
+	 * repopulated with the set of presets queried from the manager.
+	 */
 	void MainWindow::refreshPresets(void) {
 		m_ui->presets->clear();
 		m_ui->menuMyPresets->clear();
 
 		int i = 0;
 
-		for(Preset * preset : qyncApp->presets()) {
+		for(const Preset * preset : qyncApp->presets()) {
 			m_ui->presets->addItem(preset->name());
-			QAction * action = m_ui->menuMyPresets->addAction(preset->name());  //, this, SLOT(showPresetFromMenu()));
+			QAction * action = m_ui->menuMyPresets->addAction(preset->name());
 			connect(action, &QAction::triggered, this, &MainWindow::showPresetFromMenu);
 			action->setData(i);
-			i++;
+			++i;
 		}
 
-		m_ui->presets->addItem(tr("<New Preset>"));
+		if(0 == i) {
+			m_ui->presets->addItem(tr("<New Preset>"));
+			m_ui->presets->setItemData(0, -1);
+		}
 	}
 
 
@@ -542,10 +359,17 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Save the current settings to the currently-selected preset.
+	 *
+	 * The current preset is retrieved from the manager and updated with
+	 * the settings set in all the widgets in the window.
+	 */
 	void MainWindow::saveSettingsToCurrentPreset(void) {
 		int i = m_ui->presets->currentIndex();
 
-		if(i >= m_ui->presets->count() - 1) {
+		if(0 == i && -1 == m_ui->presets->itemData(0)) {
+			/* saving to <new preset> items so creaet a new one instead */
 			newPresetFromSettings();
 			return;
 		}
@@ -575,6 +399,12 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Remove the currently selected preset.
+	 *
+	 * The current preset is removed from the manager. This triggers a
+	 * refresh of the presets list.
+	 */
 	void MainWindow::removeCurrentPreset(void) {
 		if(qyncApp->presetCount() < 1) {
 			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("There are no presets to remove."));
@@ -588,27 +418,60 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Create a new preset.
+	 *
+	 * A dialogue box is presented for the user to enter a name for the
+	 * new preset. If the dialogue is not cancelled, a new preset is
+	 * created using the current settings and added to the manager.
+	 */
 	void MainWindow::newPresetFromSettings(void) {
+		newPreset(true);
+	}
+
+
+	/**
+	 * \brief Create a new preset.
+	 *
+	 * \param fill Whether or not the new preset should inherit the settings
+	 * currently selected.
+	 *
+	 * A dialogue box is presented for the user to enter a name for the
+	 * new preset. If the dialogue is not cancelled, a new preset
+	 * is created (using the current settings if \b fill == \b true) and
+	 * added to the application's master list.
+	 */
+	void MainWindow::newPreset(bool fill) {
 		bool ok;
 		QString name = QInputDialog::getText(this, tr("%1 Request").arg(qyncApp->applicationDisplayName()), tr("Enter a name for the new preset"), QLineEdit::Normal, tr("New Preset"), &ok);
 
-		if(ok) {
-			Preset * p = new Preset();
-			fillPreset(*p);
-			p->setName(name);
-			disconnectApplication(); /* don't refresh on presetesChanged() signal from manager - we'll do it ourselves */
-
-			if(qyncApp->addPreset(p)) {
-				refreshPresets();
-				m_ui->presets->setCurrentIndex(m_ui->presets->count() - 2);
-			}
-			else {
-				delete p;
-				QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The new preset could not be created:\n\n%1").arg(qyncApp->lastError()));
-			}
-
-			connectApplication();
+		if(!ok) {
+			return;
 		}
+
+		Preset * p = new Preset();
+
+		if(fill) {
+			fillPreset(*p);
+		}
+
+		p->setName(name);
+		disconnectApplication(); /* don't refresh on presetesChanged() signal from app - we'll do it ourselves */
+
+		if(qyncApp->addPreset(p)) {
+			refreshPresets();
+			/* it was added successfully, therefore we know the list contains at least one
+			 * item, and we know also that as it is not empty the <New Preset> item won't
+			 * be present, so we know that the index of the item we just added should be
+			 * the last one in the combo */
+			m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
+		}
+		else {
+			delete p;
+			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The new preset could not be created:\n\n%1").arg(qyncApp->lastError()));
+		}
+
+		connectApplication();
 	}
 
 
@@ -628,6 +491,10 @@ namespace Qync {
 
 			if(qyncApp->addPreset(p)) {
 				refreshPresets();
+				/* it was added successfully, therefore we know the list contains at least one
+				 * item, and we know also that as it is not empty the <New Preset> item won't
+				 * be present, so we know that the index of the item we just added should be
+				 * the last one in the combo */
 				m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
 			}
 			else {
@@ -696,8 +563,26 @@ namespace Qync {
 		p.setMakeBackups(m_ui->makeBackups->isChecked());
 
 		p.setUseTransferCompression(m_ui->compressInTransit->isChecked());
-		p.setOnlyUpdateExistingEntries(m_ui->onlyUpdateExisting->isChecked());
-		//		p.setDontUpdateExistingEntries(m_dontUpdateExisting->isChecked());
+
+		switch(m_ui->includeInSynchronisation->currentIndex()) {
+			case OnlyUpdateExisting:
+				p.setOnlyUpdateExistingEntries(true);
+				p.setDontUpdateExistingEntries(false);
+				break;
+
+			case DontUpdateExisting:
+				p.setOnlyUpdateExistingEntries(false);
+				p.setDontUpdateExistingEntries(true);
+				break;
+
+			default:
+				qWarning() << "unexpeced selected index" << m_ui->includeInSynchronisation->currentIndex() << "in \"what to sync\" combo box";
+			case UpdateEverything:
+				p.setOnlyUpdateExistingEntries(false);
+				p.setDontUpdateExistingEntries(false);
+				break;
+		}
+
 		p.setDontMapUsersAndGroups(m_ui->dontMapUidGid->isChecked());
 		p.setCopyHardlinksAsHardlinks(m_ui->hardlinksAsHardlinks->isChecked());
 		p.setShowItemisedChanges(m_ui->itemisedChanges->isChecked());
@@ -709,6 +594,9 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Start a simulation based on the current settings.
+	 */
 	void MainWindow::simulate(void) {
 		/* even though it's (currently) passed by raw ptr, the temp Process is not
 		 * owned by the Process created by Application::simulate() */
@@ -728,14 +616,18 @@ namespace Qync {
 	}
 
 
-	void MainWindow::execute(void) {
+	/**
+	 * \brief Start rsync based on the current settings.
+	 */
+	void MainWindow::synchronise(void) {
 		/* even though it's (currently) passed by raw ptr, the temp Process is not
 		 * owned by the Process created by Application::execute() */
 		Preset temp;
 		fillPreset(temp);
-		Process * process = qyncApp->execute(&temp);
+		Process * process = qyncApp->synchronise(&temp);
 
 		if(process) {
+			/* dialogue consumes the process */
 			ProcessDialogue * w = new ProcessDialogue(process, this);
 			w->setWindowTitle(tr("%1 Synchronisation: %2").arg(qyncApp->applicationDisplayName()).arg(m_ui->presets->currentText()));
 			w->show();

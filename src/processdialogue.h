@@ -64,7 +64,7 @@ namespace Qync {
 		virtual void closeEvent(QCloseEvent *) override;
 
 	private:
-		Process * m_process;
+		std::unique_ptr<Process> m_process;
 		QString m_outputCache;
 
 		std::unique_ptr<Ui::ProcessDialogue> m_ui;

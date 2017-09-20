@@ -10,6 +10,8 @@
  * - preferencesdialogue.h
  * - ui_preferencesdialogue.h
  * - QString
+ * - QMessageBox
+ * - QFileDialog
  * - application.h
  * - guipreferences.h
  * - common.h
@@ -18,11 +20,13 @@
 #include "preferencesdialogue.h"
 #include "ui_preferencesdialogue.h"
 
+#include <QString>
+#include <QMessageBox>
+#include <QFileDialog>
+
 #include "application.h"
 #include "guipreferences.h"
 #include "functions.h"
-
-#include <QString>
 
 
 namespace Qync {
@@ -209,7 +213,7 @@ namespace Qync {
 		}
 
 		if(qyncApp->setPreferences(p)) {
-			if(!p->saveAs(Application::configurationDirectoryPath() + "guipreferences")) {
+			if(!p->saveAs(Application::configurationPath() + "/guipreferences")) {
 				QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
 			}
 		}
