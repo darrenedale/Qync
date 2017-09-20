@@ -44,4 +44,5 @@ DISTFILES += dist/linux/qync.desktop \
 
 FORMS += \
     ui/processdialogue.ui \
-    ui/mainwindow.ui
+    ui/mainwindow.ui \
+    ui/preferencesdialogue.ui

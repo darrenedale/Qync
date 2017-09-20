@@ -1,19 +1,16 @@
 /**
  * \file QyncProcessDialogue.h
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
- * \brief Definition of the QyncProcessDialogue class.
+ * \brief Declaration of the QyncProcessDialogue class.
  *
  * \dep
- * - common.h
+ * - memory
  * - QDialog
  * - QString
- * - QTextEdit
- *
- * \todo
- * Nothing.
+ * - functions.h
  */
 #ifndef QYNC_PROCESSDIALOGUE_H
 #define QYNC_PROCESSDIALOGUE_H
@@ -22,16 +19,10 @@
 
 #include <QDialog>
 #include <QString>
-#include <QTextEdit>
 
 #include "functions.h"
-#include "ui_processdialogue.h"
 
 class QCloseEvent;
-class QLabel;
-class QProgressBar;
-class QProcess;
-class QDialogButtonBox;
 class QPushButton;
 
 namespace Qync {
@@ -77,6 +68,9 @@ namespace Qync {
 		QString m_outputCache;
 
 		std::unique_ptr<Ui::ProcessDialogue> m_ui;
+
+		QPushButton * m_saveButton;
+		QPushButton * m_abortButton;
 	};
 
 }  // namespace Qync

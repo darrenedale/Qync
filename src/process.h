@@ -1,10 +1,10 @@
 /**
  * \file Process.h
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
- * \brief Definition of the Process class.
+ * \brief Declaration of the Process class.
  *
  * The Process class takes the command and arguments from the manager
  * rather than just being given the preset. This is because the preset is
@@ -19,9 +19,7 @@
  * - QObject
  * - QString
  * - QStringList
- *
- * \todo
- * Nothing.
+ * - QHash
  */
 
 #ifndef QYNC_PROCESS_H
@@ -40,55 +38,6 @@ namespace Qync {
 	class Preset;
 	class Preferences;
 
-
-	/**
- * \class Process
- * \author Darren Hatherley
- * \date 13th December, 2013
- * \version 0.9.5
- *
- * \brief Wraps the rsync process.
- *
- * The QProcess for the rsync command is wrapped inside an object of this class.
- * The command, arguments and optional log file are set in the constructor and
- * cannot later be modified - this is intended as a read-only class that is
- * provided by the manager to represent processes and as such the manager
- * exercises complete control over its attributes. The command, arguments and
- * log file name are accessible with the command(), arguments() and logFile()
- * methods.
- *
- * The start() method starts the command. and the stop() method interrupts the
- * processing of the command. The actual QProcess can be retrieved with the
- * process() method. The process is only available if the command is either
- * currently running or has been run at some point in the past - i.e. the
- * start() method has been successfully called at some point in the object's
- * existence.
- *
- * The class monitors the output and error streams of the process and emits
- * signals when significant events occur. The finished() signal indicates that
- * the process completed successfully; the error() signal indicates that an
- * error was encountered (but not necessarily that the error was fatal). The
- * interrupted() signal occurs when the rsync process was interrupted for any
- * reason, including when the stop() slot is called. This signal indicates that
- * the rsync process has terminated prematurely. The failed() signal is
- * emitted when the rsync process has failed (except when it has been
- * interrupted - that is interrupted() and failed() are mutually exclusive).
- *
- * To monitor the progress of the rsync process, the newItemStarted(),
- * itemProgress(), itemProgressBytes() and overallProgress() signals are
- * available. The newItemStarted() signal indicates that rsync has started the
- * synchronisation of a new file or directory; itemProgress() and
- * itemProgressBytes() indicate how much of the current item has been
- * synchronised as a percentage of its total size and in bytes respectively. The
- * overallProgress() signal is not yet implemented, but it is intended to
- * indicate an overall percentage progress for the rsync command as a whole.
- *
- * Finally, if you are interested in capturing the standard output stream of
- * the process in its entirety, you can do so by connecting to the
- * standardOutputUpdated() signal. The argument provided with this signal is all
- * the data from the standard output stream since the last time the signal was
- * emitted.
- */
 	class Process
 	  : public QObject {
 		Q_OBJECT

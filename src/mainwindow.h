@@ -1,17 +1,14 @@
 /**
  * \file QyncMainWindow.h
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
- * \brief Definition of the QyncMainWindow class.
+ * \brief Declaration of the QyncMainWindow class.
  *
  * \dep
+ * - memory
  * - QMainWindow
- * - QyncProcess.h
- *
- * \todo
- * Nothing.
  */
 
 #ifndef QYNC_MAINWINDOW_H
@@ -21,23 +18,12 @@
 
 #include <QMainWindow>
 
-#include "process.h"
-
-class QComboBox;
-class QCheckBox;
-class QLineEdit;
-class QToolBar;
-class QMenu;
-class QToolButton;
-class QAction;
-
 namespace Qync {
 
 	namespace Ui {
 		class MainWindow;
 	}
 
-	class Manager;
 	class Preset;
 	class PreferencesDialogue;
 
@@ -46,35 +32,8 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		/**
-		* \brief Create a new QyncMainWindow.
-		*
-		* \param manager is the manager for the main window.
-		*
-		* The manager is used to provide the application functionality
-		* controlled by the window. The window does not take ownership of the
-		* manager as a manager may be used by more than one interface. The
-		* creator of the manager is responsible for its timely destruction.
-		*/
 		explicit MainWindow(void);
-
-		/**
-		* \brief Destroy the QyncMainWindow.
-		*/
 		virtual ~MainWindow(void);
-
-		/**
-		* \brief Retrieve the main window's application manager.
-		*
-		* The manager is used to provide the application functionality
-		* controlled by the window. The manager may be used by more than one
-		* interface so you may not take the manager, set the window's manager
-		* to \b null and then delete the manager you took. The original creator
-		* of the manager is responsible for its timely destruction.
-		*
-		* \return The manager.
-		*/
-		Manager * manager(void) const;
 
 	public Q_SLOTS:
 		/**
@@ -224,39 +183,39 @@ namespace Qync {
 
 	private Q_SLOTS:
 		/**
-			 * \brief Show the details of a preset selected from the menu.
-			 *
-			 * The preset is determined by examining the action that sent the
-			 * signal. The index of the preset is stored in the action's data. The
-			 * preset is fetched from the manager and the widgets in the window
-			 * are updated to reflect the settings in the preset.
-			 */
+		 * \brief Show the details of a preset selected from the menu.
+		 *
+		 * The preset is determined by examining the action that sent the
+		 * signal. The index of the preset is stored in the action's data. The
+		 * preset is fetched from the manager and the widgets in the window
+		 * are updated to reflect the settings in the preset.
+		 */
 		void showPresetFromMenu(void);
 
 		/**
-			 * \brief Show the details of a preset from the manager.
-			 *
-			 * \param index is the index of the preset to show.
-			 *
-			 * The preset is fetched from the manager and the widgets in the window
-			 * are updated to reflect the settings in the preset.
-			 */
+		 * \brief Show the details of a preset from the manager.
+		 *
+		 * \param index is the index of the preset to show.
+		 *
+		 * The preset is fetched from the manager and the widgets in the window
+		 * are updated to reflect the settings in the preset.
+		 */
 		void showPreset(int index);
 
 		/**
-			 * \brief (Re)read the preferences from the manager.
-			 *
-			 * This slot essentially makes the visual appearance of the GUI match
-			 * the settings stored in the manager's preferences object.
-			 */
+		 * \brief (Re)read the preferences from the manager.
+		 *
+		 * This slot essentially makes the visual appearance of the GUI match
+		 * the settings stored in the manager's preferences object.
+		 */
 		void readPreferences(void);
 
 		/**
-			 * \brief Ensure that the check boxes for only syncing existing
-			 * entries and ignoring existing entries are kept mutually exclusive.
-			 */
-		void syncIgnoreExistingToOnlyExisting(void);
-		void syncOnlyExistingToIgnoreExisting(void);
+		 * \brief Ensure that the check boxes for only syncing existing
+		 * entries and ignoring existing entries are kept mutually exclusive.
+		 */
+		//		void syncIgnoreExistingToOnlyExisting(void);
+		//		void syncOnlyExistingToIgnoreExisting(void);
 
 
 	protected:
@@ -271,68 +230,13 @@ namespace Qync {
 		void connectApplication(void);
 
 	private:
-		std::unique_ptr<Ui::MainWindow> m_ui;
-		std::unique_ptr<PreferencesDialogue> m_prefsWindow;
-
-		QMenu * m_presetsMenu;
-
-		QToolBar * m_presetsToolbar;
-		QToolBar * m_synchroniseToolbar;
-
-		QComboBox * m_preset;
-
-		QCheckBox * m_preserveTime;
-		QCheckBox * m_preservePerms;
-		QCheckBox * m_preserveOwner;
-		QCheckBox * m_preserveGroup;
-
-		QCheckBox * m_windowsCompatible;
-		QCheckBox * m_deleteOnServer;
-
-		QLineEdit * m_source;
-		QLineEdit * m_dest;
-
-		QToolButton * m_chooseSourceDir;
-		QToolButton * m_chooseDestinationDir;
-		QToolButton * m_chooseSourceFile;
-		QToolButton * m_chooseDestinationFile;
-
-		QCheckBox * m_alwaysChecksum;
-		QCheckBox * m_preserveDevices;
-		QCheckBox * m_keepParitalTransfers;
-		QCheckBox * m_symlinksAsSymlinks;
-		QCheckBox * m_makeBackups;
-
-		QCheckBox * m_compressInTransit;
-		QCheckBox * m_onlyUpdateExisting;
-		QCheckBox * m_dontUpdateExisting;
-		QCheckBox * m_dontMapUidGid;
-		QCheckBox * m_copyHardlinksAsHardlinks;
-		QCheckBox * m_showItemisedChanges;
-
-		QLineEdit * m_logFile;
-		QToolButton * m_chooseLogFile;
-
-		QAction * m_menuFileChooseSource;
-		QAction * m_menuFileChooseDest;
-		QAction * m_menuFileSwitchSourceAndDest;
-		QAction * m_menuFileSimulate;
-		QAction * m_menuFileExecute;
-		QAction * m_menuFileQuit;
-
-		QAction * m_savePresetAction;
-		QAction * m_savePresetAsAction;
-		QAction * m_removePresetAction;
-
-		/**
-		 * \brief Create all the window's widgets.
-		 */
-		void createWidgets(void);
-
 		/**
 		 * \brief Fill a preset with the current settings.
 		 */
 		void fillPreset(Preset &) const;
+
+		std::unique_ptr<Ui::MainWindow> m_ui;
+		std::unique_ptr<PreferencesDialogue> m_prefsWindow;
 	};
 
 }  // namespace Qync

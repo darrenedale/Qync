@@ -1,20 +1,21 @@
 /**
- * \file Manager.cpp
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \file application.cpp
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
- * \brief Implementation of the Manager class.
+ * \brief Implementation of the Application class.
  *
  * \dep
- * - Manager.h
- * - Preset.h
- * - Process.h
- * - Preferences.h
+ * - application.h
+ * - preset.h
+ * - process.h
+ * - preferences.h
  * - QDebug
  * - QDir
  * - QFileInfo
  * - QProcess
+ * - QStandardPaths
  */
 
 #include "application.h"
@@ -33,7 +34,7 @@
 #define QYNC_APP_NAME "Qync"
 #define QYNC_APP_DISPLAY_NAME "Qync"
 #define QYNC_APP_VERSION_STRING "0.9.5"
-#define QYNC_APP_VERSION_DATE "13th December, 2013"
+#define QYNC_APP_VERSION_DATE "September 2017"
 #define QYNC_APP_BUILD_ID "<undefined>"
 #define QYNC_APP_URL "http://www.equituk.net/"
 
@@ -81,13 +82,7 @@ namespace Qync {
 		setProperty("ApplicationWebsite", QYNC_APP_URL);
 
 		// ensure presets dir exists
-		QDir presetPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/");
-
-		if(!presetPath.exists()) {
-			presetPath.cdUp();
-			presetPath.mkpath("presets");
-		}
-
+		QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).mkpath("presets");
 		loadPresets();
 	}
 

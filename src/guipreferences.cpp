@@ -1,18 +1,15 @@
 /**
- * \file QyncGuiPreferences.cpp
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \file guipreferences.cpp
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
- * \brief Implementation of the QyncGuiPreferences class.
+ * \brief Implementation of the GuiPreferences class.
  *
  * \dep
- * - QyncGuiPreferences.h
- * - common.h
+ * - guipreferences.h
+ * - functions.h
  * - QDebug
- *
- * \todo
- * Nothing.
  */
 
 #include "guipreferences.h"
@@ -24,20 +21,48 @@
 namespace Qync {
 
 
-	GuiPreferences::GuiPreferences(const QString & fileName)
-	  : Preferences(fileName) {
-		/* must call this here as well as in base class constructor - when base
-	 * class constructor is called, the GuiPreferences object is not
-	 * initialised and therefore load() uses the copy of parseXml() in the base
-	 * class even though it is a virtual method because the copy of parseXml()
-	 * in this class is not yet available. the extra call here ensures load()
-	 * is called again when the copy of parseXml() in this class is available
-	 * and that the full set of preferences, including gui settings, is loaded.
+	/**
+	 * \brief Create a new QuncGuiPreferences object.
+	 *
+	 * \param fileName is the path to the file from which to load the
+	 * preferences.
+	 *
+	 * The file name is optional. If it is not provided, is not a valid
+	 * preferences file path or cannot be loaded for some other reason
+	 * (e.g. the file is not readable), the preferences will be set to
+	 * defaults.
 	 */
+	GuiPreferences::GuiPreferences(const QString & fileName)
+	  : Preferences(fileName),
+		 m_presetsToolbar(true),
+		 m_syncToolbar(true),
+		 m_toolButtonStyle(Qt::ToolButtonFollowStyle) {
+		/* must call this here as well as in base class constructor - when base
+		 * class constructor is called, the GuiPreferences object is not
+		 * initialised and therefore load() uses the copy of parseXml() in the base
+		 * class even though it is a virtual method because the copy of parseXml()
+		 * in this class is not yet available. the extra call here ensures load()
+		 * is called again when the copy of parseXml() in this class is available
+		 * and that the full set of preferences, including gui settings, is loaded.
+		 */
 		load();
 	}
 
 
+	/**
+	 * \brief Destroy the QuncGuiPreferences object.
+	 */
+	GuiPreferences::~GuiPreferences() = default;
+
+
+	/**
+	 * \brief Set the default values for all settings.
+	 *
+	 * By default, both toolbars are shown and the toolbar button style is
+	 * set to the default for the current Qt theme. See the documentation
+	 * for \ref QyncPreferences::setDefaults() for the defaults for
+	 * settings governed by that class.
+	 */
 	void GuiPreferences::setDefaults(void) {
 		Preferences::setDefaults();
 		setShowPresetsToolBar(true);
@@ -46,6 +71,23 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Convert the text representation of a toolbar button style to
+	 * a Qt:: ToolButtonStyle value.
+	 *
+	 * \param style is the style text to convert.
+	 * \param ok is a pointer to a boolean value that will be set to \b true
+	 * if the conversion is successful, \b false if not.
+	 *
+	 * This is a helper method to parse the content of the toolbar button
+	 * style setting from the preferences file. A valid style is always
+	 * returned - callers must provide an \b ok parameter and check its
+	 * content when the method returns if they need to check whether the
+	 * returned value represents the text provided or is just a default
+	 * value because the text was not valid.
+	 *
+	 * \return The toolbar button style.
+	 */
 	Qt::ToolButtonStyle GuiPreferences::parseToolButtonStyleText(const QString & style, bool * ok) {
 		if("icononly" == style.trimmed().toLower()) {
 			if(ok)
@@ -79,6 +121,17 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Write all settings to an XML stream.
+	 *
+	 * \param xml is the stream to which to write.
+	 *
+	 * This is a virtual method. This reimplementation passes the call back
+	 * up the class hierarchy by calling QyncPreferences::emitXmlElements()
+	 * before it emits its own elements.
+	 *
+	 * \return \b true if the settings were written, \b false otherwise.
+	 */
 	bool GuiPreferences::emitXmlElements(QXmlStreamWriter & xml) const {
 		Preferences::emitXmlElements(xml);
 		xml.writeStartElement("guipreferences");
@@ -90,6 +143,13 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Write the prests toolbar setting to an XML stream.
+	 *
+	 * \param xml is the stream to which to write.
+	 *
+	 * \return \b true if the setting was written, \b false otherwise.
+	 */
 	bool GuiPreferences::emitPresetsToolbarXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("presetstoolbar");
 		xml.writeCharacters(showPresetsToolBar() ? "true" : "false");
@@ -98,6 +158,13 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Write the synchronise toolbar setting to an XML stream.
+	 *
+	 * \param xml is the stream to which to write.
+	 *
+	 * \return \b true if the setting was written, \b false otherwise.
+	 */
 	bool GuiPreferences::emitSynchroniseToolbarXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("synchronisetoolbar");
 		xml.writeCharacters(showSynchroniseToolBar() ? "true" : "false");
@@ -106,6 +173,13 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Write the toolbar button style setting to an XML stream.
+	 *
+	 * \param xml is the stream to which to write.
+	 *
+	 * \return \b true if the setting was written, \b false otherwise.
+	 */
 	bool GuiPreferences::emitToolBarButtonStyleXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("toolbarbuttonstyle");
 
@@ -137,6 +211,17 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Read an element from an XML stream.
+	 *
+	 * \param xml is the stream from which to read.
+	 *
+	 * This is a virtual method. This reimplementation passes all
+	 * unrecognised XML elements to the parseXmlElement() method of
+	 * QyncPreferences.
+	 *
+	 * \return \b true if the settings were read, \b false otherwise.
+	 */
 	bool GuiPreferences::parseXmlElement(QXmlStreamReader & xml) {
 		Q_ASSERT(xml.isStartElement());
 
@@ -146,6 +231,13 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Read all the GUI settings from an XML stream.
+	 *
+	 * \param xml is the stream from which to read.
+	 *
+	 * \return \b true if the settings were read, \b false otherwise.
+	 */
 	bool GuiPreferences::parseGuiPreferencesXml(QXmlStreamReader & xml) {
 		Q_ASSERT(xml.isStartElement() && "guipreferences" == xml.name());
 
@@ -189,35 +281,67 @@ namespace Qync {
 	}
 
 
-	bool GuiPreferences::showPresetsToolBar(void) const {
-		return m_presetsToolbar;
-	}
+	/**
+	 * \fn GuiPreferences::showPresetsToolBar(void)
+	 * \brief Check whether the presets toolbar should be shown.
+	 *
+	 * \return \b true if the presets toolbar should be shown, \b false
+	 * if not.
+	 */
 
 
-	bool GuiPreferences::showSynchroniseToolBar(void) const {
-		return m_syncToolbar;
-	}
+	/**
+	 * \fn GuiPreferences::showSynchroniseToolBar(void)
+	 * \brief Check whether the synchronise toolbar should be shown.
+	 *
+	 * \return \b true if the synchronise toolbar should be shown, \b false
+	 * if not.
+	 */
 
 
-	void GuiPreferences::setShowPresetsToolBar(bool show) {
-		m_presetsToolbar = show;
-	}
+	/**
+	 * \fn GuiPreferences::setShowPresetsToolBar(bool)
+	 * \brief Set whether the presets toolbar should be shown.
+	 *
+	 * \param show indicates whether the presets toolbar should be shown.
+	 */
 
 
-	void GuiPreferences::setShowSynchroniseToolBar(bool show) {
-		m_syncToolbar = show;
-	}
+	/**
+	 * \fn GuiPreferences::setShowSynchroniseToolBar(bool)
+	 * \brief Set whether the synchronise toolbar should be shown.
+	 *
+	 * \param show indicates whether the synchronise toolbar should be
+	 * shown.
+	 */
 
 
-	Qt::ToolButtonStyle GuiPreferences::toolBarButtonStyle(void) const {
-		return m_toolButtonStyle;
-	}
+	/**
+	 * \fn GuiPreferences::toolBarButtonStyle(void)
+	 * \brief Get the display style for buttons in the toolbar.
+	 *
+	 * The toolbar style is one of Qt's ToolButtonStyles. This can be
+	 * either icons only, text only, icons with text underneath, icons with
+	 * text beside them, or the default setting (one of the previous four)
+	 * chosen by the current Qt theme.
+	 *
+	 * \return The display style for toolbar buttons.
+	 */
 
 
-	bool GuiPreferences::setToolBarButtonStyle(const Qt::ToolButtonStyle & style) {
-		m_toolButtonStyle = style;
-		return true;
-	}
+	/**
+	 * \fn GuiPreferences::setToolBarButtonStyle(const Qt::ToolButtonStyle)
+	 * \brief Set the display style for buttons in the toolbar.
+	 *
+	 * \param style is the style to use.
+	 *
+	 * The toolbar style is one of Qt's ToolButtonStyles. This can be
+	 * either icons only, text only, icons with text underneath, icons with
+	 * text beside them, or the default setting (one of the previous four)
+	 * chosen by the current Qt theme.
+	 *
+	 * \return \b true if the style was set, \b false otherwise.
+	 */
 
 
 }  // namespace Qync

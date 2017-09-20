@@ -1,19 +1,16 @@
 /**
- * \file common.h
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \file functions.h
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
- * \brief Defines some macros, types and functions that are available throughout
+ * \brief Defines free-standing functions that are available throughout
  * the application.
  *
- * All common functions are defined in the Qync namespace.
+ * All functions are defined in the Qync namespace.
  *
  * \dep
  * - QXmlStreamReader
- *
- * \todo
- * Nothing.
  */
 
 #ifndef QYNC_COMMON_H

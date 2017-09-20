@@ -1,44 +1,31 @@
 /**
- * \file ProcessDialogue.cpp
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \file processdialogue.cpp
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
  * \brief Implementation of the ProcessDialogue class.
  *
  * \dep
- * - ProcessDialogue.h
- * - Process.h
- * - common.h
+ * - processdialogue.h
+ * - ui_processdialogue.h
  * - QDebug
  * - QString
  * - QStringList
- * - QLabel
- * - QProgressBar
- * - QTextEdit
- * - QDialogButtonBox
-  * - QPushButton
- * - QVBoxLayout
- * - QProcess
  * - QCloseEvent
  * - QFileDialog
  * - QMessageBox
- *
- * \todo
- * Nothing.
+ * - application.h
+ * - process.h
+ * - functions.h
  */
 
 #include "processdialogue.h"
+#include "ui_processdialogue.h"
 
 #include <QDebug>
 #include <QString>
 #include <QStringList>
-#include <QLabel>
-#include <QProgressBar>
-#include <QTextEdit>
-#include <QDialogButtonBox>
-#include <QPushButton>
-#include <QVBoxLayout>
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -81,9 +68,16 @@ namespace Qync {
 	ProcessDialogue::ProcessDialogue(Process * process, QWidget * parent)
 	  : QDialog(parent),
 		 m_process(process),
-		 m_ui{new Ui::ProcessDialogue()} {
+		 m_ui{new Ui::ProcessDialogue},
+		 m_saveButton{nullptr},
+		 m_abortButton{nullptr} {
 		qDebug() << __PRETTY_FUNCTION__;
 		m_ui->setupUi(this);
+
+		/* keep refs to these from the UI because we dis/enable them at various points */
+		m_saveButton = m_ui->controls->button(QDialogButtonBox::Save);
+		m_abortButton = m_ui->controls->button(QDialogButtonBox::Abort);
+
 		connect(m_process, &Process::started, this, &ProcessDialogue::onProcessStarted);
 		connect(m_process, static_cast<void (Process::*)(QString)>(&Process::finished), this, &ProcessDialogue::onProcessFinished);
 		connect(m_process, &Process::interrupted, this, &ProcessDialogue::onProcessInterrupted);
@@ -239,8 +233,8 @@ namespace Qync {
 		m_ui->itemName->setText("");
 		m_ui->itemProgress->setValue(0);
 		m_ui->overallProgress->setValue(0);
-		m_ui->controls->button(QDialogButtonBox::Cancel)->setEnabled(true);
-		m_ui->controls->button(QDialogButtonBox::Save)->setEnabled(false);
+		m_abortButton->setEnabled(true);
+		m_saveButton->setEnabled(false);
 	}
 
 
@@ -252,8 +246,8 @@ namespace Qync {
 	 * and the save button is enabled.
 	 */
 	void ProcessDialogue::onProcessFinished(const QString & msg) {
-		m_ui->controls->button(QDialogButtonBox::Cancel)->setEnabled(false);
-		m_ui->controls->button(QDialogButtonBox::Save)->setEnabled(true);
+		m_abortButton->setEnabled(false);
+		m_saveButton->setEnabled(true);
 		m_ui->itemProgress->setValue(100);
 		m_ui->overallProgress->setValue(100);
 		m_ui->itemName->setText("");
@@ -268,8 +262,8 @@ namespace Qync {
 	 * and the save button is enabled.
 	 */
 	void ProcessDialogue::onProcessInterrupted(const QString & msg) {
-		m_ui->controls->button(QDialogButtonBox::Cancel)->setEnabled(false);
-		m_ui->controls->button(QDialogButtonBox::Save)->setEnabled(true);
+		m_abortButton->setEnabled(false);
+		m_saveButton->setEnabled(true);
 		m_ui->itemProgress->setValue(0);
 		m_ui->overallProgress->setValue(0);
 		m_ui->itemName->setText("");
@@ -287,8 +281,8 @@ namespace Qync {
 	 * and the save button is enabled.
 	 */
 	void ProcessDialogue::onProcessFailed(const QString & msg) {
-		m_ui->controls->button(QDialogButtonBox::Cancel)->setEnabled(false);
-		m_ui->controls->button(QDialogButtonBox::Save)->setEnabled(true);
+		m_abortButton->setEnabled(false);
+		m_saveButton->setEnabled(true);
 		m_ui->itemProgress->setValue(0);
 		m_ui->overallProgress->setValue(0);
 		m_ui->itemName->setText("");

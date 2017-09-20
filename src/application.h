@@ -1,10 +1,10 @@
 /**
  * \file Manager.h
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
- * \brief Definition of the Manager class.
+ * \brief Declaration of the Manager class.
  *
  * \dep
  * - QObject

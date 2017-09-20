@@ -1,16 +1,15 @@
 /**
- * \file common.cpp
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \file functions.cpp
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
- * \brief Qync common functions implementation file.
+ * \brief Qync free-standing functions implementation file.
  *
  * \dep
- * - common.h
- *
- * \todo
- * Nothing.
+ * - functions.h
+ * - QDebug
+ * - QXmlStreamReader
  */
 
 #include "functions.h"

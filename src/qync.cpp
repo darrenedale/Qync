@@ -1,7 +1,7 @@
 /**
  * \file qync.cpp
- * \author Darren Hatherley
- * \date 13th December, 2013
+ * \author Darren Edale
+ * \date September 2017
  * \version 0.9.5
  *
  * \brief Qync main application file.
@@ -9,28 +9,25 @@
  * This file implements the main() function that is the application entry point.
  *
  * \dep
- * - QyncManager.h
- * - QyncMainWindow.h
- * - QApplication
+ * - QDebug
+ * - application.h
+ * - mainwindow.h
  *
- * \todo
- * - make a nice application icon (or get someone else to make one).
- * - add application icons of all sizes to package
+ * \todo make a nice application icon (or get someone else to make one).
+ * \todo add application icons of all sizes to package
  */
 
-#include "mainwindow.h"
-#include "application.h"
-
-#include <QApplication>
 #include <QDebug>
+
+#include "application.h"
+#include "mainwindow.h"
 
 
 /**
  * \brief The main entry point for the Qync application.
  *
- * This function instantiates a QApplication, creates a main window and a
- * manager (which is given to the main window), shows the main window and
- * executes the application event loop.
+ * This function instantiates a Qync::Application, creates and shows a main window
+ * and initiates the application event loop.
  *
  * \return 0 on clean exit, non-0 otherwise.
  */
