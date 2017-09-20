@@ -40,7 +40,8 @@ DISTFILES += dist/linux/qync.desktop \
     doc/license_rsync.dox \
     doc/license_cygwin.dox \
     doc/license_openssh.dox \
-    doc/license_putty.dox
+    doc/license_putty.dox \
+    .gitignore
 
 FORMS += \
     ui/processdialogue.ui \
