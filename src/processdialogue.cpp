@@ -82,6 +82,7 @@ namespace Qync {
 		connect(m_process.get(), &Process::interrupted, this, &ProcessDialogue::onProcessInterrupted);
 		connect(m_process.get(), &Process::failed, this, &ProcessDialogue::onProcessFailed);
 		connect(m_process.get(), &Process::itemProgress, this, &ProcessDialogue::updateItemProgress);
+		connect(m_process.get(), &Process::transferSpeed, this, &ProcessDialogue::updateTransferSpeed);
 		connect(m_process.get(), &Process::overallProgress, this, &ProcessDialogue::updateOverallProgress);
 		connect(m_process.get(), &Process::newItemStarted, this, &ProcessDialogue::updateItemInProgress);
 		connect(m_process.get(), &Process::error, this, &ProcessDialogue::showError);
@@ -197,6 +198,37 @@ namespace Qync {
 
 
 	/**
+	 * \brief Updates the display of the transfer speed.
+	 *
+	 * @param speed The transfer speed to display, in bytes per second.
+	 *
+	 * Currently the speed is always displayed as bytes per second. It is likely
+	 * to change to adapt the display unit based on the size of the transfer
+	 * speed.
+	 */
+	void ProcessDialogue::updateTransferSpeed(float speed) {
+		QString unit = "B/s";
+
+		if(speed > 2048) {
+			speed /= 1024;
+			unit = "kB/s";
+		}
+
+		if(speed > 2048) {
+			speed /= 1024;
+			unit = "MB/s";
+		}
+
+		if(speed > 2048) {
+			speed /= 1024;
+			unit = "GB/s";
+		}
+
+		m_ui->transferSpeed->setText(QLocale().toString(static_cast<double>(speed), 'f', 2) + " " + unit);
+	}
+
+
+	/**
 	 * \brief Save the current content of the output widget.
 	 *
 	 * A file dialogue is presented to the user, and if s/he does not cancel
@@ -247,8 +279,12 @@ namespace Qync {
 		m_saveButton->setEnabled(true);
 		m_ui->itemProgress->setValue(100);
 		m_ui->overallProgress->setValue(100);
-		m_ui->itemName->setText("");
-		QMessageBox::information(this, tr("%1 Message").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process completed successfully.") : msg), QMessageBox::Ok);
+		m_ui->itemName->setText(QString("<strong>%1</strong>").arg(tr("Synchronisation complete")));
+
+		/* transfer speed should already be set to the overall speed as emitted by rsync
+		 * process in its stdout */
+		//		m_ui->transferSpeed->setText({});
+		//		QMessageBox::information(this, tr("%1 Message").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process completed successfully.") : msg), QMessageBox::Ok);
 	}
 
 

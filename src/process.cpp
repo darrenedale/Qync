@@ -164,6 +164,7 @@ namespace Qync {
 		args.push_back("--recursive");
 		args.push_back("--progress");
 		args.push_back("--verbose");
+		args.push_back("--out-format=f%n %l");
 
 		/* basic settings */
 		if(preset->preserveTime()) {
@@ -326,6 +327,8 @@ namespace Qync {
 	 */
 	void Process::start(void) {
 		Q_ASSERT(m_process);
+		qDebug() << "starting rsync with options:\n"
+					<< m_args.join(' ');
 		m_process->start(m_command, m_args);
 
 		if(!m_logFileName.isEmpty()) {
@@ -366,11 +369,14 @@ namespace Qync {
 
 
 	void Process::parseStdout(void) {
+		static QRegularExpression progressLine(" *(\\d+|\\d+(?:,\\d{3})*) *(\\d+)% *(\\d+\\.\\d{2})(.)B/s *(\\d+):(\\d{2}):(\\d{2}).*(?:\\(.*, to\\-chk=(\\d+)/(\\d+)\\))?");
+		static QRegularExpression newItemLine("f(.*) (\\d+)");
+		static QRegularExpression completedLine("sent (\\d+|\\d+(?:,\\d{3})*) bytes *received (\\d+|\\d+(?:,\\d{3})*) bytes *((?:\\d+|\\d+(?:,\\d{3})*)(?:\\.(\\d{2}))?) bytes/sec");
+
 		Q_ASSERT(m_process);
 		//if(m_process->state() == QProcess::NotRunning) return;
 		qDebug() << __PRETTY_FUNCTION__ << "reading stdout from process";
 		QString data = m_process->readAllStandardOutput();
-		qDebug() << __PRETTY_FUNCTION__ << "data read:" << data;
 
 		if(m_logFile.isOpen()) {
 			m_logFile.write(data.toUtf8());
@@ -378,20 +384,12 @@ namespace Qync {
 
 		if(!data.isEmpty()) {
 			Q_EMIT standardOutputUpdated(data);
-			qDebug() << __PRETTY_FUNCTION__ << "updating cache of stdout data";
 			m_outputCache.append(data);
 
 			/* this parses the output of rsync for lines indicating progress */
-			qDebug() << __PRETTY_FUNCTION__ << "normalising line ends";
 			m_outputCache = m_outputCache.replace('\r', '\n');
 
 			QStringList lines(m_outputCache.split("\n"));
-			qDebug() << __PRETTY_FUNCTION__ << "splitting into lines - have" << lines.count() << "lines";
-			/* don't need it, but would be nice to capture duration:
-		   (\\d:\\d{2,2}:\\d{2,2}) doesn't seem to do it */
-			//			QRegExp progressLine(" *(\\d+) *(\\d+)% *(\\d:\\d{2,2}:\\d{2,2}) *\\(.*, to\\-check=(\\d+)/(\\d+)\\)");
-			//			QRegExp progressLine(" *(\\d+) *(\\d+)%.*\\(.*, to\\-check=(\\d+)/(\\d+)\\)");
-			QRegularExpression progressLine(" *(\\d+) *(\\d+)%.*\\(.*, to\\-check=(\\d+)/(\\d+)\\)");
 
 			for(int i = 0; i < lines.size() - 1; i++) {
 				data = lines[i];
@@ -399,38 +397,60 @@ namespace Qync {
 				if(data.isEmpty()) {
 					continue;
 				}
+
 				qDebug() << "processing line" << data;
-				QRegularExpressionMatch match = progressLine.match(data);
 
-				if(match.hasMatch()) {
-					qDebug() << "line is indication of progress";
-					//				if(-1 != progressLine.indexIn(data)) {
-					//					qDebug() << "item progress:" << progressLine.cap(1).toInt() << "bytes (" << progressLine.cap(2) << "%)";
-					//					qDebug() << "overall progress: 100 - " << progressLine.cap(3).toInt() << "* 100 /" << progressLine.cap(4).toInt() << "=" << (100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt());
-					qDebug() << "item progress:" << match.captured(1).toInt() << "bytes (" << match.captured(2) << "%)";
-					qDebug() << "overall progress: 100 - " << match.captured(3).toInt() << "* 100 /" << match.captured(4).toInt() << "=" << (100 - match.captured(3).toInt() * 100 / match.captured(4).toInt());
+				if(QRegularExpressionMatch progressLineMatch = progressLine.match(data); progressLineMatch.hasMatch()) {
+					/* TODO can the thousands separator be ' or . depending on locale? */
+					QStringList caps = progressLineMatch.capturedTexts();
 
-					//					Q_EMIT itemProgressBytes(progressLine.cap(1).toInt());
-					//					Q_EMIT itemProgress(progressLine.cap(2).toInt());
-					//					Q_EMIT overallProgress(100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt());
-					Q_EMIT itemProgressBytes(match.captured(1).toInt());
-					Q_EMIT itemProgress(match.captured(2).toInt());
-					Q_EMIT overallProgress(100 - match.captured(3).toInt() * 100 / match.captured(4).toInt());
+					qDebug() << "item bytes:" << caps[1];
+					int itemBytes = caps[1].replace(',', "").toInt();
+					int itemPc = caps[2].toInt();
+					float xferSpeed = caps[3].toFloat();
+
+					/* whatever unit the speed is expressed in, convert it to bytes per sec */
+					switch(caps[4][0].toLower().toLatin1()) {
+						case 'k':
+							xferSpeed *= 1024;
+							break;
+
+						case 'm':
+							xferSpeed *= (1024 * 1024);
+							break;
+
+						case 'g':
+							xferSpeed *= (1024 * 1024 * 1024);
+							break;
+					}
+
+					//[[maybe_unused]] int hours = caps[5].toInt();
+					//[[maybe_unused]] int mins = caps[6].toInt();
+					//[[maybe_unused]] int secs = caps[7].toInt();
+
+					Q_EMIT transferSpeed(xferSpeed);
+					Q_EMIT itemProgressBytes(itemBytes);
+					Q_EMIT itemProgress(itemPc);
+
+					qDebug() << "line has" << caps.size() << "captures";
+
+					if(10 <= caps.size()) {
+						int remainingItems = caps[8].toInt();
+						int totalItems = caps[9].toInt();
+						int completedItems = totalItems - remainingItems;
+						float overallPc = static_cast<float>((completedItems * 100.0) / totalItems);
+						qDebug() << "overall progress:" << completedItems << "/" << totalItems << "=" << overallPc << "%";
+						Q_EMIT overallProgress(static_cast<int>(overallPc));
+					}
 				}
-
-				/*			if(data.startsWith(' ')) {
-				QStringList progress = data.trimmed().split(" ", QString::SkipEmptyParts);
-
-				//qDebug() << "line items:" << progress;
-
-				if(progress.size() > 1) {
-					Q_EMIT itemProgressBytes(progress.at(0).toInt()));
-					Q_EMIT itemProgress(progress.at(1).left(progress.at(1).size() - 1).toInt()));
-				}
-			}*/
-				else if(data.size() > 1 && 'f' == data.at(1)) {
+				else if(QRegularExpressionMatch newItemMatch = newItemLine.match(data); newItemMatch.hasMatch()) {
 					qDebug() << "line is start of new item";
-					Q_EMIT newItemStarted(data.right(data.size() - 12));
+					Q_EMIT newItemStarted(newItemMatch.captured(1));
+				}
+				else if(QRegularExpressionMatch myMatch = completedLine.match(data); myMatch.hasMatch()) {
+					qDebug() << "line indicates overall completion";
+					qDebug() << "overall transfer speed:" << myMatch.captured(3);
+					Q_EMIT transferSpeed(myMatch.captured(3).replace(',', "").toFloat());
 				}
 			}
 

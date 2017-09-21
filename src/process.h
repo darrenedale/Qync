@@ -134,6 +134,13 @@ namespace Qync {
 		void overallProgress(int progress);
 
 		/**
+		 * \brief Emitted when an update to the transfer speed is available.
+		 *
+		 * \param bytesPerSecond is the current transfer speed in bytes per second.
+		 */
+		void transferSpeed(float bytesPerSecond);
+
+		/**
 		 * \brief Emitted when \b rsync has finished.
 		 *
 		 * \param code is the exit code.

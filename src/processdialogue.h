@@ -50,6 +50,7 @@ namespace Qync {
 		void updateItemProgress(int pc);
 		void updateItemInProgress(const QString & item);
 		void updateOverallProgress(int pc);
+		void updateTransferSpeed(float bytesPerSecond);
 
 		void saveOutput(void);
 
