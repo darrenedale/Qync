@@ -11,7 +11,7 @@
  * - QDebug
  * - QProcess
  * - QFile
- * - QRegExp
+ * - QRegularExpression
  *
  * \todo Consider whether to re-introduce parsing of stderr.
  * \todo Migrate to QRegularExpression.
@@ -23,7 +23,8 @@
 #include <QDebug>
 #include <QProcess>
 #include <QFile>
-#include <QRegExp>
+//#include <QRegExp>
+#include <QRegularExpression>
 
 #include "application.h"
 #include "preferences.h"
@@ -367,8 +368,9 @@ namespace Qync {
 	void Process::parseStdout(void) {
 		Q_ASSERT(m_process);
 		//if(m_process->state() == QProcess::NotRunning) return;
-
+		qDebug() << __PRETTY_FUNCTION__ << "reading stdout from process";
 		QString data = m_process->readAllStandardOutput();
+		qDebug() << __PRETTY_FUNCTION__ << "data read:" << data;
 
 		if(m_logFile.isOpen()) {
 			m_logFile.write(data.toUtf8());
@@ -376,31 +378,44 @@ namespace Qync {
 
 		if(!data.isEmpty()) {
 			Q_EMIT standardOutputUpdated(data);
+			qDebug() << __PRETTY_FUNCTION__ << "updating cache of stdout data";
 			m_outputCache.append(data);
 
 			/* this parses the output of rsync for lines indicating progress */
+			qDebug() << __PRETTY_FUNCTION__ << "normalising line ends";
 			m_outputCache = m_outputCache.replace('\r', '\n');
 
 			QStringList lines(m_outputCache.split("\n"));
+			qDebug() << __PRETTY_FUNCTION__ << "splitting into lines - have" << lines.count() << "lines";
 			/* don't need it, but would be nice to capture duration:
 		   (\\d:\\d{2,2}:\\d{2,2}) doesn't seem to do it */
-			//QRegExp progressLine(" *(\\d+) *(\\d+)% *(\\d:\\d{2,2}:\\d{2,2}) *\\(.*, to\\-check=(\\d+)/(\\d+)\\)");
-			QRegExp progressLine(" *(\\d+) *(\\d+)%.*\\(.*, to\\-check=(\\d+)/(\\d+)\\)");
+			//			QRegExp progressLine(" *(\\d+) *(\\d+)% *(\\d:\\d{2,2}:\\d{2,2}) *\\(.*, to\\-check=(\\d+)/(\\d+)\\)");
+			//			QRegExp progressLine(" *(\\d+) *(\\d+)%.*\\(.*, to\\-check=(\\d+)/(\\d+)\\)");
+			QRegularExpression progressLine(" *(\\d+) *(\\d+)%.*\\(.*, to\\-check=(\\d+)/(\\d+)\\)");
 
 			for(int i = 0; i < lines.size() - 1; i++) {
-				data = lines.at(i);
+				data = lines[i];
 
 				if(data.isEmpty()) {
 					continue;
 				}
+				qDebug() << "processing line" << data;
+				QRegularExpressionMatch match = progressLine.match(data);
 
-				if(progressLine.indexIn(data) != -1) {
-					qDebug() << "item progress:" << progressLine.cap(1).toInt() << "bytes (" << progressLine.cap(2) << "%)";
-					qDebug() << "overall progress: 100 - " << progressLine.cap(3).toInt() << "* 100 /" << progressLine.cap(4).toInt() << "=" << (100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt());
+				if(match.hasMatch()) {
+					qDebug() << "line is indication of progress";
+					//				if(-1 != progressLine.indexIn(data)) {
+					//					qDebug() << "item progress:" << progressLine.cap(1).toInt() << "bytes (" << progressLine.cap(2) << "%)";
+					//					qDebug() << "overall progress: 100 - " << progressLine.cap(3).toInt() << "* 100 /" << progressLine.cap(4).toInt() << "=" << (100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt());
+					qDebug() << "item progress:" << match.captured(1).toInt() << "bytes (" << match.captured(2) << "%)";
+					qDebug() << "overall progress: 100 - " << match.captured(3).toInt() << "* 100 /" << match.captured(4).toInt() << "=" << (100 - match.captured(3).toInt() * 100 / match.captured(4).toInt());
 
-					Q_EMIT itemProgressBytes(progressLine.cap(1).toInt());
-					Q_EMIT itemProgress(progressLine.cap(2).toInt());
-					Q_EMIT overallProgress(100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt());
+					//					Q_EMIT itemProgressBytes(progressLine.cap(1).toInt());
+					//					Q_EMIT itemProgress(progressLine.cap(2).toInt());
+					//					Q_EMIT overallProgress(100 - progressLine.cap(3).toInt() * 100 / progressLine.cap(4).toInt());
+					Q_EMIT itemProgressBytes(match.captured(1).toInt());
+					Q_EMIT itemProgress(match.captured(2).toInt());
+					Q_EMIT overallProgress(100 - match.captured(3).toInt() * 100 / match.captured(4).toInt());
 				}
 
 				/*			if(data.startsWith(' ')) {
@@ -414,6 +429,7 @@ namespace Qync {
 				}
 			}*/
 				else if(data.size() > 1 && 'f' == data.at(1)) {
+					qDebug() << "line is start of new item";
 					Q_EMIT newItemStarted(data.right(data.size() - 12));
 				}
 			}

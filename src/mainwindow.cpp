@@ -26,7 +26,6 @@
  * - preferencesdialogue.h
  * - functions.h
  *
- * \todo use QIcon::fromTheme() wherever possible
  * \todo convert includeInSynchronisation in .ui file to a custom subclass of
  * QComboBox
  */
