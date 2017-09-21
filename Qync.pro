@@ -1,6 +1,8 @@
 QT += widgets
 CONFIG += c++14
 
+QMAKE_CXXFLAGS += -std=c++1z
+
 HEADERS += \
     src/functions.h \
     src/application.h \
@@ -36,6 +38,7 @@ DISTFILES += dist/linux/qync.desktop \
     dist/linux/doc/qync/changelog \
     doc/cwrsync-license.txt \
     doc/license.txt \
+	Qync.Doxyfile \
     todo.txt \
     doc/mainpage.dox \
     doc/license_cwrsync.dox \
