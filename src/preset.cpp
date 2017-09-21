@@ -2,7 +2,7 @@
  * \file preset.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Implementation of the Preset class.
  *
@@ -40,7 +40,7 @@ namespace Qync {
 	 * \class Preset
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.5
+	 * \version 0.9.6
 	 *
 	 * \brief A class to represent a preset for the rsync process.
 	 *

@@ -2,7 +2,7 @@
  * \file QyncMainWindow.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Declaration of the QyncMainWindow class.
  *
@@ -26,6 +26,7 @@ namespace Qync {
 
 	class Preset;
 	class PreferencesDialogue;
+	class AboutDialogue;
 
 	class MainWindow
 	  : public QMainWindow {
@@ -121,25 +122,12 @@ namespace Qync {
 		 */
 		void exportPreset(void);
 
-		/**
-		 * \brief Show the preferences dialogue.
-		 */
 		void showPreferences(void);
 
 		void simulate(void);
 		void synchronise(void);
 
-		/**
-		 * \brief Show the about Qync dialogue.
-		 */
 		void about(void);
-
-		/**
-		 * \brief Show the about rsync dialogue.
-		 *
-		 * The dialogue content is retrieved from
-		 * \ref QyncManager::rsyncVersionText()
-		 */
 		void aboutRsync(void);
 
 	private Q_SLOTS:
@@ -148,14 +136,7 @@ namespace Qync {
 		void readPreferences(void);
 
 	protected:
-		/**
-		 * \brief Disconnect the manager's signals from the window's slots.
-		 */
 		void disconnectApplication(void);
-
-		/**
-		 * \brief Connect the manager's signals to the window's slots.
-		 */
 		void connectApplication(void);
 
 	private:
@@ -163,13 +144,11 @@ namespace Qync {
 		static const int OnlyUpdateExisting;
 		static const int DontUpdateExisting;
 
-		/**
-		 * \brief Fill a preset with the current settings.
-		 */
 		void fillPreset(Preset &) const;
 
 		std::unique_ptr<Ui::MainWindow> m_ui;
 		std::unique_ptr<PreferencesDialogue> m_prefsWindow;
+		std::unique_ptr<AboutDialogue> m_aboutDialogue;
 	};
 
 }  // namespace Qync

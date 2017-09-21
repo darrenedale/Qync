@@ -2,7 +2,7 @@
  * \file preferencesdialogue.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Implementation of the PreferencesDialogue class.
  *
@@ -36,7 +36,7 @@ namespace Qync {
 	 * \class PreferencesDialogue
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.5
+	 * \version 0.9.6
 	 *
 	 * \brief The preferences window of the Qync GUI.
 	 *
@@ -213,7 +213,7 @@ namespace Qync {
 		}
 
 		if(qyncApp->setPreferences(p)) {
-			if(!p->saveAs(Application::configurationPath() + "/guipreferences")) {
+			if(!p->saveAs(qyncApp->configurationPath() + "/guipreferences")) {
 				QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
 			}
 		}

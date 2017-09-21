@@ -2,7 +2,7 @@
  * \file application.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Implementation of the Application class.
  *
@@ -35,8 +35,10 @@
 #define QYNC_APP_DISPLAY_NAME "Qync"
 #define QYNC_APP_VERSION_STRING "0.9.6"
 #define QYNC_APP_VERSION_DATE "September 2017"
-#define QYNC_APP_BUILD_ID "<undefined>"
+#define QYNC_APP_BUILD_ID "c296551"
 #define QYNC_APP_WEBSITE "http://www.equituk.net/"
+#define QYNC_ORG_NAME "BitCraft"
+#define QYNC_ORG_DOMAIN "bitcraft.eu"
 
 
 namespace Qync {
@@ -45,7 +47,7 @@ namespace Qync {
 	 * \class Application
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.5
+	 * \version 0.9.6
 	 *
 	 * \brief Manages core application functionality for Qync.
 	 *
@@ -66,9 +68,62 @@ namespace Qync {
 	 */
 
 
-	QString Application::s_rsyncVersionText;
-	QString Application::s_configPath;
-	QString Application::s_presetsPath;
+	/**
+	 * \fn Application::presetAdded(Preset *, int)
+	 * \brief Emitted when a preset has been added.
+	 *
+	 * \param preset is a pointer to the preset that was added.
+	 * \param index is its index in the list of presets stored in the
+	 * manager.
+	 *
+	 * When emitted, this signal is always emitted before presetsChanged(),
+	 * never after.
+	 */
+
+
+	/**
+	 * \fn Application::presetRemoved(void)
+	 * \brief Emitted when a preset has been removed.
+	 *
+	 * When emitted, this signal is always emitted before presetsChanged(),
+	 * never after.
+	 */
+
+
+	/**
+	 * \fn Application::presetsChanged(void)
+	 * \brief Emitted when a preset has been removed.
+	 *
+	 * When emitted with either presetAdded() or presetRemoved(), this
+	 * signal is always emitted after the other, never before.
+	 */
+
+
+	/**
+	 * \fn Application::preferencesChanged(void)
+	 * \brief Emitted when the application preferences have changed.
+	 */
+
+
+	/**
+	 * \fn Application::processStarted(Process *) const
+	 * \brief Emitted when a process has been started.
+	 *
+	 * \param process is the process created.
+	 *
+	 * Extreme care needs to be taken when connecting to this signal. It is
+	 * emitted whenever a call to simulate() or execute() produces a valid
+	 * process. The process provided with the signal is owned elsewhere. The
+	 * manager does not guarantee its lifespan and the class(es) connecting
+	 * to the signal do not own it. The process could therefore be deleted
+	 * at any time without notice. Connecting classes may listen for signals
+	 * from the process and connect to its slots, but may not call any
+	 * method or otherwise manipulate the process.
+	 *
+	 * This means that the process may be invalid by the time your class
+	 * receives this signal, that the process may never get started and that
+	 * the process may never emit any signals at all.
+	 */
 
 
 	/**
@@ -76,25 +131,27 @@ namespace Qync {
 	 */
 	Application::Application(int & argc, char ** argv)
 	  : QApplication(argc, argv),
-		 m_prefs{} {
+		 m_rsyncVersionText(),
+		 m_configPath(),
+		 m_presetsPath(),
+		 m_presets(),
+		 m_prefs(),
+		 m_lastError() {
 		setApplicationName(QYNC_APP_NAME);
 		setApplicationDisplayName(QYNC_APP_DISPLAY_NAME);
 		setApplicationVersion(QYNC_APP_VERSION_STRING);
-		setOrganizationName("BitCraft");
-		setOrganizationDomain("bitcraft.eu");
+		setOrganizationName(QYNC_ORG_NAME);
+		setOrganizationDomain(QYNC_ORG_DOMAIN);
 		setProperty("ReleaseDate", QYNC_APP_VERSION_DATE);
 		setProperty("BuildId", QYNC_APP_BUILD_ID);
 		setProperty("ApplicationWebsite", QYNC_APP_WEBSITE);
 
-		/* no need to check for wasteful assignment to a static that's already initialised:
-		 * the QApplication constructor will have bailed out before we get here if there's
-		 * already an instance of this class in existence. */
-		/* also, we have to do this here rather than in the static initialiser section above
+		/* we have to do this here rather than in the static initialiser section above
 		 * because we need QStandardPaths to take account of the organisation name/domain and
 		 * application name set in this constructor. in the static init section above, these
 		 * are not yet set */
-		s_configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-		s_presetsPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets";
+		m_configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+		m_presetsPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets";
 
 		// ensure presets dir exists
 		QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).mkpath("presets");
@@ -119,7 +176,7 @@ namespace Qync {
 	 * \return The configuration directory path.
 	 */
 	QString Application::configurationPath(void) {
-		return s_configPath;
+		return m_configPath;
 	}
 
 	/**
@@ -131,7 +188,7 @@ namespace Qync {
 	 * \return The presets directory path.
 	 */
 	QString Application::presetsPath(void) {
-		return s_presetsPath;
+		return m_presetsPath;
 	}
 
 
@@ -180,7 +237,7 @@ namespace Qync {
 	 * \return \b true if the preferences were set, \b false otherwise.
 	 */
 	bool Application::setPreferences(Preferences * prefs) {
-		Application::s_rsyncVersionText = QString(); /* force re-read on next call to rsyncVersionText() as binary might have changed */
+		m_rsyncVersionText = QString(); /* force re-read on next call to rsyncVersionText() as binary might have changed */
 		m_prefs.reset(prefs);
 		Q_EMIT preferencesChanged();
 		return true;
@@ -287,7 +344,7 @@ namespace Qync {
 			QStringList err;
 			QFileInfo f(preset->fileName());
 
-			if(f.exists() && f.absoluteFilePath().startsWith(s_presetsPath + "/")) {
+			if(f.exists() && f.absoluteFilePath().startsWith(m_presetsPath + "/")) {
 				if(!QFile::remove(f.absoluteFilePath())) {
 					err << tr("The file for the preset could not be deleted from disk. It will reappear next time your presets are reloaded.");
 				}
@@ -347,9 +404,9 @@ namespace Qync {
 			QFileInfo f(preset->fileName());
 
 			/* if the file is not in the presets dir, give it a new filename */
-			if(!f.absoluteFilePath().startsWith(Application::s_presetsPath + "/")) {
+			if(!f.absoluteFilePath().startsWith(m_presetsPath + "/")) {
 				QString fileName;
-				QDir presetDir(Application::s_presetsPath);
+				QDir presetDir(m_presetsPath);
 				int index = 0;
 
 				do {
@@ -401,11 +458,31 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Load the presets from the default location.
+	 *
+	 * The existing presets are discarded and the set stored in the default
+	 * location are loaded. The default location is usually in the user's
+	 * home directory. This differs according to platform.
+	 *
+	 * return \b true if the presets were loaded, \b false otherwise.
+	 */
 	bool Application::loadPresets(void) {
 		return loadPresets(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/");
 	}
 
 
+	/**
+	 * \brief Load the presets from a specified location.
+	 *
+	 * \param path is the path to the directory from which to load the
+	 * presets.
+	 *
+	 * The existing presets are discarded and the set stored in the
+	 * specified location are loaded.
+	 *
+	 * return \b true if the presets were loaded, \b false otherwise.
+	 */
 	bool Application::loadPresets(const QString & path) {
 		QSignalBlocker blocker(this);
 		QDir d(path);
@@ -557,14 +634,14 @@ namespace Qync {
 	 * not valid.
 	 */
 	QString Application::rsyncVersionText(void) {
-		if(m_prefs && Application::s_rsyncVersionText.isEmpty()) {
+		if(m_prefs && m_rsyncVersionText.isEmpty()) {
 			QProcess p(this);
 			p.start(m_prefs->rsyncPath(), QStringList() << "--version", QIODevice::ReadOnly | QIODevice::Text);
 			p.waitForFinished();
-			Application::s_rsyncVersionText = p.readAll();
+			m_rsyncVersionText = p.readAll();
 		}
 
-		return Application::s_rsyncVersionText;
+		return m_rsyncVersionText;
 	}
 
 

@@ -2,7 +2,7 @@
  * \file functions.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Defines free-standing functions that are available throughout
  * the application.
@@ -13,8 +13,8 @@
  * - QXmlStreamReader
  */
 
-#ifndef QYNC_COMMON_H
-#define QYNC_COMMON_H
+#ifndef QYNC_FUNCTIONS_H
+#define QYNC_FUNCTIONS_H
 
 class QXmlStreamReader;
 
@@ -22,4 +22,4 @@ namespace Qync {
 	void parseUnknownElementXml(QXmlStreamReader & xml);
 };
 
-#endif  // QYNC_COMMON_H
+#endif  // QYNC_FUNCTIONS_H

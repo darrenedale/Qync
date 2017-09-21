@@ -1,7 +1,11 @@
 #ifndef QYNC_ABOUTDIALOGUE_H
 #define QYNC_ABOUTDIALOGUE_H
 
+#include <memory>
+
 #include <QDialog>
+
+class QString;
 
 namespace Qync {
 
@@ -9,18 +13,19 @@ namespace Qync {
 		class AboutDialogue;
 	}
 
-	class AboutDialogue : public QDialog
-	{
-			Q_OBJECT
+	class AboutDialogue
+	  : public QDialog {
+		Q_OBJECT
 
-		public:
-			explicit AboutDialogue(QWidget *parent = 0);
-			~AboutDialogue();
+	public:
+		explicit AboutDialogue(void);
+		~AboutDialogue(void);
 
-		private:
-			Ui::AboutDialogue *ui;
+	private:
+		static QString & processPlaceholders(QString && content);
+
+		std::unique_ptr<Ui::AboutDialogue> m_ui;
 	};
 
-
-} // namespace Qync
-#endif // QYNC_ABOUTDIALOGUE_H
+}  // namespace Qync
+#endif  // QYNC_ABOUTDIALOGUE_H

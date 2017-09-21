@@ -2,7 +2,7 @@
  * \file GuiPreferences.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Declaration of the GuiPreferences class.
  *
@@ -28,7 +28,7 @@ namespace Qync {
  * \class GuiPreferences
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief A class representing application preferences including GUI
  * preferences.

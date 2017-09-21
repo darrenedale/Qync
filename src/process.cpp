@@ -2,7 +2,7 @@
  * \file process.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Implementation of the Process class.
  *
@@ -37,7 +37,7 @@ namespace Qync {
 	 * \class Process
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.5
+	 * \version 0.9.6
 	 *
 	 * \brief Wraps the rsync process.
 	 *

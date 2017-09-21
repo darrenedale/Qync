@@ -2,7 +2,7 @@
  * \file guipreferences.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Implementation of the GuiPreferences class.
  *
@@ -90,33 +90,45 @@ namespace Qync {
 	 */
 	Qt::ToolButtonStyle GuiPreferences::parseToolButtonStyleText(const QString & style, bool * ok) {
 		if("icononly" == style.trimmed().toLower()) {
-			if(ok)
+			if(ok) {
 				*ok = true;
+			}
+
 			return Qt::ToolButtonIconOnly;
 		}
 		if("textonly" == style.trimmed().toLower()) {
-			if(ok)
+			if(ok) {
 				*ok = true;
+			}
+
 			return Qt::ToolButtonTextOnly;
 		}
 		else if("textbesideicon" == style.trimmed().toLower()) {
-			if(ok)
+			if(ok) {
 				*ok = true;
+			}
+
 			return Qt::ToolButtonTextBesideIcon;
 		}
 		else if("textundericon" == style.trimmed().toLower()) {
-			if(ok)
+			if(ok) {
 				*ok = true;
+			}
+
 			return Qt::ToolButtonTextUnderIcon;
 		}
 		else if("styledefault" == style.trimmed().toLower()) {
-			if(ok)
+			if(ok) {
 				*ok = true;
+			}
+
 			return Qt::ToolButtonFollowStyle;
 		}
 
-		if(ok)
+		if(ok) {
 			*ok = false;
+		}
+
 		return Qt::ToolButtonFollowStyle;
 	}
 
@@ -200,7 +212,6 @@ namespace Qync {
 				xml.writeCharacters("TextUnderIcon");
 				break;
 
-			default:
 			case Qt::ToolButtonFollowStyle:
 				xml.writeCharacters("StyleDefault");
 				break;
@@ -225,8 +236,10 @@ namespace Qync {
 	bool GuiPreferences::parseXmlElement(QXmlStreamReader & xml) {
 		Q_ASSERT(xml.isStartElement());
 
-		if("guipreferences" == xml.name())
+		if("guipreferences" == xml.name()) {
 			return parseGuiPreferencesXml(xml);
+		}
+
 		return Preferences::parseXmlElement(xml);
 	}
 
@@ -244,12 +257,14 @@ namespace Qync {
 		while(!xml.atEnd()) {
 			xml.readNext();
 
-			if(xml.isEndElement())
+			if(xml.isEndElement()) {
 				break;
+			}
 
 			if(xml.isCharacters()) {
-				if(!xml.isWhitespace())
+				if(!xml.isWhitespace()) {
 					qDebug() << "GuiPreferences::parseGuiPreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				}
 
 				/* ignore extraneous characters */
 				continue;
@@ -258,23 +273,30 @@ namespace Qync {
 			if("presetstoolbar" == xml.name()) {
 				bool ok;
 				bool value = Preferences::parseBooleanText(xml.readElementText(), &ok);
-				if(ok)
+
+				if(ok) {
 					setShowPresetsToolBar(value);
+				}
 			}
 			else if("synchronisetoolbar" == xml.name()) {
 				bool ok;
 				bool value = Preferences::parseBooleanText(xml.readElementText(), &ok);
-				if(ok)
+
+				if(ok) {
 					setShowSynchroniseToolBar(value);
+				}
 			}
 			else if("toolbarbuttonstyle" == xml.name()) {
 				bool ok;
 				Qt::ToolButtonStyle value = GuiPreferences::parseToolButtonStyleText(xml.readElementText(), &ok);
-				if(ok)
+
+				if(ok) {
 					this->setToolBarButtonStyle(value);
+				}
 			}
-			else
+			else {
 				Qync::parseUnknownElementXml(xml);
+			}
 		}
 
 		return true;
