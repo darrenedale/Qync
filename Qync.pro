@@ -10,7 +10,8 @@ HEADERS += \
     src/preferencesdialogue.h \
     src/preset.h \
     src/process.h \
-    src/processdialogue.h
+    src/processdialogue.h \
+    src/aboutdialogue.h
 
 SOURCES += \
 	src/qync.cpp \
@@ -22,7 +23,8 @@ SOURCES += \
     src/preferencesdialogue.cpp \
     src/preset.cpp \
     src/process.cpp \
-    src/processdialogue.cpp
+    src/processdialogue.cpp \
+    src/aboutdialogue.cpp
 
 RESOURCES += resources/icons.qrc
 
@@ -46,4 +48,5 @@ DISTFILES += dist/linux/qync.desktop \
 FORMS += \
     ui/processdialogue.ui \
     ui/mainwindow.ui \
-    ui/preferencesdialogue.ui
+    ui/preferencesdialogue.ui \
+    ui/aboutdialogue.ui

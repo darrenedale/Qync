@@ -2,7 +2,7 @@
  * \file MainWindow.cpp
  * \author Darren Edale
  * \date September, 2017
- * \version 0.9.5
+ * \version 0.9.6
  *
  * \brief Implementation of the MainWindow class.
  *
@@ -51,6 +51,7 @@
 #include "process.h"
 #include "processdialogue.h"
 #include "preferencesdialogue.h"
+#include "aboutdialogue.h"
 #include "functions.h"
 
 
@@ -61,7 +62,7 @@ namespace Qync {
 	 * \class MainWindow
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.5
+	 * \version 0.9.6
 	 *
 	 * \brief The main window of the Qync GUI.
 	 *
@@ -138,24 +139,26 @@ namespace Qync {
 	MainWindow::MainWindow(void)
 	  : QMainWindow(nullptr),
 		 m_ui(new Ui::MainWindow),
-		 m_prefsWindow(nullptr) {
+		 m_prefsWindow(nullptr),
+		 m_aboutDialogue(nullptr) {
 		m_ui->setupUi(this);
 		m_ui->presetsToolbar->insertWidget(m_ui->actionNew, m_ui->presets);
 		setWindowIcon(QIcon(":/icons/application"));
 		setWindowTitle(qyncApp->applicationDisplayName());
 		setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-
-		GuiPreferences * newPrefs = new GuiPreferences(Application::configurationPath() + "/guipreferences");
+		GuiPreferences * newPrefs = new GuiPreferences(qyncApp->configurationPath() + "/guipreferences");
 		qyncApp->setPreferences(newPrefs);
 
-		//		createWidgets();
 		connectApplication();
 		refreshPresets();
 		readPreferences();
 
 		m_prefsWindow.reset(new PreferencesDialogue);
 		m_prefsWindow->setWindowTitle(tr("%1 Preferences").arg(qyncApp->applicationDisplayName()));
+
+		m_aboutDialogue.reset(new AboutDialogue);
+		m_aboutDialogue->setWindowTitle(tr("About %1").arg(qyncApp->applicationDisplayName()));
 	}
 
 
@@ -272,11 +275,17 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Disconnect the manager's signals from the window's slots.
+	 */
 	void MainWindow::disconnectApplication(void) {
 		qyncApp->disconnect(this);
 	}
 
 
+	/**
+	 * \brief Connect the manager's signals to the window's slots.
+	 */
 	void MainWindow::connectApplication(void) {
 		connect(qyncApp, &Application::presetsChanged, this, &MainWindow::refreshPresets);
 		connect(qyncApp, &Application::preferencesChanged, this, &MainWindow::readPreferences);
@@ -546,6 +555,9 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Fill a preset with the current settings.
+	 */
 	void MainWindow::fillPreset(Preset & p) const {
 		p.setPreserveGroup(m_ui->preserveGroup->isChecked());
 		p.setPreserveOwner(m_ui->preserveOwner->isChecked());
@@ -638,6 +650,9 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Show the preferences dialogue.
+	 */
 	void MainWindow::showPreferences(void) {
 		m_prefsWindow->show();
 		m_prefsWindow->raise();
@@ -645,11 +660,22 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Show the about Qync dialogue.
+	 */
 	void MainWindow::about(void) {
-		QMessageBox::about(this, tr("About %1").arg(qyncApp->applicationDisplayName()), "<p><big><b>" + qyncApp->applicationDisplayName() + " v" + qyncApp->applicationVersion() + "</b></big><br /><small>" + qyncApp->property("ReleaseDate").toString() + "</small></p><p><a href=\"" + qyncApp->property("ApplicationWebsite").toString() + "\">&lt;" + qyncApp->property("ApplicationWebsite").toString() + "&gt;</a></p><p>A Qt front end for rsync<br />Written by Darren Edale</p><p><small>" + qyncApp->applicationDisplayName() + " uses the Qt toolkit (<a href=\"http://qt-project.org/\">http://qt-project.org/</a>).</small></p>");
+		m_aboutDialogue->show();
+		m_aboutDialogue->raise();
+		m_aboutDialogue->setFocus();
 	}
 
 
+	/**
+	 * \brief Show the about rsync dialogue.
+	 *
+	 * The dialogue content is retrieved from
+	 * \ref QyncManager::rsyncVersionText()
+	 */
 	void MainWindow::aboutRsync(void) {
 		QMessageBox::information(this, tr("Qync - About rsync"), qyncApp->rsyncVersionText());
 	}
