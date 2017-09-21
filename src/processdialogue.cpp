@@ -284,7 +284,10 @@ namespace Qync {
 		/* transfer speed should already be set to the overall speed as emitted by rsync
 		 * process in its stdout */
 		//		m_ui->transferSpeed->setText({});
-		//		QMessageBox::information(this, tr("%1 Message").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process completed successfully.") : msg), QMessageBox::Ok);
+
+		if(!msg.isEmpty()) {
+			QMessageBox::information(this, tr("%1 Message").arg(qyncApp->applicationDisplayName()), msg, QMessageBox::Ok);
+		}
 	}
 
 
