@@ -1,5 +1,5 @@
 /**
- * \file PreferencesDialogue.h
+ * \file preferencesdialogue.h
  * \author Darren Edale
  * \date September 2017
  * \version 0.9.6
@@ -7,6 +7,7 @@
  * \brief Declaration of the PreferencesDialogue class.
  *
  * \dep
+ * - memory
  * - QDialog
  */
 
@@ -16,11 +17,6 @@
 #include <memory>
 
 #include <QDialog>
-
-//class QLineEdit;
-//class QToolButton;
-//class QCheckBox;
-//class QComboBox;
 
 namespace Qync {
 
@@ -46,11 +42,6 @@ namespace Qync {
 
 	private:
 		std::unique_ptr<Ui::PreferencesDialogue> m_ui;
-		//		QLineEdit * m_rsyncPath;
-		//		QToolButton * m_chooseRsyncPath;
-		//		QCheckBox * m_presetsToolBar;
-		//		QCheckBox * m_synchroniseToolBar;
-		//		QComboBox * m_toolBarStyle;
 	};
 
 }  // namespace Qync

@@ -9,8 +9,6 @@
  * \dep
  * - QObject
  * - QString
- * - QXmlStreamReader
- * - QXmlStreamWriter
  */
 
 #ifndef QYNC_PRESET_H
@@ -18,8 +16,9 @@
 
 #include <QObject>
 #include <QString>
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
+
+class QXmlStreamReader;
+class QXmlStreamWriter;
 
 namespace Qync {
 

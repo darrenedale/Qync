@@ -1,10 +1,10 @@
 /**
- * \file Manager.h
+ * \file application.h
  * \author Darren Edale
  * \date September 2017
  * \version 0.9.6
  *
- * \brief Declaration of the Manager class.
+ * \brief Declaration of the Application class.
  *
  * \dep
  * - memory
@@ -37,6 +37,8 @@ namespace Qync {
 
 		Application(int & argc, char ** argv);
 		~Application(void);
+
+		static int exec(void);
 
 		QString configurationPath(void);
 		QString presetsPath(void);

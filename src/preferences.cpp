@@ -7,12 +7,14 @@
  * \brief Implementation of the Preferences class.
  *
  * \dep
- * - QDir
  * - QDebug
+ * - QXmlStreamWriter
+ * - QXmlStreamReader
+ * - QDir
  * - QFileInfo
  * - QProcess
-* - preferences.h
-* - functions.h
+ * - preferences.h
+ * - functions.h
  */
 
 #include "preferences.h"
@@ -65,7 +67,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new QuncPreferences object.
+	 * \brief Create a new Preferences object.
 	 *
 	 * \param fileName is the path to the file from which to load the
 	 * preferences.

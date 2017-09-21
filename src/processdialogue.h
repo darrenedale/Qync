@@ -1,10 +1,10 @@
 /**
- * \file QyncProcessDialogue.h
+ * \file processdialogue.h
  * \author Darren Edale
  * \date September 2017
  * \version 0.9.6
  *
- * \brief Declaration of the QyncProcessDialogue class.
+ * \brief Declaration of the ProcessDialogue class.
  *
  * \dep
  * - memory
@@ -70,6 +70,8 @@ namespace Qync {
 
 		std::unique_ptr<Ui::ProcessDialogue> m_ui;
 
+		/* pointers to these are kept for convenience. they are valid for as long
+		 * as m_ui is valid (i.e. the lifetime of the object) */
 		QPushButton * m_saveButton;
 		QPushButton * m_abortButton;
 	};

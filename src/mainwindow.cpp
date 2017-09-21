@@ -319,47 +319,98 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Choose a local file for the rsync source.
+	 *
+	 * A local file browser is presented for the user to to choose a source
+	 * for rsync. If the user does not cancel the dialogue, the chosen file
+	 * is set as the text in the source line edit.
+	 */
 	void MainWindow::chooseSourceFile(void) {
 		QString newSource = QFileDialog::getOpenFileName(this, tr("Choose source"), m_ui->source->text());
-		if(!newSource.isNull())
+
+		if(!newSource.isNull()) {
 			m_ui->source->setText(newSource);
+		}
 	}
 
 
+	/**
+	 * \brief Choose a local file for the rsync destination.
+	 *
+	 * A local file browser is presented for the user to to choose a
+	 * destination for rsync. If the user does not cancel the dialogue, the
+	 * chosen file is set as the text in the destination line edit.
+	 */
 	void MainWindow::chooseDestinationFile(void) {
 		QString newDest = QFileDialog::getOpenFileName(this, tr("Choose destination"), m_ui->destination->text());
-		if(!newDest.isNull())
+
+		if(!newDest.isNull()) {
 			m_ui->destination->setText(newDest);
+		}
 	}
 
 
+	/**
+	 * \brief Choose a local directory for the rsync source.
+	 *
+	 * A local directory browser is presented for the user to to choose a
+	 * source for rsync. If the user does not cancel the dialogue, the
+	 * chosen directory is set as the text in the source line edit.
+	 */
 	void MainWindow::chooseSourceDirectory(void) {
 		QString newSource = QFileDialog::getExistingDirectory(this, tr("Choose source"), m_ui->source->text());
+
 		if(!newSource.isNull()) {
-			if(!newSource.endsWith(("/")))
+			if(!newSource.endsWith(("/"))) {
 				newSource.append("/");
+			}
+
 			m_ui->source->setText(newSource);
 		}
 	}
 
 
+	/**
+	 * \brief Choose a local directory for the rsync destination.
+	 *
+	 * A local directory browser is presented for the user to to choose a
+	 * destination for rsync. If the user does not cancel the dialogue, the
+	 * chosen directory is set as the text in the destination line edit.
+	 */
+	void chooseDestinationDirectory(void);
 	void MainWindow::chooseDestinationDirectory(void) {
 		QString newDest = QFileDialog::getExistingDirectory(this, tr("Choose destination"), m_ui->destination->text());
+
 		if(!newDest.isNull()) {
-			if(!newDest.endsWith(("/")))
+			if(!newDest.endsWith(("/"))) {
 				newDest.append("/");
+			}
+
 			m_ui->destination->setText(newDest);
 		}
 	}
 
 
+	/**
+	 * \brief Choose a local file for the rsycn output log.
+	 *
+	 * A local file browser is presented for the user to to choose a log
+	 * file. If the user does not cancel the dialogue, the chosen file is
+	 * set as the text in the log file line edit.
+	 */
 	void MainWindow::chooseLogFile(void) {
 		QString newLog = QFileDialog::getSaveFileName(this, tr("Choose log file"), m_ui->logFile->text());
-		if(!newLog.isNull())
+
+		if(!newLog.isNull()) {
 			m_ui->logFile->setText(newLog);
+		}
 	}
 
 
+	/**
+	 * \brief Switch the content of the source and destination line edits.
+	 */
 	void MainWindow::switchSourceAndDestination(void) {
 		QString t = m_ui->source->text();
 		m_ui->source->setText(m_ui->destination->text());
@@ -398,8 +449,9 @@ namespace Qync {
 		oldPreset->setSource(temp.source());
 		oldPreset->setDestination(temp.destination());
 
-		for(i = mo->propertyOffset(); i < mo->propertyCount(); i++)
+		for(i = mo->propertyOffset(); i < mo->propertyCount(); ++i) {
 			oldPreset->setProperty(mo->property(i).name(), temp.property(mo->property(i).name()));
+		}
 
 		/* save and redisplay original preset */
 		oldPreset->save();
@@ -483,6 +535,15 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Import a preset from a file.
+	 *
+	 * A file dialogue is presented for the user to choose a file from which
+	 * to import a preset. If the user does not cancel the dialogue and the
+	 * file s/he chooses is a valid preset file, the preset is added to
+	 * the manager. Any failures to do so, other than the user cancelling
+	 * the dialogue, are reported to the user.
+	 */
 	void MainWindow::importPreset(void) {
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Import %1 preset").arg(qyncApp->applicationDisplayName()));
 
@@ -515,6 +576,20 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Export a preset to a file.
+	 *
+	 * A file dialogue is presented for the user to choose a file to which
+	 * to export a preset. If the user does not cancel the dialogue, the
+	 * current settings are saved to the selected file. Any failures to do
+	 * so, other than the user cancelling the dialogue, are reported to the
+	 * user.
+	 *
+	 * \note It is the current settings \b not the current preset that is
+	 * exported. The two could be different if the user has selected a
+	 * preset and altered the settings without saving the settings back to
+	 * selected preset.
+	 */
 	void MainWindow::exportPreset(void) {
 		QString fileName = QFileDialog::getSaveFileName(this, tr("Export %1 preset").arg(qyncApp->applicationDisplayName()));
 
@@ -588,6 +663,7 @@ namespace Qync {
 
 			default:
 				qWarning() << "unexpeced selected index" << m_ui->includeInSynchronisation->currentIndex() << "in \"what to sync\" combo box";
+				[[fallthrough]];
 			case UpdateEverything:
 				p.setOnlyUpdateExistingEntries(false);
 				p.setDontUpdateExistingEntries(false);

@@ -1,3 +1,16 @@
+/**
+ * \file aboutdialogue.h
+ * \author Darren Edale
+ * \date September 2017
+ * \version 0.9.6
+ *
+ * \brief Declaration of the AboutDialogue class.
+ *
+ * \dep
+ * - memory
+ * - QDialog
+ */
+
 #ifndef QYNC_ABOUTDIALOGUE_H
 #define QYNC_ABOUTDIALOGUE_H
 

@@ -1,5 +1,5 @@
 /**
- * \file Preferences.h
+ * \file preferences.h
  * \author Darren Edale
  * \date September 2017
  * \version 0.9.6
@@ -8,8 +8,6 @@
  *
  * \dep
  * - QString
- * - QXmlStreamWriter
- * - QXmlStreamReader
  */
 
 #ifndef QYNC_PREFERENCES_H

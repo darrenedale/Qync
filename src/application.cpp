@@ -26,6 +26,7 @@
 #include <QProcess>
 #include <QStandardPaths>
 
+#include "mainwindow.h"
 #include "preset.h"
 #include "process.h"
 #include "preferences.h"
@@ -212,6 +213,20 @@ namespace Qync {
 	 */
 	QString Application::lastError(void) const {
 		return m_lastError;
+	}
+
+
+	/**
+	 * \brief Start the application's main loop.
+	 *
+	 * The main window is shown and the main loop is executed.
+	 *
+	 * \return 0 on successful execution, non-0 on error.
+	 */
+	int Application::exec(void) {
+		MainWindow win;
+		win.show();
+		return QApplication::exec();
 	}
 
 

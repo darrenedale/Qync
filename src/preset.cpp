@@ -7,7 +7,7 @@
  * \brief Implementation of the Preset class.
  *
  * \dep
- * - Preset.h
+ * - preset.h
  * - QDebug
  * - QDir
  * - QFile

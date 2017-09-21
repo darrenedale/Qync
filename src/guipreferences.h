@@ -1,5 +1,5 @@
 /**
- * \file GuiPreferences.h
+ * \file guipreferences.h
  * \author Darren Edale
  * \date September 2017
  * \version 0.9.6
@@ -24,26 +24,6 @@
 
 namespace Qync {
 
-	/**
- * \class GuiPreferences
- * \author Darren Edale
- * \date September 2017
- * \version 0.9.6
- *
- * \brief A class representing application preferences including GUI
- * preferences.
- *
- * This is an extension of the Preferences class to record preferences for
- * the following GUI-related items:
- * - whether or not the presets toolbar is shown
- * - whether or not the synchronise toolbar is shown
- * - the style of buttons on the toolbar(s):
- *   - Icons only
- *   - Text only
- *   - Icons with text below
- *   - Icons with text beside
- *   - Whatever style the current visual theme suggests
- */
 	class GuiPreferences
 	  : public Preferences {
 	public:

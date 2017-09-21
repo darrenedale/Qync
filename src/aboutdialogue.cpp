@@ -1,3 +1,16 @@
+/**
+ * \file application.cpp
+ * \author Darren Edale
+ * \date September 2017
+ * \version 0.9.6
+ *
+ * \brief Implementation of the AboutDialogue class.
+ *
+ * \dep
+ * - QString
+ * - application.h
+ */
+
 #include "src/aboutdialogue.h"
 #include "ui_aboutdialogue.h"
 
@@ -39,6 +52,7 @@ namespace Qync {
 
 	QString & AboutDialogue::processPlaceholders(QString && content) {
 		content.replace("{ApplicationDisplayName}", qyncApp->applicationDisplayName());
+		content.replace("{ApplicationVersion}", qyncApp->applicationVersion());
 		content.replace("{ApplicationWebsite}", qyncApp->websiteUrl());
 		content.replace("{ReleaseDate}", qyncApp->releaseDate());
 		content.replace("{BuildId}", qyncApp->buildId());

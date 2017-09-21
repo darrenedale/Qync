@@ -33,7 +33,5 @@
  */
 int main(int argc, char ** argv) {
 	Qync::Application app(argc, argv);
-	Qync::MainWindow win;
-	win.show();
 	return app.exec();
 }
