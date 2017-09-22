@@ -27,7 +27,7 @@ namespace Qync {
 	}
 
 	class AboutDialogue
-	  : public QDialog {
+	: public QDialog {
 		Q_OBJECT
 
 	public:

@@ -22,35 +22,14 @@ class QXmlStreamWriter;
 
 namespace Qync {
 
-	class Preset
-	  : public QObject {
-		Q_OBJECT
-
-		Q_PROPERTY(bool preserveTime READ preserveTime WRITE setPreserveTime)
-		Q_PROPERTY(bool preservePermissions READ preservePermissions WRITE setPreservePermissions)
-		Q_PROPERTY(bool preserveOwner READ preserveOwner WRITE setPreserveOwner)
-		Q_PROPERTY(bool preserveGroup READ preserveGroup WRITE setPreserveGroup)
-
-		Q_PROPERTY(bool windowsCompatability READ windowsCompatability WRITE setWindowsCompatability)
-		Q_PROPERTY(bool honourDeletions READ honourDeletions WRITE setHonourDeletions)
-
-		Q_PROPERTY(bool alwaysCompareChecksums READ alwaysCompareChecksums WRITE setAlwaysCompareChecksums)
-		Q_PROPERTY(bool preserveDevices READ preserveDevices WRITE setPreserveDevices)
-		Q_PROPERTY(bool keepPartialTransfers READ keepPartialTransfers WRITE setKeepPartialTransfers)
-		Q_PROPERTY(bool copySymlinksAsSymlinks READ copySymlinksAsSymlinks WRITE setCopySymlinksAsSymlinks)
-		Q_PROPERTY(bool makeBackups READ makeBackups WRITE setMakeBackups)
-
-		Q_PROPERTY(bool useTransferCompression READ useTransferCompression WRITE setUseTransferCompression)
-		Q_PROPERTY(bool onlyUpdateExistingEntries READ onlyUpdateExistingEntries WRITE setOnlyUpdateExistingEntries)
-		Q_PROPERTY(bool dontUpdateExistingEntries READ dontUpdateExistingEntries WRITE setDontUpdateExistingEntries)
-		Q_PROPERTY(bool dontMapUsersAndGroups READ dontMapUsersAndGroups WRITE setDontMapUsersAndGroups)
-		Q_PROPERTY(bool copyHardlinksAsHardlinks READ copyHardlinksAsHardlinks WRITE setCopyHardlinksAsHardlinks)
-		Q_PROPERTY(bool showItemisedChanges READ showItemisedChanges WRITE setShowItemisedChanges)
-
-		Q_PROPERTY(QString logFile READ logFile WRITE setLogFile)
-
+	class Preset {
 	public:
 		explicit Preset(const QString & name = QString());
+		Preset(const Preset & other) = default;
+		Preset(Preset && other) = default;
+
+		Preset & operator=(const Preset & other) = default;
+		Preset & operator=(Preset && other) = default;
 
 		static Preset * load(const QString & fileName);
 
@@ -75,23 +54,23 @@ namespace Qync {
 
 		bool setSource(const QString & source);
 		bool setDestination(const QString & dest);
-		bool setPreserveTime(bool preserve);
-		bool setPreservePermissions(bool preserve);
-		bool setPreserveOwner(bool preserve);
-		bool setPreserveGroup(bool preserve);
-		bool setWindowsCompatability(bool compatible);
-		bool setHonourDeletions(bool honour);
-		bool setAlwaysCompareChecksums(bool checksums);
-		bool setPreserveDevices(bool preserve);
-		bool setKeepPartialTransfers(bool keep);
-		bool setCopySymlinksAsSymlinks(bool links);
-		bool setMakeBackups(bool backup);
-		bool setUseTransferCompression(bool compress);
-		bool setOnlyUpdateExistingEntries(bool onlyExisting);
-		bool setDontUpdateExistingEntries(bool noExisting);
-		bool setDontMapUsersAndGroups(bool dontMap);
-		bool setCopyHardlinksAsHardlinks(bool links);
-		bool setShowItemisedChanges(bool itemise);
+		bool setPreserveTime(const bool & preserve);
+		bool setPreservePermissions(const bool & preserve);
+		bool setPreserveOwner(const bool & preserve);
+		bool setPreserveGroup(const bool & preserve);
+		bool setWindowsCompatability(const bool & compatible);
+		bool setHonourDeletions(const bool & honour);
+		bool setAlwaysCompareChecksums(const bool & checksums);
+		bool setPreserveDevices(const bool & preserve);
+		bool setKeepPartialTransfers(const bool & keep);
+		bool setCopySymlinksAsSymlinks(const bool & links);
+		bool setMakeBackups(const bool & backup);
+		bool setUseTransferCompression(const bool & compress);
+		bool setOnlyUpdateExistingEntries(const bool & onlyExisting);
+		bool setDontUpdateExistingEntries(const bool & noExisting);
+		bool setDontMapUsersAndGroups(const bool & dontMap);
+		bool setCopyHardlinksAsHardlinks(const bool & links);
+		bool setShowItemisedChanges(const bool & itemise);
 		bool setLogFile(const QString & fileName);
 
 		inline QString source(void) const {
@@ -102,75 +81,75 @@ namespace Qync {
 			return m_dest;
 		}
 
-		inline bool preserveTime(void) const {
+		inline const bool & preserveTime(void) const {
 			return m_preserveTime;
 		}
 
-		inline bool preservePermissions(void) const {
+		inline const bool & preservePermissions(void) const {
 			return m_preservePerms;
 		}
 
-		inline bool preserveOwner(void) const {
+		inline const bool & preserveOwner(void) const {
 			return m_preserveOwner;
 		}
 
-		inline bool preserveGroup(void) const {
+		inline const bool & preserveGroup(void) const {
 			return m_preserveGroup;
 		}
 
-		inline bool windowsCompatability(void) const {
+		inline const bool & windowsCompatability(void) const {
 			return m_windowsCompatability;
 		}
 
-		inline bool honourDeletions(void) const {
+		inline const bool & honourDeletions(void) const {
 			return m_deleteOnDestination;
 		}
 
-		inline bool alwaysCompareChecksums(void) const {
+		inline const bool & alwaysCompareChecksums(void) const {
 			return m_alwaysChecksum;
 		}
 
-		inline bool preserveDevices(void) const {
+		inline const bool & preserveDevices(void) const {
 			return m_preserveDevices;
 		}
 
-		inline bool keepPartialTransfers(void) const {
+		inline const bool & keepPartialTransfers(void) const {
 			return m_keepParitalTransfers;
 		}
 
-		inline bool copySymlinksAsSymlinks(void) const {
+		inline const bool & copySymlinksAsSymlinks(void) const {
 			return m_symlinksAsSymlinks;
 		}
 
-		inline bool makeBackups(void) const {
+		inline const bool & makeBackups(void) const {
 			return m_makeBackups;
 		}
 
-		inline bool useTransferCompression(void) const {
+		inline const bool & useTransferCompression(void) const {
 			return m_compressInTransit;
 		}
 
-		inline bool onlyUpdateExistingEntries(void) const {
+		inline const bool & onlyUpdateExistingEntries(void) const {
 			return m_onlyUpdateExisting;
 		}
 
-		inline bool dontUpdateExistingEntries(void) const {
+		inline const bool & dontUpdateExistingEntries(void) const {
 			return m_dontUpdateExisting;
 		}
 
-		inline bool dontMapUsersAndGroups(void) const {
+		inline const bool & dontMapUsersAndGroups(void) const {
 			return m_dontMapUidGid;
 		}
 
-		inline bool copyHardlinksAsHardlinks(void) const {
+		inline const bool & copyHardlinksAsHardlinks(void) const {
 			return m_copyHardlinksAsHardlinks;
 		}
 
-		inline bool showItemisedChanges(void) const {
+		inline const bool & showItemisedChanges(void) const {
 			return m_showItemisedChanges;
 		}
 
-		inline QString logFile(void) const {
+		inline const QString & logFile(void) const {
 			return m_logFile;
 		}
 
@@ -188,7 +167,7 @@ namespace Qync {
 	private:
 		void setDefaultProperties(void);
 
-		mutable bool m_modified;
+		//		mutable bool m_modified;
 		QString m_fileName;
 		QString m_name;
 

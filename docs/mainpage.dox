@@ -7,37 +7,37 @@
  * which may be remote (i.e. a networked server). Probably the most common use
  * case for rsync is to synchronise two local directories, the destination
  * being used as a backup of the source. Because rsync only copies files and
- * directories that have meen modified since the last time the backup was
+ * directories that have been modified since the last time the backup was
  * updated, and because it can be set to compress data in transit, it is very
  * useful as a fast and resource efficient backup tool, particularly for large
  * quantities of data and particularly when that data is being transferred over
  * a network.
  *
  * <h2>Architecture</h2>
- * The Qync application is built on a modular architecture. At its core is a
- * manager class (\ref QyncManager) that provides access to program features
+ * The Qync application is built on a modular architecture. At its core is an
+ * application class (\ref Qync::Application) that provides access to program features
  * such as presets, and enables the rsync process to be launched. The manager
  * class also ensures that the core functionality of the application is
  * separated from the user interface, so that it is possible to build different
  * interfaces around the core manager class.
  *
- * Any rsync process launched is wrapped in a process class (\ref QyncProcess)
+ * Any rsync process launched is wrapped in a process class (\ref Qync::Process)
  * that provides the ability to start, interrupt and monitor the progress of the
  * rsync process. The process class emits a number of useful signals that can be
  * used to provide feedback to the end user.
  *
- * Presets are represented as instances of the \ref QyncPreset class. All
+ * Presets are represented as instances of the \ref Qync::Preset class. All
  * presets that are saved are completely administered by the manager - the
  * manager ensures that all presets stored are saved to disk and loaded each
  * time the program is started. The preset class can also be used by front ends
  * to build custom settings for the manager to run.
  *
  * Finally, a base class is provided for managing application preferences
- * (\ref QyncPreferences). The base class provides only the core preference
+ * (\ref Qync::Preferences). The base class provides only the core preference
  * settings required for the manager to do its job - currently this is just the
  * path to the rsync executable file. The majority of its features are designed
  * to enable the base class to be extended to provide other settings for the
- * various possible user interfaces. For example, the \ref QyncGuiPreferences
+ * various possible user interfaces. For example, the \ref Qync::GuiPreferences
  * class extends the base class to provide preferences relating to the visual
  * appearance of the GUI. The base class is structured such that a minimum of
  * reimplementation and duplication is required when extending the preferences.
@@ -49,8 +49,8 @@
  * save presets so that s/he can easily recall frequently-used rsync settings
  * and execute them without having to enter the settings every time.
  *
- * The example user interface is provided by the \ref QyncMainWindow,
- * \ref QyncProcessDialogue and \ref QyncPreferencesDialogue classes. The main
+ * The example user interface is provided by the \ref Qync::MainWindow,
+ * \ref Qync::ProcessDialogue and \ref Qync::PreferencesDialogue classes. The main
  * window class is the main interface through which the user interacts with the
  * program. It provedes the user with facilities to manage his/her presets and
  * with the ability to alter and execute rsync with arbitrary parameters. The

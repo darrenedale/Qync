@@ -224,14 +224,11 @@ namespace Qync {
 	 *
 	 * \param preset is the preset from which to create the process.
 	 *
-	 * The Preset is neither owned nor consumed. The calling code retains
-	 * responsibility for its timely destruction.
-	 *
 	 * The rsync command to run is gathered directly from the application
 	 * preferences.
 	 */
-	Process::Process(const Preset * preset)
-	  : Process(qyncApp->preferences()->rsyncPath(), preset) {
+	Process::Process(const Preset & preset)
+	: Process(qyncApp->preferences()->rsyncPath(), preset) {
 	}
 
 
@@ -240,18 +237,13 @@ namespace Qync {
 	 *
 	 * \param cmd is the path to the rsync command to run.
 	 * \param preset is the preset from which to create the process.
-	 *
-	 * The Preset is neither owned nor consumed. The calling code retains
-	 * responsibility for its timely destruction.
 	 */
-	Process::Process(const QString & cmd, const Preset * preset)
-	  : QObject(),
-		 m_process(new QProcess),
-		 m_command(cmd) {
-		if(preset) {
-			m_logFileName = preset->logFile();
-			m_args = rsyncArguments(preset);
-		}
+	Process::Process(const QString & cmd, const Preset & preset)
+	: QObject(),
+	  m_process(new QProcess),
+	  m_command(cmd) {
+		m_logFileName = preset.logFile();
+		m_args = rsyncArguments(preset);
 	}
 
 
@@ -280,18 +272,13 @@ namespace Qync {
 	 *
 	 *\return A list of arguments.
 	 */
-	QStringList Process::rsyncArguments(const Preset * preset, const QStringList & forceOptions) {
-		if(!preset) {
-			qCritical() << __PRETTY_FUNCTION__ << "null Preset provided";
-			return {};
-		}
-
-		if(preset->source().isEmpty()) {
+	QStringList Process::rsyncArguments(const Preset & preset, const QStringList & forceOptions) {
+		if(preset.source().isEmpty()) {
 			qCritical() << __PRETTY_FUNCTION__ << "Preset's source is empty";
 			return {};
 		}
 
-		if(preset->destination().isEmpty()) {
+		if(preset.destination().isEmpty()) {
 			qCritical() << __PRETTY_FUNCTION__ << "Preset's destination is empty";
 			return {};
 		}
@@ -304,78 +291,78 @@ namespace Qync {
 		args.push_back("--out-format=f%n %l");
 
 		/* basic settings */
-		if(preset->preserveTime()) {
+		if(preset.preserveTime()) {
 			args.push_back("--times");
 		}
 
-		if(preset->preservePermissions()) {
+		if(preset.preservePermissions()) {
 			args.push_back("--perms");
 		}
 
-		if(preset->preserveOwner()) {
+		if(preset.preserveOwner()) {
 			args.push_back("--owner");
 		}
 
-		if(preset->preserveGroup()) {
+		if(preset.preserveGroup()) {
 			args.push_back("--group");
 		}
 
-		if(preset->windowsCompatability()) {
+		if(preset.windowsCompatability()) {
 			args.push_back("--modify-window=1");
 		}
 
-		if(preset->honourDeletions()) {
+		if(preset.honourDeletions()) {
 			args.push_back("--delete");
 		}
 
 		/* advanced settings */
-		if(preset->alwaysCompareChecksums()) {
+		if(preset.alwaysCompareChecksums()) {
 			args.push_back("--checksum");
 		}
 
-		if(preset->preserveDevices()) {
+		if(preset.preserveDevices()) {
 			args.push_back("--devices");
 		}
 
-		if(preset->keepPartialTransfers()) {
+		if(preset.keepPartialTransfers()) {
 			args.push_back("--partial");
 		}
 
-		if(preset->copySymlinksAsSymlinks()) {
+		if(preset.copySymlinksAsSymlinks()) {
 			args.push_back("--links");
 		}
 
-		if(preset->makeBackups()) {
+		if(preset.makeBackups()) {
 			args.push_back("--backup");
 		}
 
-		if(preset->useTransferCompression()) {
+		if(preset.useTransferCompression()) {
 			args.push_back("--compress");
 		}
 
-		if(preset->onlyUpdateExistingEntries()) {
+		if(preset.onlyUpdateExistingEntries()) {
 			args.push_back("--existing");
 		}
 
-		if(preset->dontUpdateExistingEntries()) {
+		if(preset.dontUpdateExistingEntries()) {
 			args.push_back("--ignore-existing");
 		}
 
-		if(preset->dontMapUsersAndGroups()) {
+		if(preset.dontMapUsersAndGroups()) {
 			args.push_back("--numeric-ids");
 		}
 
-		if(preset->copyHardlinksAsHardlinks()) {
+		if(preset.copyHardlinksAsHardlinks()) {
 			args.push_back("--hard-links");
 		}
 
-		if(preset->showItemisedChanges()) {
+		if(preset.showItemisedChanges()) {
 			args.push_back("--itemize-changes");
 		}
 
 		/* source and dest */
-		args.push_back(preset->source());
-		args.push_back(preset->destination());
+		args.push_back(preset.source());
+		args.push_back(preset.destination());
 
 		return args;
 	}

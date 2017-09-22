@@ -29,11 +29,11 @@ namespace Qync {
 	class Preferences;
 
 	class Application
-	  : public QApplication {
+	: public QApplication {
 		Q_OBJECT
 
 	public:
-		using PresetList = QList<Preset *>;
+		using PresetList = std::vector<std::unique_ptr<Preset>>;
 
 		Application(int & argc, char ** argv);
 		~Application(void);
@@ -60,28 +60,23 @@ namespace Qync {
 		bool setPreferences(Preferences * prefs);
 
 		inline int presetCount(void) const {
-			return m_presets.size();
+			return static_cast<int>(m_presets.size());
 		}
 
-		inline const PresetList presets(void) const {
+		const PresetList & presets(void) const {
 			return m_presets;
 		}
 
-		Preset * preset(int index) const;
+		Preset & preset(int index) const;
 		bool removePreset(int index);
-		bool removePreset(Preset * preset);
-		bool insertPreset(Preset * preset, int index = -1);
-
-		inline bool addPreset(Preset * preset) {
-			return insertPreset(preset, -1);
-		}
+		bool addPreset(Preset * preset);
 
 		void clearPresets(void);
 
 		Process * simulate(int i) const;
-		Process * simulate(const Preset * preset) const;
+		Process * simulate(const Preset & preset) const;
 		Process * synchronise(int i) const;
-		Process * synchronise(const Preset * preset) const;
+		Process * synchronise(const Preset & preset) const;
 
 		QString lastError(void) const;
 
@@ -90,7 +85,7 @@ namespace Qync {
 		bool loadPresets(const QString & path);
 
 	Q_SIGNALS:
-		void presetAdded(Preset * preset, int index);
+		//		void presetAdded(Preset * preset);
 		void presetRemoved(void);
 		void presetsChanged(void);
 		void preferencesChanged(void);

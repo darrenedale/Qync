@@ -30,22 +30,23 @@ SOURCES += \
 
 RESOURCES += resources/icons.qrc
 
-DISTFILES += dist/linux/qync.desktop \
+DISTFILES += tools/* \
+    dist/linux/qync.desktop \
     dist/linux/qync.menu \
     dist/linux/man/man1/qync.1 \
     dist/linux/doc/qync/copyright \
     dist/linux/doc/qync/changelog.Debian \
     dist/linux/doc/qync/changelog \
-    doc/cwrsync-license.txt \
-    doc/license.txt \
 	Qync.Doxyfile \
     todo.txt \
-    doc/mainpage.dox \
-    doc/license_cwrsync.dox \
-    doc/license_rsync.dox \
-    doc/license_cygwin.dox \
-    doc/license_openssh.dox \
-    doc/license_putty.dox \
+    docs/license.txt \
+    docs/cwrsync-license.txt \
+    docs/mainpage.dox \
+    docs/license_cwrsync.dox \
+    docs/license_rsync.dox \
+    docs/license_cygwin.dox \
+    docs/license_openssh.dox \
+    docs/license_putty.dox \
     .gitignore \
     .clang-format
 

@@ -34,7 +34,7 @@ namespace Qync {
 	class Preferences;
 
 	class Process
-	  : public QObject {
+	: public QObject {
 		Q_OBJECT
 	public:
 		/* based on v3.0.7 of rsync. see the rsync man page */
@@ -61,11 +61,11 @@ namespace Qync {
 			ConnectionTimeout = 35
 		};
 
-		Process(const Preset * preset);
-		Process(const QString & cmd, const Preset * preset);
+		Process(const Preset & preset);
+		Process(const QString & cmd, const Preset & preset);
 		virtual ~Process(void);
 
-		static QStringList rsyncArguments(const Preset * preset, const QStringList & forceOptions = QStringList());
+		static QStringList rsyncArguments(const Preset & preset, const QStringList & forceOptions = QStringList());
 		static QString defaultExitCodeMessage(const Process::ExitCode & code);
 
 		inline QProcess * process(void) {

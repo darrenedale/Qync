@@ -21,6 +21,8 @@
 
 #include "preset.h"
 
+#include <unordered_map>
+
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -34,6 +36,70 @@
 
 
 namespace Qync {
+
+
+	namespace PresetDetail {
+		/*
+		 * These aid with loading from and saving to XML. It is not necessary to
+		 * implement any added features as properties, but doing so means that the
+		 * XML reading/writing code will automatically handle them without having
+		 * to write any XML parsing code (which can be a bit verbose).
+		 */
+
+		/* data structure containing the getter and setter for a property
+		 * getters and setters are member functions of Preset. */
+		template<typename T>
+		struct PresetProperty {
+			using Type = T;
+			using Getter = const T & (Preset::*) (void) const;
+			using Setter = bool (Preset::*)(const T &);
+
+			const Getter getter;
+			const Setter setter;
+		};
+
+		/* Alias for a set of properties of a given type. it's a map of
+		 * property-name => PresetProperty, with property-name a std::string
+		 *
+		 * so for any given property "myproperty" the value contains the getter
+		 * and setter for "myproperty". So properties["myproperty"].setter(value)
+		 * sets the value of "myproperty" and properties["myproperties"].getter()
+		 * retrieves the value. The actual call syntax is more complicated because
+		 * it needs an object to operate on.
+		 */
+		template<typename T>
+		using PresetProperties = std::unordered_map<std::string, PresetProperty<T>>;
+
+		/* the boolean properties for Preset objects */
+		static PresetProperties<bool> booleanPresetProperties = {
+		  {"preserveTime", {&Preset::preserveTime, &Preset::setPreserveTime}},
+		  {"preservePermissions", {&Preset::preservePermissions, &Preset::setPreservePermissions}},
+		  {"preserveOwner", {&Preset::preserveOwner, &Preset::setPreserveOwner}},
+		  {"preserveGroup", {&Preset::preserveGroup, &Preset::setPreserveGroup}},
+
+		  {"windowsCompatability", {&Preset::windowsCompatability, &Preset::setWindowsCompatability}},
+		  {"honourDeletions", {&Preset::honourDeletions, &Preset::setHonourDeletions}},
+
+		  {"alwaysCompareChecksums", {&Preset::alwaysCompareChecksums, &Preset::setAlwaysCompareChecksums}},
+		  {"preserveDevices", {&Preset::preserveDevices, &Preset::setPreserveDevices}},
+		  {"keepPartialTransfers", {&Preset::keepPartialTransfers, &Preset::setKeepPartialTransfers}},
+		  {"copySymlinksAsSymlinks", {&Preset::copySymlinksAsSymlinks, &Preset::setCopySymlinksAsSymlinks}},
+		  {"makeBackups", {&Preset::makeBackups, &Preset::setMakeBackups}},
+
+		  {"useTransferCompression", {&Preset::useTransferCompression, &Preset::setUseTransferCompression}},
+		  {"onlyUpdateExistingEntries", {&Preset::onlyUpdateExistingEntries, &Preset::setOnlyUpdateExistingEntries}},
+		  {"dontUpdateExistingEntries", {&Preset::dontUpdateExistingEntries, &Preset::setDontUpdateExistingEntries}},
+		  {"dontMapUsersAndGroups", {&Preset::dontMapUsersAndGroups, &Preset::setDontMapUsersAndGroups}},
+		  {"copyHardlinksAsHardlinks", {&Preset::copyHardlinksAsHardlinks, &Preset::setCopyHardlinksAsHardlinks}},
+		  {"showItemisedChanges", {&Preset::showItemisedChanges, &Preset::setShowItemisedChanges}},
+		};
+
+		/* the string properties for Preset objects */
+		static PresetProperties<QString> stringPresetProperties = {
+		  {"logFile", {&Preset::logFile, &Preset::setLogFile}},
+		};
+
+	}  // namespace PresetDetail
 
 
 	/**
@@ -80,8 +146,13 @@ namespace Qync {
 	 *
 	 * In addition, it provides (protected) methods to write and read the preset to
 	 * and from an XML stream (parseXml(), emitXml()), and to write and read that
-	 * stream to and from a file (load(), loadFrom(), save(), saveAs(),
-	 * saveCopyAs()).
+	 * stream to and from a file (load(), save(), saveAs(), saveCopyAs()).
+	 *
+	 * A Preset object is just a container for settings. It does not \i do anything
+	 * itself. An object of this class is provided to a Process object in order for
+	 * the Process to set up the rsync command. A set of Preset objects is kept by
+	 * the Application instance as the master set of presets available during a
+	 * session.
 	 */
 
 
@@ -111,7 +182,7 @@ namespace Qync {
 	 */
 	Preset * Preset::load(const QString & fileName) {
 		/* parse the preset from the file */
-		Preset * ret = new Preset();
+		Preset * ret = new Preset;
 		QFile file(fileName);
 		file.open(QIODevice::ReadOnly);
 
@@ -123,28 +194,24 @@ namespace Qync {
 				xml.readNext();
 
 				if(xml.isStartElement()) {
-					if("qyncpreset" == xml.name() && ret->parseXml(xml))
+					if("qyncpreset" == xml.name() && ret->parseXml(xml)) {
 						return ret;
-					else
+					}
+					else {
 						xml.readElementText();
+					}
 				}
 			}
 
 			qDebug() << "file" << fileName << "does not contain a valid qync preset";
 		}
-		else
+		else {
 			qDebug() << "failed to open file" << fileName << "for reading";
+		}
 
 		delete ret;
-		return 0;
+		return ret;
 	}
-
-
-	/**
-	 * \brief Save the preset to its internally stored file name.
-	 *
-	 * \return \b true if the preset file was saved, \b false otherwise.
-	 */
 
 
 	/**
@@ -182,6 +249,7 @@ namespace Qync {
 
 		if(file.open(QIODevice::WriteOnly)) {
 			QXmlStreamWriter xml(&file);
+			xml.setAutoFormatting(true);
 			return emitXml(xml);
 		}
 
@@ -261,43 +329,32 @@ namespace Qync {
 	 *
 	 * \param xml is the stream to write to.
 	 *
-	 * Most of the settings in a preset are implemented using Qt's
-	 * properties system. This method automatically writes all properties
-	 * to the stream.
+	 * Most of the settings in a preset are implemented using a basic properties
+	 * system. The properties are defined in a map in the PresetDetail private
+	 * namespace. Each property has a name, a getter and a setter. This function
+	 * iterates over the defined properties and emits a &lt;property&gt; element
+	 * to the XML stream for each with the appropriate name and type attributes,
+	 * and the value set according to the value provided by the property's getter.
 	 *
-	 * \return \b true if the preset properties were written to the stream,
-	 * \b false otherwise.
+	 * \return \b true if the properties were written to the stream, \b false
+	 * otherwise.
 	 */
 	bool Preset::emitPropertiesXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("properties");
 
-		const QMetaObject * mo = metaObject();
-
-		/* write all properties to XML */
-		for(int i = mo->propertyOffset(); i < mo->propertyCount(); i++) {
-			QMetaProperty mp = mo->property(i);
+		for(const auto & propertyDef : PresetDetail::booleanPresetProperties) {
 			xml.writeStartElement("property");
-			xml.writeAttribute("name", QString::fromLatin1(mp.name()));
-			QString value;
+			xml.writeAttribute("name", QString::fromStdString(propertyDef.first));
+			xml.writeAttribute("type", "boolean");
+			xml.writeCharacters((this->*(propertyDef.second.getter))() ? "true" : "false");
+			xml.writeEndElement(); /* property */
+		}
 
-			switch(mp.type()) {
-				case QVariant::Bool:
-					xml.writeAttribute("type", "boolean");
-					value = (property(mp.name()).toBool() ? "true" : "false");
-					break;
-
-				case QVariant::String:
-					xml.writeAttribute("type", "string");
-					value = property(mp.name()).toString();
-					break;
-
-				default:
-					xml.writeAttribute("type", "unknown");
-					value = QString();
-					break;
-			}
-
-			xml.writeCharacters(value);
+		for(const auto & propertyDef : PresetDetail::stringPresetProperties) {
+			xml.writeStartElement("property");
+			xml.writeAttribute("name", QString::fromStdString(propertyDef.first));
+			xml.writeAttribute("type", "string");
+			xml.writeCharacters((this->*(propertyDef.second.getter))());
 			xml.writeEndElement(); /* property */
 		}
 
@@ -321,27 +378,34 @@ namespace Qync {
 		while(!xml.atEnd()) {
 			xml.readNext();
 
-			if(xml.isEndElement())
+			if(xml.isEndElement()) {
 				break;
+			}
 
 			if(xml.isCharacters()) {
-				if(!xml.isWhitespace())
-					qDebug() << "Preset::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				if(!xml.isWhitespace()) {
+					qWarning() << "Preset::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				}
 
 				/* ignore extraneous characters */
 				continue;
 			}
 
-			if("name" == xml.name())
+			if(0 == QString::compare("name", xml.name(), Qt::CaseInsensitive)) {
 				setName(xml.readElementText().trimmed());
-			else if("source" == xml.name())
+			}
+			else if(0 == QString::compare("source", xml.name(), Qt::CaseInsensitive)) {
 				setSource(xml.readElementText());
-			else if("destination" == xml.name())
+			}
+			else if(0 == QString::compare("destination", xml.name(), Qt::CaseInsensitive)) {
 				setDestination(xml.readElementText());
-			else if("properties" == xml.name())
+			}
+			else if(0 == QString::compare("properties", xml.name(), Qt::CaseInsensitive)) {
 				parsePropertiesXml(xml);
-			else
+			}
+			else {
 				Qync::parseUnknownElementXml(xml);
+			}
 		}
 
 		return true;
@@ -362,21 +426,25 @@ namespace Qync {
 		while(!xml.atEnd()) {
 			xml.readNext();
 
-			if(xml.isEndElement())
+			if(xml.isEndElement()) {
 				break;
+			}
 
 			if(xml.isCharacters()) {
-				if(!xml.isWhitespace())
-					qDebug() << "Preset::parsePropertiesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				if(!xml.isWhitespace()) {
+					qWarning() << "Preset::parsePropertiesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				}
 
 				/* ignore extraneous characters */
 				continue;
 			}
 
-			if("property" == xml.name())
+			if(0 == QString::compare("property", xml.name(), Qt::CaseInsensitive)) {
 				parsePropertyXml(xml);
-			else
+			}
+			else {
 				Qync::parseUnknownElementXml(xml);
+			}
 		}
 
 		return true;
@@ -394,25 +462,50 @@ namespace Qync {
 	bool Preset::parsePropertyXml(QXmlStreamReader & xml) {
 		Q_ASSERT(xml.isStartElement() && "property" == xml.name());
 
-		QString name = xml.attributes().value("name").toString();
-		QString type = xml.attributes().value("type").toString();
-		QString value = xml.readElementText();
+		auto propName = xml.attributes().value("name");
+		auto propType = xml.attributes().value("type");
+		auto propValueString = xml.readElementText();
 
-		if("boolean" == type) {
-			if("true" == value)
-				setProperty(name.toLatin1(), true);
-			else if("false" == value)
-				setProperty(name.toLatin1(), false);
-			else {
-				qDebug() << "Preset::parsePropertyXml() - invalid value" << value << "for boolean property" << name << "at line" << xml.lineNumber() << "column" << xml.columnNumber();
+		if(0 == QString::compare("boolean", propType, Qt::CaseInsensitive)) {
+			auto propertyDef = PresetDetail::booleanPresetProperties.find(propName.toString().toStdString());
+
+			if(propertyDef == PresetDetail::booleanPresetProperties.end()) {
+				qWarning() << __PRETTY_FUNCTION__ << "unrecognised boolean property" << propName << "found at line" << xml.lineNumber();
 				return false;
 			}
+
+			bool propValue;
+
+			if(0 == QString::compare("true", propValueString, Qt::CaseInsensitive)) {
+				propValue = true;
+			}
+			else if(0 == QString::compare("false", propValueString, Qt::CaseInsensitive)) {
+				propValue = false;
+			}
+			else {
+				qWarning() << "Preset::parsePropertyXml() - invalid value" << propValueString << "for boolean property" << propName << "at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				return false;
+			}
+
+			(this->*(propertyDef->second.setter))(propValue);
 		}
-		else if("string" == type)
-			setProperty(name.toLatin1(), value);
+		else if(0 == QString::compare("string", propType, Qt::CaseInsensitive)) {
+			auto propertyDef = PresetDetail::stringPresetProperties.find(propName.toString().toStdString());
+
+			if(propertyDef == PresetDetail::stringPresetProperties.end()) {
+				qWarning() << __PRETTY_FUNCTION__ << "unrecognised string property" << propName << "found at line" << xml.lineNumber();
+				return false;
+			}
+
+			(this->*(propertyDef->second.setter))(propValueString);
+		}
+		else {
+			qWarning() << __PRETTY_FUNCTION__ << "unrecognised property type" << propType << "for property" << propName << "found at line" << xml.lineNumber();
+			return false;
+		}
 
 		return true;
-	}
+	}  // namespace Qync
 
 
 	/**
@@ -461,13 +554,6 @@ namespace Qync {
 
 
 	/**
-	 * \brief Get the name of the preset.
-	 *
-	 * \return The name of the preset.
-	 */
-
-
-	/**
 	 * \brief Set the file name of the preset.
 	 *
 	 * \param fileName is the new path to the file for the preset.
@@ -477,13 +563,6 @@ namespace Qync {
 	void Preset::setFileName(const QString & fileName) {
 		m_fileName = fileName;
 	}
-
-
-	/**
-	 * \brief Get the file name of the preset.
-	 *
-	 * \return The current path to the file for the preset.
-	 */
 
 
 	/**
@@ -519,7 +598,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setPreserveTime(bool preserve) {
+	bool Preset::setPreserveTime(const bool & preserve) {
 		m_preserveTime = preserve;
 		return true;
 	}
@@ -533,7 +612,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setPreservePermissions(bool preserve) {
+	bool Preset::setPreservePermissions(const bool & preserve) {
 		m_preservePerms = preserve;
 		return true;
 	}
@@ -546,7 +625,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setPreserveOwner(bool preserve) {
+	bool Preset::setPreserveOwner(const bool & preserve) {
 		m_preserveOwner = preserve;
 		return true;
 	}
@@ -560,7 +639,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setPreserveGroup(bool preserve) {
+	bool Preset::setPreserveGroup(const bool & preserve) {
 		m_preserveGroup = preserve;
 		return true;
 	}
@@ -578,7 +657,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setWindowsCompatability(bool compatible) {
+	bool Preset::setWindowsCompatability(const bool & compatible) {
 		m_windowsCompatability = compatible;
 		return true;
 	}
@@ -596,7 +675,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setHonourDeletions(bool honour) {
+	bool Preset::setHonourDeletions(const bool & honour) {
 		this->m_deleteOnDestination = honour;
 		return true;
 	}
@@ -614,7 +693,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setAlwaysCompareChecksums(bool compare) {
+	bool Preset::setAlwaysCompareChecksums(const bool & compare) {
 		m_alwaysChecksum = compare;
 		return true;
 	}
@@ -628,7 +707,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setPreserveDevices(bool preserve) {
+	bool Preset::setPreserveDevices(const bool & preserve) {
 		m_preserveDevices = preserve;
 		return true;
 	}
@@ -642,7 +721,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setKeepPartialTransfers(bool partial) {
+	bool Preset::setKeepPartialTransfers(const bool & partial) {
 		m_keepParitalTransfers = partial;
 		return true;
 	}
@@ -659,7 +738,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setCopySymlinksAsSymlinks(bool copyAsLinks) {
+	bool Preset::setCopySymlinksAsSymlinks(const bool & copyAsLinks) {
 		m_symlinksAsSymlinks = copyAsLinks;
 		return true;
 	}
@@ -677,7 +756,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setMakeBackups(bool backups) {
+	bool Preset::setMakeBackups(const bool & backups) {
 		m_makeBackups = backups;
 		return true;
 	}
@@ -694,7 +773,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setUseTransferCompression(bool compress) {
+	bool Preset::setUseTransferCompression(const bool & compress) {
 		m_compressInTransit = compress;
 		return true;
 	}
@@ -715,7 +794,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setOnlyUpdateExistingEntries(bool existingOnly) {
+	bool Preset::setOnlyUpdateExistingEntries(const bool & existingOnly) {
 		m_onlyUpdateExisting = existingOnly;
 
 		if(existingOnly) {
@@ -740,7 +819,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setDontUpdateExistingEntries(bool noExisting) {
+	bool Preset::setDontUpdateExistingEntries(const bool & noExisting) {
 		m_dontUpdateExisting = noExisting;
 
 		if(noExisting) {
@@ -767,7 +846,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setDontMapUsersAndGroups(bool dontMap) {
+	bool Preset::setDontMapUsersAndGroups(const bool & dontMap) {
 		m_dontMapUidGid = dontMap;
 		return true;
 	}
@@ -784,7 +863,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setCopyHardlinksAsHardlinks(bool copyAsLinks) {
+	bool Preset::setCopyHardlinksAsHardlinks(const bool & copyAsLinks) {
 		m_copyHardlinksAsHardlinks = copyAsLinks;
 		return true;
 	}
@@ -799,7 +878,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
 	 */
-	bool Preset::setShowItemisedChanges(bool show) {
+	bool Preset::setShowItemisedChanges(const bool & show) {
 		m_showItemisedChanges = show;
 		return true;
 	}
@@ -819,6 +898,30 @@ namespace Qync {
 		m_logFile = fileName;
 		return true;
 	}
+
+
+	/**
+	 * \fn Preset::name(void)
+	 * \brief Get the name of the preset.
+	 *
+	 * \return The name of the preset.
+	 */
+
+
+	/**
+	 * \fn Preset::fileName(void)
+	 * \brief Get the file name of the preset.
+	 *
+	 * \return The current path to the file for the preset.
+	 */
+
+
+	/**
+	 * \fn Preset::save(void)
+	 * \brief Save the preset to its internally stored file name.
+	 *
+	 * \return \b true if the preset file was saved, \b false otherwise.
+	 */
 
 
 	/**

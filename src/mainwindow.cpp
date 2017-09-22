@@ -55,6 +55,11 @@
 #include "functions.h"
 
 
+/* this identifies the <new preset> item in the presets list
+ * it is set as the item data for the item. */
+#define QYNC_MAINWINDOW_NEW_PRESET_TAG -99
+
+
 namespace Qync {
 
 
@@ -137,10 +142,10 @@ namespace Qync {
 	 * creator of the manager is responsible for its timely destruction.
 	 */
 	MainWindow::MainWindow(void)
-	  : QMainWindow(nullptr),
-		 m_ui(new Ui::MainWindow),
-		 m_prefsWindow(nullptr),
-		 m_aboutDialogue(nullptr) {
+	: QMainWindow(nullptr),
+	  m_ui(new Ui::MainWindow),
+	  m_prefsWindow(nullptr),
+	  m_aboutDialogue(nullptr) {
 		m_ui->setupUi(this);
 		m_ui->presetsToolbar->insertWidget(m_ui->actionNew, m_ui->presets);
 		setWindowIcon(QIcon(":/icons/application"));
@@ -207,49 +212,48 @@ namespace Qync {
 	void MainWindow::showPreset(int index) {
 		/* NOTE index can be > last preset in app because the combo box has
 	   <New Preset> empty item as its last index */
-		if(0 == index && -1 == m_ui->presets->itemData(0).toInt()) {
+		if(0 == index && QYNC_MAINWINDOW_NEW_PRESET_TAG == m_ui->presets->itemData(0).toInt()) {
 			/* <New Preset> chosen */
 			m_ui->actionRemove->setEnabled(false);
 			return;
 		}
 
 		if(0 <= index && qyncApp->presetCount() > index) {
-			Preset * preset = qyncApp->preset(index);
-			Q_ASSERT_X(preset, "MainWindow::showPreset(int)", "Manager provided null preset");
-			m_ui->preserveTime->setChecked(preset->preserveTime());
-			m_ui->preservePermissions->setChecked(preset->preservePermissions());
-			m_ui->preserveOwner->setChecked(preset->preserveOwner());
-			m_ui->preserveGroup->setChecked(preset->preserveGroup());
+			const Preset & preset = qyncApp->preset(index);
+			m_ui->preserveTime->setChecked(preset.preserveTime());
+			m_ui->preservePermissions->setChecked(preset.preservePermissions());
+			m_ui->preserveOwner->setChecked(preset.preserveOwner());
+			m_ui->preserveGroup->setChecked(preset.preserveGroup());
 
-			m_ui->windowsCompatible->setChecked(preset->windowsCompatability());
-			m_ui->honourDeletions->setChecked(preset->honourDeletions());
+			m_ui->windowsCompatible->setChecked(preset.windowsCompatability());
+			m_ui->honourDeletions->setChecked(preset.honourDeletions());
 
-			m_ui->alwaysCompareChecksums->setChecked(preset->alwaysCompareChecksums());
-			m_ui->preserveDevices->setChecked(preset->preserveDevices());
-			m_ui->keepPartialFiles->setChecked(preset->keepPartialTransfers());
-			m_ui->symlinksAsSymlinks->setChecked(preset->copySymlinksAsSymlinks());
-			m_ui->makeBackups->setChecked(preset->makeBackups());
+			m_ui->alwaysCompareChecksums->setChecked(preset.alwaysCompareChecksums());
+			m_ui->preserveDevices->setChecked(preset.preserveDevices());
+			m_ui->keepPartialFiles->setChecked(preset.keepPartialTransfers());
+			m_ui->symlinksAsSymlinks->setChecked(preset.copySymlinksAsSymlinks());
+			m_ui->makeBackups->setChecked(preset.makeBackups());
 
-			m_ui->compressInTransit->setChecked(preset->useTransferCompression());
+			m_ui->compressInTransit->setChecked(preset.useTransferCompression());
 
-			if(preset->onlyUpdateExistingEntries()) {
+			if(preset.onlyUpdateExistingEntries()) {
 				m_ui->includeInSynchronisation->setCurrentIndex(OnlyUpdateExisting);
 			}
-			else if(preset->dontUpdateExistingEntries()) {
+			else if(preset.dontUpdateExistingEntries()) {
 				m_ui->includeInSynchronisation->setCurrentIndex(DontUpdateExisting);
 			}
 			else {
 				m_ui->includeInSynchronisation->setCurrentIndex(UpdateEverything);
 			}
 
-			m_ui->dontMapUidGid->setChecked(preset->dontMapUsersAndGroups());
-			m_ui->hardlinksAsHardlinks->setChecked(preset->copyHardlinksAsHardlinks());
-			m_ui->itemisedChanges->setChecked(preset->showItemisedChanges());
+			m_ui->dontMapUidGid->setChecked(preset.dontMapUsersAndGroups());
+			m_ui->hardlinksAsHardlinks->setChecked(preset.copyHardlinksAsHardlinks());
+			m_ui->itemisedChanges->setChecked(preset.showItemisedChanges());
 
-			m_ui->source->setText(preset->source());
-			m_ui->destination->setText(preset->destination());
+			m_ui->source->setText(preset.source());
+			m_ui->destination->setText(preset.destination());
 
-			m_ui->logFile->setText(preset->logFile());
+			m_ui->logFile->setText(preset.logFile());
 
 			m_ui->actionRemove->setEnabled(true);
 		}
@@ -304,7 +308,7 @@ namespace Qync {
 
 		int i = 0;
 
-		for(const Preset * preset : qyncApp->presets()) {
+		for(const auto & preset : qyncApp->presets()) {
 			m_ui->presets->addItem(preset->name());
 			QAction * action = m_ui->menuMyPresets->addAction(preset->name());
 			connect(action, &QAction::triggered, this, &MainWindow::showPresetFromMenu);
@@ -314,7 +318,7 @@ namespace Qync {
 
 		if(0 == i) {
 			m_ui->presets->addItem(tr("<New Preset>"));
-			m_ui->presets->setItemData(0, -1);
+			m_ui->presets->setItemData(0, QYNC_MAINWINDOW_NEW_PRESET_TAG);
 		}
 	}
 
@@ -427,35 +431,28 @@ namespace Qync {
 	void MainWindow::saveSettingsToCurrentPreset(void) {
 		int i = m_ui->presets->currentIndex();
 
-		if(0 == i && -1 == m_ui->presets->itemData(0)) {
+		if(0 == i && QYNC_MAINWINDOW_NEW_PRESET_TAG == m_ui->presets->itemData(0)) {
 			/* saving to <new preset> items so creaet a new one instead */
 			newPresetFromSettings();
 			return;
 		}
 
-		Preset * oldPreset = qyncApp->preset(i);
-
-		if(!oldPreset) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The selected preset could not be replaced as it could not be found."));
-			return;
-		}
-
 		/* get current settings */
-		Preset temp;
-		fillPreset(temp);
-		const QMetaObject * mo = oldPreset->metaObject();
+		Preset & myPreset = qyncApp->preset(i);
+		fillPreset(myPreset);
+		//		const QMetaObject * mo = oldPreset.metaObject();
 
-		/* copy current settings into original preset */
-		oldPreset->setSource(temp.source());
-		oldPreset->setDestination(temp.destination());
+		//		/* copy current settings into original preset */
+		//		oldPreset.setSource(temp.source());
+		//		oldPreset.setDestination(temp.destination());
 
-		for(i = mo->propertyOffset(); i < mo->propertyCount(); ++i) {
-			oldPreset->setProperty(mo->property(i).name(), temp.property(mo->property(i).name()));
-		}
+		//		for(i = mo->propertyOffset(); i < mo->propertyCount(); ++i) {
+		//			oldPreset.setProperty(mo->property(i).name(), temp.property(mo->property(i).name()));
+		//		}
 
-		/* save and redisplay original preset */
-		oldPreset->save();
-		showPreset(m_ui->presets->currentIndex());
+		//		/* save and redisplay original preset */
+		myPreset.save();
+		showPreset(i);
 	}
 
 
@@ -603,24 +600,20 @@ namespace Qync {
 				}
 			}
 
-			Preset temp;
-			fillPreset(temp);
 			QString name;
 
-			if(m_ui->presets->count() > 0) {
-				Preset * myPreset = qyncApp->preset(m_ui->presets->currentIndex());
-
-				if(myPreset) {
-					name = myPreset->name();
-				}
+			/* if we're editing an existing preset, copy its name */
+			if(-1 != m_ui->presets->currentIndex() && QYNC_MAINWINDOW_NEW_PRESET_TAG != m_ui->presets->currentData()) {
+				name = qyncApp->preset(m_ui->presets->currentIndex()).name();
 			}
 
-			/* name is as current preset; if no preset or preset has no name (?),
-		 * use the basename of the save path chosen by user */
-			if(name.isNull()) {
+			/* if no name use the basename of the save path chosen by user */
+			if(name.isEmpty()) {
 				name = QFileInfo(fileName).baseName();
 			}
 
+			Preset temp;
+			fillPreset(temp);
 			temp.setName(name);
 
 			if(!temp.saveCopyAs(fileName)) {
@@ -685,13 +678,12 @@ namespace Qync {
 	 * \brief Start a simulation based on the current settings.
 	 */
 	void MainWindow::simulate(void) {
-		/* even though it's (currently) passed by raw ptr, the temp Process is not
-		 * owned by the Process created by Application::simulate() */
 		Preset temp;
 		fillPreset(temp);
-		Process * process = qyncApp->simulate(&temp);
+		Process * process = qyncApp->simulate(temp);
 
 		if(process) {
+			/* dialogue consumes the process */
 			ProcessDialogue * w = new ProcessDialogue(process, this);
 			w->setWindowTitle(tr("%1 Simulation: %2").arg(qyncApp->applicationDisplayName()).arg(m_ui->presets->currentText()));
 			w->show();
@@ -707,11 +699,9 @@ namespace Qync {
 	 * \brief Start rsync based on the current settings.
 	 */
 	void MainWindow::synchronise(void) {
-		/* even though it's (currently) passed by raw ptr, the temp Process is not
-		 * owned by the Process created by Application::execute() */
 		Preset temp;
 		fillPreset(temp);
-		Process * process = qyncApp->synchronise(&temp);
+		Process * process = qyncApp->synchronise(temp);
 
 		if(process) {
 			/* dialogue consumes the process */

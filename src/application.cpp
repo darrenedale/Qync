@@ -26,6 +26,7 @@
 #include <QProcess>
 #include <QStandardPaths>
 
+#include "aliases.h"
 #include "mainwindow.h"
 #include "preset.h"
 #include "process.h"
@@ -43,6 +44,7 @@
 
 
 namespace Qync {
+
 
 	/**
 	 * \class Application
@@ -62,7 +64,7 @@ namespace Qync {
 	 * to be kept informed of important events such as when presets are changed,
 	 * when the preferences change and when a process is spawned.
 	 *
-	 * The manager stores all of its configuration details in a hidden directory
+	 * The application stores all of its configuration details in a hidden directory
 	 * in the user's home directory. The \b preferences file stores the application
 	 * preferences as XML, and the presets folder stores each preset in its own
 	 * XML file.
@@ -74,8 +76,6 @@ namespace Qync {
 	 * \brief Emitted when a preset has been added.
 	 *
 	 * \param preset is a pointer to the preset that was added.
-	 * \param index is its index in the list of presets stored in the
-	 * manager.
 	 *
 	 * When emitted, this signal is always emitted before presetsChanged(),
 	 * never after.
@@ -115,7 +115,7 @@ namespace Qync {
 	 * Extreme care needs to be taken when connecting to this signal. It is
 	 * emitted whenever a call to simulate() or execute() produces a valid
 	 * process. The process provided with the signal is owned elsewhere. The
-	 * manager does not guarantee its lifespan and the class(es) connecting
+	 * application does not guarantee its lifespan and the class(es) connecting
 	 * to the signal do not own it. The process could therefore be deleted
 	 * at any time without notice. Connecting classes may listen for signals
 	 * from the process and connect to its slots, but may not call any
@@ -131,13 +131,13 @@ namespace Qync {
 	 * \brief Create a new application.
 	 */
 	Application::Application(int & argc, char ** argv)
-	  : QApplication(argc, argv),
-		 m_rsyncVersionText(),
-		 m_configPath(),
-		 m_presetsPath(),
-		 m_presets(),
-		 m_prefs(),
-		 m_lastError() {
+	: QApplication(argc, argv),
+	  m_rsyncVersionText(),
+	  m_configPath(),
+	  m_presetsPath(),
+	  m_presets(),
+	  m_prefs(),
+	  m_lastError() {
 		setApplicationName(QYNC_APP_NAME);
 		setApplicationDisplayName(QYNC_APP_DISPLAY_NAME);
 		setApplicationVersion(QYNC_APP_VERSION_STRING);
@@ -261,7 +261,7 @@ namespace Qync {
 
 	/**
 	 * \fn Application::presetCount(void)
-	 * \brief Get the number of presets stored in the manager.
+	 * \brief Get the number of presets stored in the application.
 	 *
 	 * \return The number of presets.
 	 */
@@ -269,43 +269,35 @@ namespace Qync {
 
 	/**
 	 * \fn Application::presets(void)
-	 * \brief Retrieve the presets stored in the manager.
+	 * \brief Retrieve the presets stored in the application.
 	 *
-	 * The pointers in the set returned are still owned by the manager.
+	 * The pointers in the set returned are still owned by the application.
 	 * Your code may not delete any of them.
 	 *
-	 * \return the presets (or an empty set if the manager does not have
+	 * \return the presets (or an empty set if the application does not have
 	 * any presets stored.
 	 */
 
 
 	/**
-	 * \brief Retrieve an indexed preset from the manager.
+	 * \brief Retrieve an indexed preset from the application.
 	 *
 	 * \param index is the index of the preset to retrieve.
 	 *
 	 * Indices are 0-based. If the index is found to be out of bounds,
-	 * a null pointer will be returned.
+	 * an assertion failure occurs.
 	 *
-	 * The pointer returned is still owned by the manager. Your code
-	 * may not delete it.
-	 *
-	 * \return the preset at the index provided, or \b null if the
-	 * index is out of bounds.
+	 * \return the preset at the index provided.
 	 */
-	Preset * Application::preset(int index) const {
-		if(0 > index || m_presets.size() <= index) {
-			qDebug() << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
-			return nullptr;
-		}
-
-		return m_presets.at(index);
+	Preset & Application::preset(int index) const {
+		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 is out of bounds (have presets 0 .. %2)").arg(index).arg(m_presets.size() - 1));
+		return *m_presets[static_cast<PresetList::size_type>(index)];
 	}
 
 
 	/**
 	 * \brief Remove an indexed preset from the collection stored in the
-	 * manager.
+	 * application.
 	 *
 	 * \param index is index of the preset to remove.
 	 *
@@ -318,26 +310,27 @@ namespace Qync {
 	 * If this method returns \b true, one or more pointers in a
 	 * previously retrieved set from presets() is invalid, and existing
 	 * indices may not be valid. For this reason, all presets retrieved
-	 * from the manager prior to a successful call to this method must be
+	 * from the application prior to a successful call to this method must be
 	 * considered invalid.
 	 *
 	 * \return \b true if the preset was removed from the collection,
 	 * \b false otherwise.
 	 */
 	bool Application::removePreset(int index) {
-		if(index < 0 || index >= m_presets.size()) {
-			qDebug() << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
+		if(0 > index || m_presets.size() <= static_cast<PresetList::size_type>(index)) {
+			qCritical() << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
 			setLastError(tr("The preset at position %1 in the list could not be found.").arg(index));
 			return false;
 		}
 
-		return removePreset(m_presets.at(index));
-	}
+		auto presetToRemove = m_presets.begin() + index;
+		//		return removePreset(m_presets[static_cast<PresetList::size_type>(index)].get());
+		//	}
 
 
-	/**
+		/**
 	 * \brief Remove a known preset from the collection stored in the
-	 * manager.
+	 * application.
 	 *
 	 * \param preset is the preset to remove.
 	 *
@@ -348,108 +341,94 @@ namespace Qync {
 	 * If this method returns \b true, the pointer passed in is no longer
 	 * valid, along with one or more pointers in any previously retrieved
 	 * set from presets(), and existing indices may not be valid. For this
-	 * reason, all presets retrieved from the manager prior to a successful
+	 * reason, all presets retrieved from the application prior to a successful
 	 * call to this method must be considered invalid.
 	 *
 	 * \return \b true if the preset was removed from the collection,
 	 * \b false otherwise.
 	 */
-	bool Application::removePreset(Preset * preset) {
-		if(m_presets.contains(preset)) {
-			QStringList err;
-			QFileInfo f(preset->fileName());
+		//	bool Application::removePreset(Preset * preset) {
+		//		if(!preset) {
+		//			qCritical() << __PRETTY_FUNCTION__ << "can't remove a null Preset";
+		//			return false;
+		//		}
 
-			if(f.exists() && f.absoluteFilePath().startsWith(m_presetsPath + "/")) {
-				if(!QFile::remove(f.absoluteFilePath())) {
-					err << tr("The file for the preset could not be deleted from disk. It will reappear next time your presets are reloaded.");
-				}
-			}
+		//		auto predicate = [preset](const std::unique_ptr<Preset> & item) {
+		//			return item.get() == preset;
+		//		};
 
-			if(1 < m_presets.removeAll(preset)) {
-				err << tr("The preset was in the list more than once. Each instance of it in the list was removed.");
-			}
+		//		auto presetToRemove = std::find_if(m_presets.begin(), m_presets.end(), predicate);
 
-			delete preset;
-
-			Q_EMIT presetRemoved();
-			Q_EMIT presetsChanged();
-
-			switch(err.size()) {
-				case 1:
-					setLastError(err.at(0));
-					return false;
-
-				case 0:
-					break;
-
-				default:
-					setLastError(tr("The following problems were encoutered when removing the preset:\n\n%1").arg(err.join("\n")));
-					return false;
-			}
-
-			return true;
+		/* this can't happen! */
+		if(m_presets.end() == presetToRemove) {
+			qCritical() << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
+			setLastError(tr("The preset at position %1 in the list could not be found.").arg(index));
+			return false;
 		}
 
-		setLastError(tr("The preset to remove is not valid."));
-		return false;
+		bool ret = true;
+		QFileInfo f((*presetToRemove)->fileName());
+
+		if(f.exists() && f.absoluteFilePath().startsWith(m_presetsPath + "/")) {
+			if(!QFile::remove(f.absoluteFilePath())) {
+				setLastError("The file for the preset could not be deleted from disk. It will reappear next time your presets are reloaded.");
+				ret = false;
+			}
+		}
+
+		m_presets.erase(presetToRemove);
+
+		Q_EMIT presetRemoved();
+		Q_EMIT presetsChanged();
+
+		return ret;
 	}
 
 
 	/**
-	 * \brief Insert a preset into the collection stored in the manager.
+	 * \brief Add a preset to the collection stored in the application.
 	 *
 	 * \param preset is the preset to add.
-	 * \param index is the index at which to add it.
 	 *
-	 * Indices are 0-based. If an index is found to be out of bounds,
-	 * the preset will be added to the end of the collection.
-	 *
-	 * The manager takes ownership of the preset and will delete it at
-	 * the appropriate time.
+	 * The Application object takes ownership of the Preset.
 	 *
 	 * \return \b \c true if the preset was added, \b \c false otherwise.
 	 */
-	bool Application::insertPreset(Preset * preset, int i) {
-		if(preset && !m_presets.contains(preset)) {
-			if(0 > i || m_presets.size() < i) {
-				i = m_presets.size();
-			}
+	bool Application::addPreset(Preset * preset) {
+		Q_ASSERT_X(preset, __PRETTY_FUNCTION__, "null Preset pointer provided");
 
-			m_presets.insert(i, preset);
-			QFileInfo f(preset->fileName());
+		m_presets.push_back(std::unique_ptr<Preset>(preset));
+		QFileInfo f(preset->fileName());
 
-			/* if the file is not in the presets dir, give it a new filename */
-			if(!f.absoluteFilePath().startsWith(m_presetsPath + "/")) {
-				QString fileName;
-				QDir presetDir(m_presetsPath);
-				int index = 0;
+		/* if the file is not in the presets dir, give it a new filename */
+		if(!f.absoluteFilePath().startsWith(m_presetsPath + "/")) {
+			QString fileName;
+			QDir presetDir(m_presetsPath);
+			int index = 0;
 
-				do {
-					fileName = "preset" + QString::number(++index);
-				} while(presetDir.exists(fileName));
+			do {
+				fileName = "preset" + QString::number(++index);
+			} while(presetDir.exists(fileName));
 
-				preset->setFileName(presetDir.absoluteFilePath(fileName));
-			}
-
-			preset->save();
-			Q_EMIT presetAdded(preset, i);
-			Q_EMIT presetsChanged();
-
-			return true;
+			preset->setFileName(presetDir.absoluteFilePath(fileName));
 		}
 
-		return false;
+		preset->save();
+		//		Q_EMIT presetAdded(preset);
+		Q_EMIT presetsChanged();
+
+		return true;
 	}
 
 
 	/**
 	 * \fn Application::addPreset(Preset *)
 	 * \brief Add a preset to the end of the collection stored in the
-	 * manager.
+	 * application.
 	 *
 	 * \param preset is the preset to add.
 	 *
-	 * The manager takes ownership of the preset and will delete it at
+	 * The application takes ownership of the preset and will delete it at
 	 * the appropriate time.
 	 *
 	 * \return \b \c true if the preset was added, \b \c false otherwise.
@@ -457,18 +436,14 @@ namespace Qync {
 
 
 	/**
-	 * \brief Remove all presets stored in the manager.
+	 * \brief Remove all presets stored in the application.
 	 *
-	 * All presets will be removed and the manager will end up containing
-	 * no presets. All presets that were contained in the manager before
+	 * All presets will be removed and the application will end up containing
+	 * no presets. All presets that were contained in the application before
 	 * the call will be deleted, so any pointers to presets retrieved using
 	 * preset() or presets() will be invalid.
 	 */
 	void Application::clearPresets(void) {
-		for(Preset * preset : m_presets) {
-			delete preset;
-		}
-
 		m_presets.clear();
 	}
 
@@ -510,10 +485,10 @@ namespace Qync {
 		clearPresets();
 
 		for(const auto & fileName : d.entryList(QDir::Files | QDir::Readable)) {
-			Preset * myPreset = Preset::load(d.absoluteFilePath(fileName));
+			Preset * preset = Preset::load(d.absoluteFilePath(fileName));
 
-			if(myPreset) {
-				addPreset(myPreset);
+			if(preset) {
+				addPreset(preset);
 			}
 			else {
 				qDebug() << "failed to load preset from file" << fileName;
@@ -536,7 +511,7 @@ namespace Qync {
 	 * rsync that performs all operations set up in the preset without
 	 * actually modifying anything on disk or on a remote server.
 	 *
-	 * The process created is released by the manager. The calling code is
+	 * The process created is released by the application. The calling code is
 	 * responsible for its management, including deleting it when it is no
 	 * longer required.
 	 *
@@ -546,7 +521,8 @@ namespace Qync {
 	 * pointer if the preset cannot be simulated.
 	 */
 	Process * Application::simulate(int i) const {
-		if(0 > i || m_presets.size() <= i) {
+		if(0 > i || m_presets.size() <= static_cast<PresetList::size_type>(i)) {
+			qCritical() << "preset with index" << i << "does not exist (valid indices in range 0 .." << (m_presets.size() - 1);
 			return nullptr;
 		}
 
@@ -559,24 +535,24 @@ namespace Qync {
 	 *
 	 * \param preset is the preset to simulate.
 	 *
-	 * The preset need not be one stored in the manager. It is used to
+	 * The preset need not be one stored in the application. It is used to
 	 * create a QyncProcess object that will simulate the preset. A
 	 * simulation is a dry-run of \b rsync that performs all operations set
 	 * up in the preset without actually modifying anything on disk or on a
 	 * remote server.
 	 *
-	 * The process created is released by the manager. The calling code is
+	 * The process created is released by the application. The calling code is
 	 * responsible for its management, including deleting it when it is no
 	 * longer required. Similarly, the preset passed in is not consumed by
-	 * the manager and it is up to its creator to ensure it is deleted
+	 * the application and it is up to its creator to ensure it is deleted
 	 * at the appropriate time.
 	 *
 	 * \return A pointer to a process to simulate the preset, or a \b null
 	 * pointer if the preset cannot be simulated.
 	 */
-	Process * Application::simulate(const Preset * preset) const {
-		if(!preset || !m_prefs) {
-			return 0;
+	Process * Application::simulate(const Preset & preset) const {
+		if(!m_prefs) {
+			return nullptr;
 		}
 
 		Process * p = new Process(preset);
@@ -603,7 +579,8 @@ namespace Qync {
 	 * pointer if the preset cannot be synchronised.
 	 */
 	Process * Application::synchronise(int i) const {
-		if(0 > i || m_presets.size() <= i) {
+		if(0 > i || m_presets.size() <= static_cast<PresetList::size_type>(i)) {
+			qCritical() << "preset with index" << i << "does not exist (valid indices in range 0 .." << (m_presets.size() - 1);
 			return nullptr;
 		}
 
@@ -628,8 +605,8 @@ namespace Qync {
 	 * \return A pointer to a process to synchronise the preset, or a \b null
 	 * pointer if the preset cannot be synchronised.
 	 */
-	Process * Application::synchronise(const Preset * preset) const {
-		if(!preset || !m_prefs) {
+	Process * Application::synchronise(const Preset & preset) const {
+		if(!m_prefs) {
 			return nullptr;
 		}
 
