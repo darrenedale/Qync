@@ -35,9 +35,9 @@
 
 #define QYNC_APP_NAME "Qync"
 #define QYNC_APP_DISPLAY_NAME "Qync"
-#define QYNC_APP_VERSION_STRING "0.9.6"
+#define QYNC_APP_VERSION_STRING "0.9.7"
 #define QYNC_APP_VERSION_DATE "September 2017"
-#define QYNC_APP_BUILD_ID "c296551"
+#define QYNC_APP_BUILD_ID "715ab31"
 #define QYNC_APP_WEBSITE "http://www.equituk.net/"
 #define QYNC_ORG_NAME "BitCraft"
 #define QYNC_ORG_DOMAIN "bitcraft.eu"
