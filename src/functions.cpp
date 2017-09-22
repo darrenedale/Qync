@@ -2,7 +2,7 @@
  * \file functions.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.6
+ * \version 0.9.7
  *
  * \brief Qync free-standing functions implementation file.
  *

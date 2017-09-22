@@ -2,7 +2,7 @@
  * \file MainWindow.cpp
  * \author Darren Edale
  * \date September, 2017
- * \version 0.9.6
+ * \version 0.9.7
  *
  * \brief Implementation of the MainWindow class.
  *
@@ -67,7 +67,7 @@ namespace Qync {
 	 * \class MainWindow
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.6
+	 * \version 0.9.7
 	 *
 	 * \brief The main window of the Qync GUI.
 	 *

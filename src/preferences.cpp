@@ -2,7 +2,7 @@
  * \file preferences.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.6
+ * \version 0.9.7
  *
  * \brief Implementation of the Preferences class.
  *
@@ -35,7 +35,7 @@ namespace Qync {
 	 * \class Preferences
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.6
+	 * \version 0.9.7
 	 *
 	 * \brief Base class representing the core Qync preferences.
 	 *

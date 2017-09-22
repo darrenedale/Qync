@@ -2,7 +2,7 @@
  * \file guipreferences.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.6
+ * \version 0.9.7
  *
  * \brief Implementation of the GuiPreferences class.
  *
@@ -25,7 +25,7 @@ namespace Qync {
 	 * \class GuiPreferences
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.6
+	 * \version 0.9.7
 	 *
 	 * \brief A class representing application preferences including GUI
 	 * preferences.

@@ -2,7 +2,7 @@
  * \file preferencesdialogue.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.6
+ * \version 0.9.7
  *
  * \brief Implementation of the PreferencesDialogue class.
  *
@@ -36,7 +36,7 @@ namespace Qync {
 	 * \class PreferencesDialogue
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.6
+	 * \version 0.9.7
 	 *
 	 * \brief The preferences window of the Qync GUI.
 	 *

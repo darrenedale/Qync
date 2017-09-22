@@ -2,7 +2,7 @@
  * \file functions.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.6
+ * \version 0.9.7
  *
  * \brief Defines free-standing functions that are available throughout
  * the application.
