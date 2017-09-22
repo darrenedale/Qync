@@ -31,7 +31,7 @@ BreakConstructorInitializers: BeforeColon
 BreakStringLiterals: true
 ColumnLimit: 0
 CompactNamespaces: false
-ConstructorInitializerIndentWidth: 2
+ConstructorInitializerIndentWidth: 0
 ContinuationIndentWidth: 2
 Cpp11BracedListStyle: true
 # DerivePointerAlignment: true

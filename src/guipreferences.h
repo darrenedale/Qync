@@ -25,7 +25,7 @@
 namespace Qync {
 
 	class GuiPreferences
-	  : public Preferences {
+	: public Preferences {
 	public:
 		explicit GuiPreferences(const QString & fileName = {});
 		virtual ~GuiPreferences(void);

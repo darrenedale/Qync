@@ -66,11 +66,12 @@ namespace Qync {
 	 * destroyed.
 	 */
 	ProcessDialogue::ProcessDialogue(Process * process, QWidget * parent)
-	  : QDialog(parent),
-		 m_process(process),
-		 m_ui{new Ui::ProcessDialogue},
-		 m_saveButton{nullptr},
-		 m_abortButton{nullptr} {
+	: QDialog(parent),
+	  m_process(process),
+	  m_ui{new Ui::ProcessDialogue},
+	  m_saveButton{nullptr},
+	  m_abortButton{nullptr} {
+		Q_ASSERT_X(m_process, __PRETTY_FUNCTION__, "No process provided");
 		m_ui->setupUi(this);
 
 		/* keep refs to these from the UI because we dis/enable them at various points */
@@ -94,13 +95,10 @@ namespace Qync {
 	 * \brief Destroy the ProcessDialogue
 	 */
 	ProcessDialogue::~ProcessDialogue(void) {
-		qDebug() << "deleting rsync process";
-		if(m_process) {
-			m_process->disconnect(this);
-			m_ui->detailsButton->disconnect(this);
-		}
-
-		m_process = nullptr;
+		m_process->disconnect(this);
+		m_ui->detailsButton->disconnect(this);
+		m_saveButton = nullptr;
+		m_abortButton = nullptr;
 	}
 
 
@@ -212,16 +210,16 @@ namespace Qync {
 		if(speed > 2048) {
 			speed /= 1024;
 			unit = "kB/s";
-		}
 
-		if(speed > 2048) {
-			speed /= 1024;
-			unit = "MB/s";
-		}
+			if(speed > 2048) {
+				speed /= 1024;
+				unit = "MB/s";
 
-		if(speed > 2048) {
-			speed /= 1024;
-			unit = "GB/s";
+				if(speed > 2048) {
+					speed /= 1024;
+					unit = "GB/s";
+				}
+			}
 		}
 
 		m_ui->transferSpeed->setText(QLocale().toString(static_cast<double>(speed), 'f', 2) + " " + unit);
@@ -259,7 +257,8 @@ namespace Qync {
 	 * The progress widgets are reset and the stop button is enabled.
 	 */
 	void ProcessDialogue::onProcessStarted(void) {
-		m_ui->itemName->setText("");
+		m_ui->itemName->setText({});
+		m_ui->transferSpeed->setText({});
 		m_ui->itemProgress->setValue(0);
 		m_ui->overallProgress->setValue(0);
 		m_abortButton->setEnabled(true);
@@ -302,7 +301,8 @@ namespace Qync {
 		m_saveButton->setEnabled(true);
 		m_ui->itemProgress->setValue(0);
 		m_ui->overallProgress->setValue(0);
-		m_ui->itemName->setText("");
+		m_ui->itemName->setText({});
+		m_ui->transferSpeed->setText({});
 		QMessageBox::critical(this, tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process was interrupted.") : msg), QMessageBox::Ok);
 	}
 
@@ -321,7 +321,8 @@ namespace Qync {
 		m_saveButton->setEnabled(true);
 		m_ui->itemProgress->setValue(0);
 		m_ui->overallProgress->setValue(0);
-		m_ui->itemName->setText("");
+		m_ui->itemName->setText({});
+		m_ui->transferSpeed->setText({});
 		QMessageBox::critical(this, tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process failed.") : msg), QMessageBox::Ok);
 	}
 

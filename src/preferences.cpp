@@ -78,9 +78,9 @@ namespace Qync {
 	 * defaults.
 	 */
 	Preferences::Preferences(const QString & fileName)
-	  : m_modified(false),
-		 m_fileName(fileName),
-		 m_rsyncBinary() {
+	: m_modified(false),
+	  m_fileName(fileName),
+	  m_rsyncBinary() {
 		setDefaults();
 		load();
 	}
@@ -136,19 +136,25 @@ namespace Qync {
 	 * \return The \b bool value.
 	 */
 	bool Preferences::parseBooleanText(const QString & b, bool * ok) {
-		if("true" == b.trimmed().toLower()) {
-			if(ok)
+		if(0 == QString::compare("true", b.trimmed(), Qt::CaseInsensitive)) {
+			if(ok) {
 				*ok = true;
+			}
+
 			return true;
 		}
-		else if("false" == b.trimmed().toLower()) {
-			if(ok)
+		else if(0 == QString::compare("false", b.trimmed(), Qt::CaseInsensitive)) {
+			if(ok) {
 				*ok = true;
+			}
+
 			return false;
 		}
 
-		if(ok)
+		if(ok) {
 			*ok = false;
+		}
+
 		return false;
 	}
 
@@ -167,12 +173,14 @@ namespace Qync {
 		while(!xml.atEnd()) {
 			xml.readNext();
 
-			if(xml.isEndElement())
+			if(xml.isEndElement()) {
 				break;
+			}
 
 			if(xml.isCharacters()) {
-				if(!xml.isWhitespace())
-					qDebug() << "Preferences::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				if(!xml.isWhitespace()) {
+					qWarning() << "Preferences::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				}
 
 				/* ignore extraneous characters */
 				continue;
@@ -201,8 +209,10 @@ namespace Qync {
 	bool Preferences::parseXmlElement(QXmlStreamReader & xml) {
 		Q_ASSERT(xml.isStartElement());
 
-		if("corepreferences" == xml.name())
+		if("corepreferences" == xml.name()) {
 			return parseCorePreferencesXml(xml);
+		}
+
 		Qync::parseUnknownElementXml(xml);
 		return true;
 	}
@@ -221,12 +231,14 @@ namespace Qync {
 		while(!xml.atEnd()) {
 			xml.readNext();
 
-			if(xml.isEndElement())
+			if(xml.isEndElement()) {
 				break;
+			}
 
 			if(xml.isCharacters()) {
-				if(!xml.isWhitespace())
-					qDebug() << "Preferences::parseCorePreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				if(!xml.isWhitespace()) {
+					qWarning() << "Preferences::parseCorePreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				}
 
 				/* ignore extraneous characters */
 				continue;
@@ -235,8 +247,9 @@ namespace Qync {
 			if("rsyncpath" == xml.name()) {
 				setRsyncPath(xml.readElementText());
 			}
-			else
+			else {
 				Qync::parseUnknownElementXml(xml);
+			}
 		}
 
 		return true;
@@ -398,8 +411,9 @@ namespace Qync {
 						m_fileName = fileName;
 						return true;
 					}
-					else
+					else {
 						xml.readElementText();
+					}
 				}
 			}
 		}

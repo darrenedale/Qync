@@ -26,8 +26,8 @@
 /**
  * \brief The main entry point for the Qync application.
  *
- * This function instantiates a Qync::Application, creates and shows a main window
- * and initiates the application event loop.
+ * This function instantiates a Qync::Application and initiates its
+ * event loop.
  *
  * \return 0 on clean exit, non-0 otherwise.
  */

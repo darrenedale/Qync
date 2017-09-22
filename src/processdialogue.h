@@ -34,7 +34,7 @@ namespace Qync {
 	class Process;
 
 	class ProcessDialogue
-	  : public QDialog {
+	: public QDialog {
 		Q_OBJECT
 
 	public:

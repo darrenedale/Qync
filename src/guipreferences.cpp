@@ -22,25 +22,25 @@ namespace Qync {
 
 
 	/**
- * \class GuiPreferences
- * \author Darren Edale
- * \date September 2017
- * \version 0.9.6
- *
- * \brief A class representing application preferences including GUI
- * preferences.
- *
- * This is an extension of the Preferences class to record preferences for
- * the following GUI-related items:
- * - whether or not the presets toolbar is shown
- * - whether or not the synchronise toolbar is shown
- * - the style of buttons on the toolbar(s):
- *   - Icons only
- *   - Text only
- *   - Icons with text below
- *   - Icons with text beside
- *   - Whatever style the current visual theme suggests
- */
+	 * \class GuiPreferences
+	 * \author Darren Edale
+	 * \date September 2017
+	 * \version 0.9.6
+	 *
+	 * \brief A class representing application preferences including GUI
+	 * preferences.
+	 *
+	 * This is an extension of the Preferences class to record preferences for
+	 * the following GUI-related items:
+	 * - whether or not the presets toolbar is shown
+	 * - whether or not the synchronise toolbar is shown
+	 * - the style of buttons on the toolbar(s):
+	 *   - Icons only
+	 *   - Text only
+	 *   - Icons with text below
+	 *   - Icons with text beside
+	 *   - Whatever style the current visual theme suggests
+	 */
 
 
 	/**
@@ -55,10 +55,10 @@ namespace Qync {
 	 * defaults.
 	 */
 	GuiPreferences::GuiPreferences(const QString & fileName)
-	  : Preferences(fileName),
-		 m_presetsToolbar(true),
-		 m_syncToolbar(true),
-		 m_toolButtonStyle(Qt::ToolButtonFollowStyle) {
+	: Preferences(fileName),
+	  m_presetsToolbar(true),
+	  m_syncToolbar(true),
+	  m_toolButtonStyle(Qt::ToolButtonFollowStyle) {
 		/* must call this here as well as in base class constructor - when base
 		 * class constructor is called, the GuiPreferences object is not
 		 * initialised and therefore load() uses the copy of parseXml() in the base
@@ -74,7 +74,7 @@ namespace Qync {
 	/**
 	 * \brief Destroy the QuncGuiPreferences object.
 	 */
-	GuiPreferences::~GuiPreferences() = default;
+	GuiPreferences::~GuiPreferences(void) = default;
 
 
 	/**
@@ -285,7 +285,7 @@ namespace Qync {
 
 			if(xml.isCharacters()) {
 				if(!xml.isWhitespace()) {
-					qDebug() << "GuiPreferences::parseGuiPreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+					qWarning() << "GuiPreferences::parseGuiPreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				}
 
 				/* ignore extraneous characters */
