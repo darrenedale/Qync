@@ -2,17 +2,17 @@
  * \file preset.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the Preset class.
  *
  * \dep
  * - preset.h
+ * - unordered_map
  * - QDebug
  * - QDir
  * - QFile
  * - QVariant
- * - QMetaProperty
  * - QStringRef
  * - QXmlStreamWriter
  * - QXmlStreamReader
@@ -27,7 +27,6 @@
 #include <QDir>
 #include <QFile>
 #include <QVariant>
-#include <QMetaProperty>
 #include <QStringRef>
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
@@ -106,7 +105,7 @@ namespace Qync {
 	 * \class Preset
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief A class to represent a preset for the rsync process.
 	 *
@@ -182,35 +181,33 @@ namespace Qync {
 	 */
 	Preset * Preset::load(const QString & fileName) {
 		/* parse the preset from the file */
-		Preset * ret = new Preset;
 		QFile file(fileName);
-		file.open(QIODevice::ReadOnly);
 
-		if(file.isOpen()) {
-			ret->setFileName(fileName);
-			QXmlStreamReader xml(&file);
+		if(!file.open(QIODevice::ReadOnly)) {
+			qCritical() << __PRETTY_FUNCTION__ << "failed to open file" << fileName << "for reading";
+			return nullptr;
+		}
 
-			while(!xml.atEnd()) {
-				xml.readNext();
+		Preset * ret = new Preset;
+		ret->setFileName(fileName);
+		QXmlStreamReader xml(&file);
 
-				if(xml.isStartElement()) {
-					if("qyncpreset" == xml.name() && ret->parseXml(xml)) {
-						return ret;
-					}
-					else {
-						xml.readElementText();
-					}
+		while(!xml.atEnd()) {
+			xml.readNext();
+
+			if(xml.isStartElement()) {
+				if("qyncpreset" == xml.name() && ret->parseXml(xml)) {
+					return ret;
+				}
+				else {
+					xml.readElementText();
 				}
 			}
-
-			qDebug() << "file" << fileName << "does not contain a valid qync preset";
-		}
-		else {
-			qDebug() << "failed to open file" << fileName << "for reading";
 		}
 
+		qCritical() << __PRETTY_FUNCTION__ << "file" << fileName << "does not contain a valid qync preset";
 		delete ret;
-		return ret;
+		return nullptr;
 	}
 
 
@@ -225,12 +222,12 @@ namespace Qync {
 	 * \return \b true if the preset file was saved, \b false otherwise.
 	 */
 	bool Preset::saveAs(const QString & fileName) {
-		if(saveCopyAs(fileName)) {
-			m_fileName = fileName;
-			return true;
+		if(!saveCopyAs(fileName)) {
+			return false;
 		}
 
-		return false;
+		m_fileName = fileName;
+		return true;
 	}
 
 
@@ -247,13 +244,13 @@ namespace Qync {
 	bool Preset::saveCopyAs(const QString & fileName) const {
 		QFile file(fileName);
 
-		if(file.open(QIODevice::WriteOnly)) {
-			QXmlStreamWriter xml(&file);
-			xml.setAutoFormatting(true);
-			return emitXml(xml);
+		if(!file.open(QIODevice::WriteOnly)) {
+			return false;
 		}
 
-		return false;
+		QXmlStreamWriter xml(&file);
+		xml.setAutoFormatting(true);
+		return emitXml(xml);
 	}
 
 
@@ -372,7 +369,7 @@ namespace Qync {
 	 * otherwise.
 	 */
 	bool Preset::parseXml(QXmlStreamReader & xml) {
-		Q_ASSERT(xml.isStartElement() && "qyncpreset" == xml.name());
+		Q_ASSERT_X(xml.isStartElement() && "qyncpreset" == xml.name(), __PRETTY_FUNCTION__, "XML stream is not at the start of a \"qyncpreset\" element");
 		setDefaultProperties();
 
 		while(!xml.atEnd()) {
@@ -384,7 +381,7 @@ namespace Qync {
 
 			if(xml.isCharacters()) {
 				if(!xml.isWhitespace()) {
-					qWarning() << "Preset::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+					qWarning() << __PRETTY_FUNCTION__ << "Preset::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				}
 
 				/* ignore extraneous characters */
@@ -421,7 +418,7 @@ namespace Qync {
 	 * stream, \b false otherwise.
 	 */
 	bool Preset::parsePropertiesXml(QXmlStreamReader & xml) {
-		Q_ASSERT(xml.isStartElement() && "properties" == xml.name());
+		Q_ASSERT_X(xml.isStartElement() && "properties" == xml.name(), __PRETTY_FUNCTION__, "XML stream is not at the start of a \"properties\" element");
 
 		while(!xml.atEnd()) {
 			xml.readNext();
@@ -432,7 +429,7 @@ namespace Qync {
 
 			if(xml.isCharacters()) {
 				if(!xml.isWhitespace()) {
-					qWarning() << "Preset::parsePropertiesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+					qWarning() << __PRETTY_FUNCTION__ << "Preset::parsePropertiesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				}
 
 				/* ignore extraneous characters */
@@ -460,7 +457,7 @@ namespace Qync {
 	 * stream, \b false otherwise.
 	 */
 	bool Preset::parsePropertyXml(QXmlStreamReader & xml) {
-		Q_ASSERT(xml.isStartElement() && "property" == xml.name());
+		Q_ASSERT_X(xml.isStartElement() && "property" == xml.name(), __PRETTY_FUNCTION__, "XML stream is not at the start of a \"property\" element");
 
 		auto propName = xml.attributes().value("name");
 		auto propType = xml.attributes().value("type");
@@ -483,7 +480,7 @@ namespace Qync {
 				propValue = false;
 			}
 			else {
-				qWarning() << "Preset::parsePropertyXml() - invalid value" << propValueString << "for boolean property" << propName << "at line" << xml.lineNumber() << "column" << xml.columnNumber();
+				qWarning() << __PRETTY_FUNCTION__ << "Preset::parsePropertyXml() - invalid value" << propValueString << "for boolean property" << propName << "at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				return false;
 			}
 
@@ -505,7 +502,7 @@ namespace Qync {
 		}
 
 		return true;
-	}  // namespace Qync
+	}
 
 
 	/**

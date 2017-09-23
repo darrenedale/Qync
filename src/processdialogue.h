@@ -2,7 +2,7 @@
  * \file processdialogue.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Declaration of the ProcessDialogue class.
  *
@@ -12,6 +12,7 @@
  * - QString
  * - functions.h
  */
+
 #ifndef QYNC_PROCESSDIALOGUE_H
 #define QYNC_PROCESSDIALOGUE_H
 
@@ -65,10 +66,10 @@ namespace Qync {
 		virtual void closeEvent(QCloseEvent *) override;
 
 	private:
+		std::unique_ptr<Ui::ProcessDialogue> m_ui;
+
 		std::unique_ptr<Process> m_process;
 		QString m_outputCache;
-
-		std::unique_ptr<Ui::ProcessDialogue> m_ui;
 
 		/* pointers to these are kept for convenience. they are valid for as long
 		 * as m_ui is valid (i.e. the lifetime of the object) */

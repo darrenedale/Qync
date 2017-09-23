@@ -2,13 +2,13 @@
  * \file processdialogue.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the ProcessDialogue class.
  *
  * \dep
  * - processdialogue.h
- * - ui_processdialogue.h
+ * - processdialogue.ui
  * - QDebug
  * - QString
  * - QStringList
@@ -42,7 +42,7 @@ namespace Qync {
 	 * \class ProcessDialogue
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief The window to interact with a spawned rsync process.
 	 *
@@ -67,8 +67,8 @@ namespace Qync {
 	 */
 	ProcessDialogue::ProcessDialogue(Process * process, QWidget * parent)
 	: QDialog(parent),
-	  m_process(process),
 	  m_ui{new Ui::ProcessDialogue},
+	  m_process(process),
 	  m_saveButton{nullptr},
 	  m_abortButton{nullptr} {
 		Q_ASSERT_X(m_process, __PRETTY_FUNCTION__, "No process provided");
@@ -164,8 +164,8 @@ namespace Qync {
 	 * \param pc is the percent progress for the current item.
 	 *
 	 * The current item progress bar is updated to the value provided.
-	 */ void
-	ProcessDialogue::updateItemProgress(int pc) {
+	 */
+	void ProcessDialogue::updateItemProgress(int pc) {
 		m_ui->itemProgress->setValue(pc);
 	}
 
@@ -207,6 +207,7 @@ namespace Qync {
 	void ProcessDialogue::updateTransferSpeed(float speed) {
 		QString unit = "B/s";
 
+		/* TODO this is lazy - do it properly so it's not so wasteful! */
 		if(speed > 2048) {
 			speed /= 1024;
 			unit = "kB/s";
@@ -236,18 +237,19 @@ namespace Qync {
 	void ProcessDialogue::saveOutput(void) {
 		QString fileName = QFileDialog::getSaveFileName(this, tr("Save %1 output").arg(qyncApp->applicationDisplayName()));
 
-		if(!fileName.isEmpty()) {
-			QFile f(fileName);
-			f.open(QIODevice::WriteOnly);
-
-			if(!f.isOpen()) {
-				QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The output could not be saved to %1.").arg(fileName));
-				return;
-			}
-
-			f.write(m_ui->details->toPlainText().toUtf8());
-			f.close();
+		if(fileName.isEmpty()) {
+			return;
 		}
+
+		QFile f(fileName);
+
+		if(!f.open(QIODevice::WriteOnly)) {
+			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The output could not be saved to %1.").arg(fileName));
+			return;
+		}
+
+		f.write(m_ui->details->toPlainText().toUtf8());
+		f.close();
 	}
 
 
@@ -280,9 +282,8 @@ namespace Qync {
 		m_ui->overallProgress->setValue(100);
 		m_ui->itemName->setText(QString("<strong>%1</strong>").arg(tr("Synchronisation complete")));
 
-		/* transfer speed should already be set to the overall speed as emitted by rsync
-		 * process in its stdout */
-		//		m_ui->transferSpeed->setText({});
+		/* transfer speed will be set to the overall speed as emitted by rsync
+		 * process in its stdout, so we don't clear it */
 
 		if(!msg.isEmpty()) {
 			QMessageBox::information(this, tr("%1 Message").arg(qyncApp->applicationDisplayName()), msg, QMessageBox::Ok);

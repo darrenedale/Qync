@@ -2,7 +2,7 @@
  * \file functions.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Qync free-standing functions implementation file.
  *
@@ -16,6 +16,7 @@
 
 #include <QDebug>
 #include <QXmlStreamReader>
+
 
 /**
  * \namespace Qync
@@ -48,8 +49,6 @@ namespace Qync {
 	 */
 	void parseUnknownElementXml(QXmlStreamReader & xml) {
 		Q_ASSERT(xml.isStartElement());
-
-		qDebug() << "discarding unrecognised XML element" << xml.name();
 
 		while(!xml.atEnd()) {
 			xml.readNext();

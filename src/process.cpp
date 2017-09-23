@@ -2,15 +2,18 @@
  * \file process.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the Process class.
  *
+ * \note This class uses some C++17 features:
+ * - initialisations statements in if
+ *
  * \dep
+ * - map
  * - process.h
  * - QDebug
  * - QProcess
- * - QHash
  * - QFile
  * - QRegularExpression
  * - preset.h
@@ -19,6 +22,8 @@
  */
 
 #include "process.h"
+
+#include <map>
 
 #include <QDebug>
 #include <QProcess>
@@ -38,7 +43,7 @@ namespace Qync {
 	 * \class Process
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief Wraps the rsync process.
 	 *
@@ -243,32 +248,34 @@ namespace Qync {
 	 * \return The explanation.
 	 */
 	QString Process::defaultExitCodeMessage(const Process::ExitCode & code) {
-		static QHash<Process::ExitCode, QString> s_messages;
+		static std::map<ExitCode, QString> s_messages = {
+		  {Success, tr("The rsync process completed successfully.")},
+		  {SyntaxError, tr("The rsync process could not be started because one or more arguments were not valid.")},
+		  {ProtocolIncompatibility, tr("The rysnc process could not be started because the source and destination rsync versions are incompatible.")},
+		  {FileSelectionError, tr("The rsync process failed because one or more source files or directories could not be found.")},
+		  {UnsupportedAction, tr("The rsync process failed because the action requested is not supported.\n\nThis usually means you attempted to transfer data from a 32-bit computer to a 64-bit computer, or vice versa.")},
+		  {TransmissionProtocolStartupError, tr("The rsync process failed because it was unable to initialise its data transmission protocol.")},
+		  {UnableToWriteLogFile, tr("The rsync process completed but was unable to write to its log file.")},
+		  {SocketIoError, tr("The rsync process failed because it encountered a network input/output error.")},
+		  {FileIoError, tr("The rsync process failed because it encountered a file input/output error.")},
+		  {DataStreamError, tr("The rsync process failed because of a failure in the transmission protocol's data stream.")},
+		  {ProgramDiagnosticsError, tr("The rsync process failed because it was unable successfully to complete some internal diagnostics.")},
+		  {IpcCodeError, tr("The rsync process failed because of an inter-process communication problem.")},
+		  {InterruptReceived, tr("The rsync process was interrupted by the operating system.")},
+		  {WaitpidError, tr("The rsync process failed while waiting for a process state to change.")},
+		  {MemoryAllocationError, tr("The rsync process failed because it was unable to allocate some memory.")},
+		  {PartialTransferError, tr("The rsync process completed but some files or directories were only partially transferred.\n\nThis could mean that the destination filesystem does not support some features (such as access permissions or ownership).")},
+		  {VanishedSourceFile, tr("The rsync process failed because a source file or directory vanished while rsync was transferring its contents.")},
+		  {MaximumDeletionsExceeded, tr("The rsync process aborted because the maximum number of deletions was exceeded.")},
+		  {DataTransmissionTimeout, tr("The rsync process failed because it had to wait too long for data to be transmitted.")},
+		  {ConnectionTimeout, tr("The rsync process failed because its network connection timed out.")},
+		};
 
-		if(s_messages.size() == 0) {
-			s_messages[Success] = tr("The rsync process completed successfully.");
-			s_messages[SyntaxError] = tr("The rsync process could not be started because one or more arguments were not valid.");
-			s_messages[ProtocolIncompatibility] = tr("The rysnc process could not be started because the source and destination rsync versions are incompatible.");
-			s_messages[FileSelectionError] = tr("The rsync process failed because one or more source files or directories could not be found.");
-			s_messages[UnsupportedAction] = tr("The rsync process failed because the action requested is not supported.\n\nThis usually means you attempted to transfer data from a 32-bit computer to a 64-bit computer, or vice versa.");
-			s_messages[TransmissionProtocolStartupError] = tr("The rsync process failed because it was unable to initialise its data transmission protocol.");
-			s_messages[UnableToWriteLogFile] = tr("The rsync process completed but was unable to write to its log file.");
-			s_messages[SocketIoError] = tr("The rsync process failed because it encountered a network input/output error.");
-			s_messages[FileIoError] = tr("The rsync process failed because it encountered a file input/output error.");
-			s_messages[DataStreamError] = tr("The rsync process failed because of a failure in the transmission protocol's data stream.");
-			s_messages[ProgramDiagnosticsError] = tr("The rsync process failed because it was unable successfully to complete some internal diagnostics.");
-			s_messages[IpcCodeError] = tr("The rsync process failed because of an inter-process communication problem.");
-			s_messages[InterruptReceived] = tr("The rsync process was interrupted by the operating system.");
-			s_messages[WaitpidError] = tr("The rsync process failed while waiting for a process state to change.");
-			s_messages[MemoryAllocationError] = tr("The rsync process failed because it was unable to allocate some memory.");
-			s_messages[PartialTransferError] = tr("The rsync process completed but some files or directories were only partially transferred.\n\nThis could mean that the destination filesystem does not support some features (such as access permissions or ownership).");
-			s_messages[VanishedSourceFile] = tr("The rsync process failed because a source file or directory vanished while rsync was transferring its contents.");
-			s_messages[MaximumDeletionsExceeded] = tr("The rsync process aborted because the maximum number of deletions was exceeded.");
-			s_messages[DataTransmissionTimeout] = tr("The rsync process failed because it had to wait too long for data to be transmitted.");
-			s_messages[ConnectionTimeout] = tr("The rsync process failed because its network connection timed out.");
+		if(s_messages.end() == s_messages.find(code)) {
+			return {};
 		}
 
-		return s_messages.value(code);
+		return s_messages[code];
 	}
 
 
@@ -316,8 +323,6 @@ namespace Qync {
 	 */
 	void Process::start(void) {
 		Q_ASSERT(m_process);
-		qDebug() << "starting rsync with options:\n"
-					<< m_args.join(' ');
 		m_process->start(m_command, m_args);
 
 		if(!m_logFileName.isEmpty()) {
@@ -362,9 +367,7 @@ namespace Qync {
 		static QRegularExpression newItemLine("f(.*) (\\d+)");
 		static QRegularExpression completedLine("sent (\\d+|\\d+(?:,\\d{3})*) bytes *received (\\d+|\\d+(?:,\\d{3})*) bytes *((?:\\d+|\\d+(?:,\\d{3})*)(?:\\.(\\d{2}))?) bytes/sec");
 
-		Q_ASSERT(m_process);
-		//if(m_process->state() == QProcess::NotRunning) return;
-		qDebug() << __PRETTY_FUNCTION__ << "reading stdout from process";
+		Q_ASSERT_X(m_process, __PRETTY_FUNCTION__, "no process from which to read output");
 		QString data = m_process->readAllStandardOutput();
 
 		if(m_logFile.isOpen()) {
@@ -419,24 +422,18 @@ namespace Qync {
 					Q_EMIT itemProgressBytes(itemBytes);
 					Q_EMIT itemProgress(itemPc);
 
-					qDebug() << "line has" << caps.size() << "captures";
-
 					if(10 <= caps.size()) {
 						int remainingItems = caps[8].toInt();
 						int totalItems = caps[9].toInt();
 						int completedItems = totalItems - remainingItems;
 						float overallPc = static_cast<float>((completedItems * 100.0) / totalItems);
-						qDebug() << "overall progress:" << completedItems << "/" << totalItems << "=" << overallPc << "%";
 						Q_EMIT overallProgress(static_cast<int>(overallPc));
 					}
 				}
 				else if(QRegularExpressionMatch newItemMatch = newItemLine.match(data); newItemMatch.hasMatch()) {
-					qDebug() << "line is start of new item";
 					Q_EMIT newItemStarted(newItemMatch.captured(1));
 				}
 				else if(QRegularExpressionMatch myMatch = completedLine.match(data); myMatch.hasMatch()) {
-					qDebug() << "line indicates overall completion";
-					qDebug() << "overall transfer speed:" << myMatch.captured(3);
 					Q_EMIT transferSpeed(myMatch.captured(3).replace(',', "").toFloat());
 				}
 			}

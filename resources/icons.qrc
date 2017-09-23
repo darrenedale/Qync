@@ -41,6 +41,7 @@
         <file alias="basic_settings">icons/tabs/basic_settings.png</file>
     </qresource>
     <qresource prefix="/icons">
-        <file alias="application">icons/application48.png</file>
+        <file>icons/application48.png</file>
+        <file alias="application">icons/application.svg</file>
     </qresource>
 </RCC>

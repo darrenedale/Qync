@@ -2,7 +2,7 @@
  * \file aboutdialogue.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Declaration of the AboutDialogue class.
  *
@@ -31,7 +31,7 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		explicit AboutDialogue(void);
+		AboutDialogue(void);
 		~AboutDialogue(void);
 
 	private:
@@ -41,4 +41,5 @@ namespace Qync {
 	};
 
 }  // namespace Qync
+
 #endif  // QYNC_ABOUTDIALOGUE_H

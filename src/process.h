@@ -2,7 +2,7 @@
  * \file process.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Declaration of the Process class.
  *
@@ -36,6 +36,7 @@ namespace Qync {
 	class Process
 	: public QObject {
 		Q_OBJECT
+
 	public:
 		/* based on v3.0.7 of rsync. see the rsync man page */
 		enum ExitCode {
@@ -65,22 +66,22 @@ namespace Qync {
 		Process(const QString & cmd, const Preset & preset);
 		virtual ~Process(void);
 
-		static QStringList rsyncArguments(const Preset & preset, const QStringList & forceOptions = QStringList());
+		static QStringList rsyncArguments(const Preset & preset, const QStringList & forceOptions = {});
 		static QString defaultExitCodeMessage(const Process::ExitCode & code);
 
 		inline QProcess * process(void) {
 			return m_process.get();
 		}
 
-		inline QString command(void) const {
+		inline const QString & command(void) const {
 			return m_command;
 		}
 
-		inline QStringList arguments(void) const {
+		inline const QStringList & arguments(void) const {
 			return m_args;
 		}
 
-		inline QString logFile(void) const {
+		inline const QString & logFile(void) const {
 			return m_logFileName;
 		}
 

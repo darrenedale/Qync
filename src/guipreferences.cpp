@@ -2,7 +2,7 @@
  * \file guipreferences.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the GuiPreferences class.
  *
@@ -25,7 +25,7 @@ namespace Qync {
 	 * \class GuiPreferences
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief A class representing application preferences including GUI
 	 * preferences.
@@ -285,7 +285,7 @@ namespace Qync {
 
 			if(xml.isCharacters()) {
 				if(!xml.isWhitespace()) {
-					qWarning() << "GuiPreferences::parseGuiPreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+					qWarning() << __PRETTY_FUNCTION__ << "GuiPreferences::parseGuiPreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				}
 
 				/* ignore extraneous characters */

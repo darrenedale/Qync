@@ -2,11 +2,13 @@
  * \file MainWindow.cpp
  * \author Darren Edale
  * \date September, 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the MainWindow class.
  *
  * \dep
+ * - mainwindow.h
+ * - mainwindow.ui
  * - QDebug
  * - QDir
  * - QString
@@ -14,16 +16,14 @@
  * - QMessageBox
  * - QFileDialog
  * - QInputDialog
- * - QMetaObject
- * - QMetaProperty
  * - QApplication
- * - mainwindow.h
- * - ui_mainwindow.h
+ * - QStandardPaths
  * - application.h
- * - preferences.h
+ * - guipreferences.h
  * - preset.h
  * - processdialogue.h
  * - preferencesdialogue.h
+ * - aboutdialogue.h
  * - functions.h
  *
  * \todo convert includeInSynchronisation in .ui file to a custom subclass of
@@ -40,8 +40,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QInputDialog>
-#include <QMetaObject>
-#include <QMetaProperty>
 #include <QApplication>
 #include <QStandardPaths>
 
@@ -67,7 +65,7 @@ namespace Qync {
 	 * \class MainWindow
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief The main window of the Qync GUI.
 	 *
@@ -185,14 +183,14 @@ namespace Qync {
 		QAction * action = qobject_cast<QAction *>(sender());
 
 		if(!action) {
-			qDebug() << "showPresetFromMenu() slot call did not result from trigger of action from My Presets menu";
+			qCritical() << __PRETTY_FUNCTION__ << "showPresetFromMenu() slot call did not result from trigger of action from My Presets menu";
 			return;
 		}
 
 		int index = action->data().toInt();
 
 		if(index < 0 || index >= qyncApp->presetCount()) {
-			qDebug() << "action from My Presets menu contains invalid preset index";
+			qCritical() << __PRETTY_FUNCTION__ << "action from My Presets menu contains invalid preset index";
 			refreshPresets();
 			return;
 		}
@@ -210,8 +208,7 @@ namespace Qync {
 	 * are updated to reflect the settings in the preset.
 	 */
 	void MainWindow::showPreset(int index) {
-		/* NOTE index can be > last preset in app because the combo box has
-	   <New Preset> empty item as its last index */
+		/* NOTE index can be > last preset because combo box has <New Preset> if no presets */
 		if(0 == index && QYNC_MAINWINDOW_NEW_PRESET_TAG == m_ui->presets->itemData(0).toInt()) {
 			/* <New Preset> chosen */
 			m_ui->actionRemove->setEnabled(false);
@@ -440,17 +437,6 @@ namespace Qync {
 		/* get current settings */
 		Preset & myPreset = qyncApp->preset(i);
 		fillPreset(myPreset);
-		//		const QMetaObject * mo = oldPreset.metaObject();
-
-		//		/* copy current settings into original preset */
-		//		oldPreset.setSource(temp.source());
-		//		oldPreset.setDestination(temp.destination());
-
-		//		for(i = mo->propertyOffset(); i < mo->propertyCount(); ++i) {
-		//			oldPreset.setProperty(mo->property(i).name(), temp.property(mo->property(i).name()));
-		//		}
-
-		//		/* save and redisplay original preset */
 		myPreset.save();
 		showPreset(i);
 	}
@@ -655,7 +641,7 @@ namespace Qync {
 				break;
 
 			default:
-				qWarning() << "unexpeced selected index" << m_ui->includeInSynchronisation->currentIndex() << "in \"what to sync\" combo box";
+				qWarning() << __PRETTY_FUNCTION__ << "unexpeced selected index" << m_ui->includeInSynchronisation->currentIndex() << "in \"what to sync\" combo box";
 				[[fallthrough]];
 			case UpdateEverything:
 				p.setOnlyUpdateExistingEntries(false);

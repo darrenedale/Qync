@@ -2,14 +2,14 @@
  * \file application.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Declaration of the Application class.
  *
  * \dep
  * - memory
+ * - vector
  * - QApplication
- * - QList
  * - QString
  */
 
@@ -17,9 +17,9 @@
 #define QYNC_APPLICATION_H
 
 #include <memory>
+#include <vector>
 
 #include <QApplication>
-#include <QList>
 #include <QString>
 
 namespace Qync {
@@ -85,23 +85,12 @@ namespace Qync {
 		bool loadPresets(const QString & path);
 
 	Q_SIGNALS:
-		//		void presetAdded(Preset * preset);
 		void presetRemoved(void);
 		void presetsChanged(void);
 		void preferencesChanged(void);
 		void processStarted(Process * process) const;
 
 	protected:
-		/**
-		 * \brief Set the text that describes the last error.
-		 *
-		 * \param err is the error description.
-		 *
-		 * Methods that indicate success or failure must use this method if
-		 * they indicate failure so that the end user can be presented with a
-		 * description of what went wrong. They need not reset it if they
-		 * succeed as long as the clearly indicate success.
-		 */
 		void setLastError(const QString & err) const;
 
 	private:

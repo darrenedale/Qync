@@ -2,7 +2,7 @@
  * \file preferences.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Declaration of the Preferences class.
  *
@@ -22,7 +22,7 @@ namespace Qync {
 
 	class Preferences {
 	public:
-		explicit Preferences(const QString & fileName = QString());
+		explicit Preferences(const QString & fileName = {});
 		virtual ~Preferences(void) = default;
 
 		bool save(void) const;
@@ -54,7 +54,6 @@ namespace Qync {
 		bool emitCorePreferencesXml(QXmlStreamWriter & xml) const;
 
 	private:
-		mutable bool m_modified;
 		QString m_fileName;
 		QString m_rsyncBinary;
 	};

@@ -2,23 +2,22 @@
  * \file preferences.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the Preferences class.
  *
  * \dep
+ * - preferences.h
  * - QDebug
  * - QXmlStreamWriter
  * - QXmlStreamReader
  * - QDir
  * - QFileInfo
  * - QProcess
- * - preferences.h
  * - functions.h
  */
 
 #include "preferences.h"
-#include "functions.h"
 
 #include <QDebug>
 #include <QXmlStreamWriter>
@@ -26,6 +25,8 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QProcess>
+
+#include "functions.h"
 
 
 namespace Qync {
@@ -35,7 +36,7 @@ namespace Qync {
 	 * \class Preferences
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief Base class representing the core Qync preferences.
 	 *
@@ -78,18 +79,11 @@ namespace Qync {
 	 * defaults.
 	 */
 	Preferences::Preferences(const QString & fileName)
-	: m_modified(false),
-	  m_fileName(fileName),
+	: m_fileName(fileName),
 	  m_rsyncBinary() {
 		setDefaults();
 		load();
 	}
-
-
-	/**
-	 * \fn Preferences::~Preferences(void)
-	 * \brief Destroy the Preferences object.
-	 */
 
 
 	/**
@@ -112,8 +106,8 @@ namespace Qync {
 		/* rsync binary is provided with qync */
 		setRsyncPath(QDir::currentPath() + "/bin/rsync.exe");
 #else
-		qDebug() << "unsupported platform - default rsync binary unknown";
-		setRsyncPath(QString());
+		qCritical() << __PRETTY_FUNCTION__ << "unsupported platform - default rsync binary unknown";
+		setRsyncPath({});
 #endif
 	}
 
@@ -167,7 +161,7 @@ namespace Qync {
 	 * \return \b true if the settings were read, \b false otherwise.
 	 */
 	bool Preferences::parseXmlStream(QXmlStreamReader & xml) {
-		Q_ASSERT(xml.isStartElement() && "qyncpreferences" == xml.name());
+		Q_ASSERT_X(xml.isStartElement() && "qyncpreferences" == xml.name(), __PRETTY_FUNCTION__, "no XML start element or element is not qyncpreferences");
 		setDefaults();
 
 		while(!xml.atEnd()) {
@@ -179,7 +173,7 @@ namespace Qync {
 
 			if(xml.isCharacters()) {
 				if(!xml.isWhitespace()) {
-					qWarning() << "Preferences::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+					qWarning() << __PRETTY_FUNCTION__ << "Preferences::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				}
 
 				/* ignore extraneous characters */
@@ -207,7 +201,7 @@ namespace Qync {
 	 * \return \b true if the settings were read, \b false otherwise.
 	 */
 	bool Preferences::parseXmlElement(QXmlStreamReader & xml) {
-		Q_ASSERT(xml.isStartElement());
+		Q_ASSERT_X(xml.isStartElement(), __PRETTY_FUNCTION__, "no XML start element");
 
 		if("corepreferences" == xml.name()) {
 			return parseCorePreferencesXml(xml);
@@ -226,7 +220,7 @@ namespace Qync {
 	 * \return \b true if the settings were read, \b false otherwise.
 	 */
 	bool Preferences::parseCorePreferencesXml(QXmlStreamReader & xml) {
-		Q_ASSERT(xml.isStartElement() && "corepreferences" == xml.name());
+		Q_ASSERT_X(xml.isStartElement() && "corepreferences" == xml.name(), __PRETTY_FUNCTION__, "no XML start element or element is not corepreferences");
 
 		while(!xml.atEnd()) {
 			xml.readNext();
@@ -237,7 +231,7 @@ namespace Qync {
 
 			if(xml.isCharacters()) {
 				if(!xml.isWhitespace()) {
-					qWarning() << "Preferences::parseCorePreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
+					qWarning() << __PRETTY_FUNCTION__ << "Preferences::parseCorePreferencesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				}
 
 				/* ignore extraneous characters */
@@ -317,7 +311,6 @@ namespace Qync {
 	 */
 	bool Preferences::save(void) const {
 		if(saveCopyAs(m_fileName)) {
-			m_modified = false;
 			return true;
 		}
 
@@ -338,7 +331,6 @@ namespace Qync {
 	bool Preferences::saveAs(const QString & fileName) {
 		if(saveCopyAs(fileName)) {
 			m_fileName = fileName;
-			m_modified = false;
 			return true;
 		}
 
@@ -358,15 +350,15 @@ namespace Qync {
 	 */
 	bool Preferences::saveCopyAs(const QString & fileName) const {
 		QFile file(fileName);
-		file.open(QIODevice::WriteOnly);
 
-		if(file.isOpen()) {
-			QXmlStreamWriter xml(&file);
-			return emitXmlStream(xml);
+		if(!file.open(QIODevice::WriteOnly)) {
+			return false;
 		}
 
-		return false;
+		QXmlStreamWriter xml(&file);
+		return emitXmlStream(xml);
 	}
+
 
 	/**
 	 * \brief (Re)load the settings from the internally stored file.
@@ -378,12 +370,12 @@ namespace Qync {
 	 */
 	bool Preferences::load(void) {
 		if(loadFrom(m_fileName)) {
-			m_modified = false;
 			return true;
 		}
 
 		return false;
 	}
+
 
 	/**
 	 * \brief Load settings from a named file.
@@ -397,29 +389,49 @@ namespace Qync {
 	 */
 	bool Preferences::loadFrom(const QString & fileName) {
 		QFile file(fileName);
-		file.open(QIODevice::ReadOnly);
 
-		if(file.isOpen()) {
-			QXmlStreamReader xml(&file);
+		if(!file.open(QIODevice::ReadOnly)) {
+			qCritical() << __PRETTY_FUNCTION__ << "failed to open preferences file" << fileName << "for reading";
+			return false;
+		}
 
-			while(!xml.atEnd()) {
-				xml.readNext();
+		QXmlStreamReader xml(&file);
 
-				if(xml.isStartElement()) {
-					if("qyncpreferences" == xml.name() && parseXmlStream(xml)) {
-						m_modified = false;
-						m_fileName = fileName;
-						return true;
-					}
-					else {
-						xml.readElementText();
-					}
+		while(!xml.atEnd()) {
+			xml.readNext();
+
+			if(xml.isStartElement()) {
+				if(0 == QString::compare("qyncpreferences", xml.name(), Qt::CaseInsensitive) && parseXmlStream(xml)) {
+					m_fileName = fileName;
+					return true;
 				}
+
+				xml.readElementText();
 			}
 		}
 
 		return false;
 	}
+
+
+	/**
+	 * \brief Check whether the path to the rsync command is valid.
+	 *
+	 * The path is valid if it identifies a valid, executable file that
+	 * the current user has access to.
+	 *
+	 * \return \b true if the path is valid, \b false otherwise.
+	 */
+	bool Preferences::rsyncPathIsValid(void) const {
+		QFileInfo f(rsyncPath());
+		return f.exists() && f.isFile() && f.isExecutable();
+	}
+
+
+	/**
+	 * \fn Preferences::~Preferences(void)
+	 * \brief Destroy the Preferences object.
+	 */
 
 
 	/**
@@ -437,18 +449,5 @@ namespace Qync {
 	 * \return \b true if the path was set, \b false otherwise.
 	 */
 
-
-	/**
-	 * \brief Check whether the path to the rsync command is valid.
-	 *
-	 * The path is valid if it identifies a valid, executable file that
-	 * the current user has access to.
-	 *
-	 * \return \b true if the path is valid, \b false otherwise.
-	 */
-	bool Preferences::rsyncPathIsValid(void) const {
-		QFileInfo f(rsyncPath());
-		return f.exists() && f.isFile() && f.isExecutable();
-	}
 
 }  // namespace Qync

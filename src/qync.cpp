@@ -2,7 +2,7 @@
  * \file qync.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Qync main application file.
  *
@@ -12,9 +12,6 @@
  * - QDebug
  * - application.h
  * - mainwindow.h
- *
- * \todo make a nice application icon (or get someone else to make one).
- * \todo add application icons of all sizes to package
  */
 
 #include <QDebug>

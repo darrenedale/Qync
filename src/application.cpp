@@ -2,7 +2,7 @@
  * \file application.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the Application class.
  *
@@ -35,9 +35,9 @@
 
 #define QYNC_APP_NAME "Qync"
 #define QYNC_APP_DISPLAY_NAME "Qync"
-#define QYNC_APP_VERSION_STRING "0.9.7"
+#define QYNC_APP_VERSION_STRING "1.0.0"
 #define QYNC_APP_VERSION_DATE "September 2017"
-#define QYNC_APP_BUILD_ID "715ab31"
+#define QYNC_APP_BUILD_ID "828c38f"
 #define QYNC_APP_WEBSITE "http://www.equituk.net/"
 #define QYNC_ORG_NAME "BitCraft"
 #define QYNC_ORG_DOMAIN "bitcraft.eu"
@@ -50,7 +50,7 @@ namespace Qync {
 	 * \class Application
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief Manages core application functionality for Qync.
 	 *
@@ -68,62 +68,6 @@ namespace Qync {
 	 * in the user's home directory. The \b preferences file stores the application
 	 * preferences as XML, and the presets folder stores each preset in its own
 	 * XML file.
-	 */
-
-
-	/**
-	 * \fn Application::presetAdded(Preset *, int)
-	 * \brief Emitted when a preset has been added.
-	 *
-	 * \param preset is a pointer to the preset that was added.
-	 *
-	 * When emitted, this signal is always emitted before presetsChanged(),
-	 * never after.
-	 */
-
-
-	/**
-	 * \fn Application::presetRemoved(void)
-	 * \brief Emitted when a preset has been removed.
-	 *
-	 * When emitted, this signal is always emitted before presetsChanged(),
-	 * never after.
-	 */
-
-
-	/**
-	 * \fn Application::presetsChanged(void)
-	 * \brief Emitted when a preset has been removed.
-	 *
-	 * When emitted with either presetAdded() or presetRemoved(), this
-	 * signal is always emitted after the other, never before.
-	 */
-
-
-	/**
-	 * \fn Application::preferencesChanged(void)
-	 * \brief Emitted when the application preferences have changed.
-	 */
-
-
-	/**
-	 * \fn Application::processStarted(Process *) const
-	 * \brief Emitted when a process has been started.
-	 *
-	 * \param process is the process created.
-	 *
-	 * Extreme care needs to be taken when connecting to this signal. It is
-	 * emitted whenever a call to simulate() or execute() produces a valid
-	 * process. The process provided with the signal is owned elsewhere. The
-	 * application does not guarantee its lifespan and the class(es) connecting
-	 * to the signal do not own it. The process could therefore be deleted
-	 * at any time without notice. Connecting classes may listen for signals
-	 * from the process and connect to its slots, but may not call any
-	 * method or otherwise manipulate the process.
-	 *
-	 * This means that the process may be invalid by the time your class
-	 * receives this signal, that the process may never get started and that
-	 * the process may never emit any signals at all.
 	 */
 
 
@@ -180,6 +124,7 @@ namespace Qync {
 		return m_configPath;
 	}
 
+
 	/**
 	 * \brief Provides the path to the presets directory.
 	 *
@@ -193,6 +138,16 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Set the text that describes the last error.
+	 *
+	 * \param err is the error description.
+	 *
+	 * Methods that indicate success or failure must use this method if
+	 * they indicate failure so that the end user can be presented with a
+	 * description of what went wrong. They need not reset it if they
+	 * succeed as long as the clearly indicate success.
+	 */
 	void Application::setLastError(const QString & err) const {
 		m_lastError = err;
 	}
@@ -260,26 +215,6 @@ namespace Qync {
 
 
 	/**
-	 * \fn Application::presetCount(void)
-	 * \brief Get the number of presets stored in the application.
-	 *
-	 * \return The number of presets.
-	 */
-
-
-	/**
-	 * \fn Application::presets(void)
-	 * \brief Retrieve the presets stored in the application.
-	 *
-	 * The pointers in the set returned are still owned by the application.
-	 * Your code may not delete any of them.
-	 *
-	 * \return the presets (or an empty set if the application does not have
-	 * any presets stored.
-	 */
-
-
-	/**
 	 * \brief Retrieve an indexed preset from the application.
 	 *
 	 * \param index is the index of the preset to retrieve.
@@ -318,54 +253,12 @@ namespace Qync {
 	 */
 	bool Application::removePreset(int index) {
 		if(0 > index || m_presets.size() <= static_cast<PresetList::size_type>(index)) {
-			qCritical() << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
+			qCritical() << __PRETTY_FUNCTION__ << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
 			setLastError(tr("The preset at position %1 in the list could not be found.").arg(index));
 			return false;
 		}
 
 		auto presetToRemove = m_presets.begin() + index;
-		//		return removePreset(m_presets[static_cast<PresetList::size_type>(index)].get());
-		//	}
-
-
-		/**
-	 * \brief Remove a known preset from the collection stored in the
-	 * application.
-	 *
-	 * \param preset is the preset to remove.
-	 *
-	 * If the preset is in the collection, it is removed and deleted. If
-	 * not, it is untouched. If this method returns \b true the pointer
-	 * passed in is no longer valid.
-	 *
-	 * If this method returns \b true, the pointer passed in is no longer
-	 * valid, along with one or more pointers in any previously retrieved
-	 * set from presets(), and existing indices may not be valid. For this
-	 * reason, all presets retrieved from the application prior to a successful
-	 * call to this method must be considered invalid.
-	 *
-	 * \return \b true if the preset was removed from the collection,
-	 * \b false otherwise.
-	 */
-		//	bool Application::removePreset(Preset * preset) {
-		//		if(!preset) {
-		//			qCritical() << __PRETTY_FUNCTION__ << "can't remove a null Preset";
-		//			return false;
-		//		}
-
-		//		auto predicate = [preset](const std::unique_ptr<Preset> & item) {
-		//			return item.get() == preset;
-		//		};
-
-		//		auto presetToRemove = std::find_if(m_presets.begin(), m_presets.end(), predicate);
-
-		/* this can't happen! */
-		if(m_presets.end() == presetToRemove) {
-			qCritical() << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
-			setLastError(tr("The preset at position %1 in the list could not be found.").arg(index));
-			return false;
-		}
-
 		bool ret = true;
 		QFileInfo f((*presetToRemove)->fileName());
 
@@ -414,25 +307,10 @@ namespace Qync {
 		}
 
 		preset->save();
-		//		Q_EMIT presetAdded(preset);
 		Q_EMIT presetsChanged();
 
 		return true;
 	}
-
-
-	/**
-	 * \fn Application::addPreset(Preset *)
-	 * \brief Add a preset to the end of the collection stored in the
-	 * application.
-	 *
-	 * \param preset is the preset to add.
-	 *
-	 * The application takes ownership of the preset and will delete it at
-	 * the appropriate time.
-	 *
-	 * \return \b \c true if the preset was added, \b \c false otherwise.
-	 */
 
 
 	/**
@@ -478,7 +356,7 @@ namespace Qync {
 		QDir d(path);
 
 		if(!d.exists()) {
-			qDebug() << "path" << path << "does not exist";
+			qWarning() << __PRETTY_FUNCTION__ << "path" << path << "does not exist";
 			return false;
 		}
 
@@ -491,7 +369,7 @@ namespace Qync {
 				addPreset(preset);
 			}
 			else {
-				qDebug() << "failed to load preset from file" << fileName;
+				qWarning() << __PRETTY_FUNCTION__ << "failed to load preset from file" << fileName;
 			}
 		}
 
@@ -522,7 +400,7 @@ namespace Qync {
 	 */
 	Process * Application::simulate(int i) const {
 		if(0 > i || m_presets.size() <= static_cast<PresetList::size_type>(i)) {
-			qCritical() << "preset with index" << i << "does not exist (valid indices in range 0 .." << (m_presets.size() - 1);
+			qCritical() << __PRETTY_FUNCTION__ << "preset with index" << i << "does not exist (valid indices in range 0 .." << (m_presets.size() - 1);
 			return nullptr;
 		}
 
@@ -552,6 +430,7 @@ namespace Qync {
 	 */
 	Process * Application::simulate(const Preset & preset) const {
 		if(!m_prefs) {
+			qCritical() << __PRETTY_FUNCTION__ << "there is no prefs object therefore the rsync program cannot be located";
 			return nullptr;
 		}
 
@@ -580,7 +459,7 @@ namespace Qync {
 	 */
 	Process * Application::synchronise(int i) const {
 		if(0 > i || m_presets.size() <= static_cast<PresetList::size_type>(i)) {
-			qCritical() << "preset with index" << i << "does not exist (valid indices in range 0 .." << (m_presets.size() - 1);
+			qCritical() << __PRETTY_FUNCTION__ << "preset with index" << i << "does not exist (valid indices in range 0 .." << (m_presets.size() - 1);
 			return nullptr;
 		}
 
@@ -635,6 +514,96 @@ namespace Qync {
 
 		return m_rsyncVersionText;
 	}
+
+
+	/**
+	 * \fn Application::presetCount(void)
+	 * \brief Get the number of presets stored in the application.
+	 *
+	 * \return The number of presets.
+	 */
+
+
+	/**
+	 * \fn Application::presets(void)
+	 * \brief Retrieve the presets stored in the application.
+	 *
+	 * The pointers in the set returned are still owned by the application.
+	 * Your code may not delete any of them.
+	 *
+	 * \return the presets (or an empty set if the application does not have
+	 * any presets stored.
+	 */
+
+
+	/**
+	 * \fn Application::addPreset(Preset *)
+	 * \brief Add a preset to the end of the collection stored in the
+	 * application.
+	 *
+	 * \param preset is the preset to add.
+	 *
+	 * The application takes ownership of the preset and will delete it at
+	 * the appropriate time.
+	 *
+	 * \return \b \c true if the preset was added, \b \c false otherwise.
+	 */
+
+
+	/**
+	 * \fn Application::presetAdded(Preset *, int)
+	 * \brief Emitted when a preset has been added.
+	 *
+	 * \param preset is a pointer to the preset that was added.
+	 *
+	 * When emitted, this signal is always emitted before presetsChanged(),
+	 * never after.
+	 */
+
+
+	/**
+	 * \fn Application::presetRemoved(void)
+	 * \brief Emitted when a preset has been removed.
+	 *
+	 * When emitted, this signal is always emitted before presetsChanged(),
+	 * never after.
+	 */
+
+
+	/**
+	 * \fn Application::presetsChanged(void)
+	 * \brief Emitted when a preset has been removed.
+	 *
+	 * When emitted with either presetAdded() or presetRemoved(), this
+	 * signal is always emitted after the other, never before.
+	 */
+
+
+	/**
+	 * \fn Application::preferencesChanged(void)
+	 * \brief Emitted when the application preferences have changed.
+	 */
+
+
+	/**
+	 * \fn Application::processStarted(Process *) const
+	 * \brief Emitted when a process has been started.
+	 *
+	 * \param process is the process created.
+	 *
+	 * Extreme care needs to be taken when connecting to this signal. It is
+	 * emitted whenever a call to simulate() or execute() produces a valid
+	 * process. The process provided with the signal is owned elsewhere. The
+	 * application does not guarantee its lifespan and the class(es) connecting
+	 * to the signal do not own it. The process could therefore be deleted
+	 * at any time without notice. Connecting classes may listen for signals
+	 * from the process and connect to its slots, but may not call any
+	 * method or otherwise manipulate the process.
+	 *
+	 * This means that the process may be invalid by the time your class
+	 * receives this signal, that the process may never get started and that
+	 * the process may never emit any signals at all.
+	 */
 
 
 }  // namespace Qync

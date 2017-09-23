@@ -2,7 +2,7 @@
  * \file aboutdialogue.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the AboutDialogue class.
  *
@@ -10,13 +10,17 @@
  * - aboutdialogue.h
  * - aboutdialogue.ui
  * - QString
+ * - QIcon
  * - application.h
+ *
+ * \todo Rethink the main content of the dialogue
  */
 
 #include "aboutdialogue.h"
 #include "ui_aboutdialogue.h"
 
 #include <QString>
+#include <QIcon>
 
 #include "application.h"
 
@@ -28,7 +32,7 @@ namespace Qync {
 	 * \class AboutDialogue
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief Dialogue showing information about the Qync application.
 	 */
@@ -42,6 +46,7 @@ namespace Qync {
 	  m_ui(new Ui::AboutDialogue) {
 		m_ui->setupUi(this);
 
+		m_ui->logo->setPixmap(QIcon(":/icons/application").pixmap(64));
 		m_ui->title->setText(processPlaceholders(m_ui->title->text()));
 		m_ui->about->setText(processPlaceholders(m_ui->about->text()));
 		m_ui->dependencies->setText(processPlaceholders(m_ui->dependencies->text()));
@@ -73,9 +78,9 @@ namespace Qync {
 	 *
 	 * \param content The content to process.
 	 *
-	 * The provided content is modified in-place. If it is provided as an rvalue,
-	 * obviously you will need to use the return value; otherwise, the string
-	 * provided will have been modified in-place after this function returns.
+	 * The content must be provided as an rvalue and is modified directly. The returned
+	 * value is just a (lvalue) reference to the provided (modified) object, so there
+	 * should be no copies involved in calling this function.
 	 *
 	 * The following placeholders are processed:
 	 * - \b {ApplicationDisplayName} is replaced with the display name of the application,
@@ -88,11 +93,6 @@ namespace Qync {
 	 *   provided by Application::releaseDate()
 	 * - \b {BuildId} is replaced with the build id of the application, as provided by
 	 *   Application::buildId()
-	 *
-	 * The return value is just a reference to the provided string (which has had
-	 * the replacemenets made). If you provide a non-rvalue as the argument to this
-	 * function, you can discard the return value and just use the variable you
-	 * provided to the function.
 	 *
 	 * \return A reference to the provided string with the modifications made.
 	 */

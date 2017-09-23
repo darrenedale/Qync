@@ -2,13 +2,13 @@
  * \file preferencesdialogue.cpp
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Implementation of the PreferencesDialogue class.
  *
  * \dep
  * - preferencesdialogue.h
- * - ui_preferencesdialogue.h
+ * - preferencesdialogue.ui
  * - QString
  * - QMessageBox
  * - QFileDialog
@@ -36,7 +36,7 @@ namespace Qync {
 	 * \class PreferencesDialogue
 	 * \author Darren Edale
 	 * \date September 2017
-	 * \version 0.9.7
+	 * \version 1.0.0
 	 *
 	 * \brief The preferences window of the Qync GUI.
 	 *
@@ -64,73 +64,14 @@ namespace Qync {
 	 * \param parent is the parent widget.
 	 */
 	PreferencesDialogue::PreferencesDialogue(QWidget * parent)
-	  : QDialog(parent),
-		 m_ui{new Ui::PreferencesDialogue} {
+	: QDialog(parent),
+	  m_ui{new Ui::PreferencesDialogue} {
 		m_ui->setupUi(this);
-		//		createWidgets();
 		updateWidgets();
 	}
 
 
 	PreferencesDialogue::~PreferencesDialogue(void) = default;
-
-
-	//	void PreferencesDialogue::createWidgets(void) {
-	//		m_ui->rsyncPath = new QLineEdit();
-	//		m_chooseRsyncPath = new QToolButton();
-	//		m_ui->presetsToolbar = new QCheckBox(tr("Presets"));
-	//		m_ui->synchroniseToolbar = new QCheckBox(tr("Synchronise"));
-	//		m_ui->toolbarStyle = new QComboBox();
-
-	//		m_chooseRsyncPath->setIcon(QIcon(":/icons/buttons/choosefile"));
-
-	//		m_ui->toolbarStyle->addItem(tr("Style Default"));
-	//		m_ui->toolbarStyle->addItem(tr("Icons Only"));
-	//		m_ui->toolbarStyle->addItem(tr("Text Under Icons"));
-	//		m_ui->toolbarStyle->addItem(tr("Text Beside Icons"));
-	//		m_ui->toolbarStyle->addItem(tr("Text Only"));
-
-	//		connect(m_chooseRsyncPath, &QPushButton::clicked, this, &PreferencesDialogue::chooseRsyncPath);
-
-	//		QVBoxLayout * vLayout = new QVBoxLayout();
-	//		QHBoxLayout * hLayout = new QHBoxLayout();
-	//		hLayout->addWidget(new QLabel(tr("rsync path")));
-	//		hLayout->addWidget(m_ui->rsyncPath);
-	//		hLayout->addWidget(m_chooseRsyncPath);
-	//		vLayout->addLayout(hLayout);
-
-	//		QGroupBox * group = new QGroupBox(tr("Toolbars"));
-	//		QGridLayout * gLayout = new QGridLayout();
-	//		gLayout->addWidget(m_ui->presetsToolbar, 0, 0);
-	//		gLayout->addWidget(m_ui->synchroniseToolbar, 0, 1);
-	//		hLayout = new QHBoxLayout();
-	//		hLayout->addWidget(new QLabel(tr("Style")));
-	//		hLayout->addWidget(m_ui->toolbarStyle);
-	//		gLayout->addLayout(hLayout, 1, 0, 1, 2, Qt::AlignLeft);
-	//		group->setLayout(gLayout);
-	//		vLayout->addWidget(group);
-	//		vLayout->addStretch(2);
-
-	//		QDialogButtonBox * buttons = new QDialogButtonBox();
-
-	//		QPushButton * button = new QPushButton(QIcon(":/icons/buttons/save"), tr("Save"));
-	//		button->setToolTip(tr("Save the preferences and close the preferences window."));
-	//		connect(button, &QPushButton::clicked, this, &PreferencesDialogue::savePreferencesAndClose);
-	//		buttons->addButton(button, QDialogButtonBox::ActionRole);
-
-	//		button = new QPushButton(QIcon(":/icons/buttons/apply"), tr("Apply"));
-	//		button->setToolTip(tr("Save the preferences."));
-	//		connect(button, &QPushButton::clicked, this, &PreferencesDialogue::savePreferences);
-	//		buttons->addButton(button, QDialogButtonBox::AcceptRole);
-
-	//		button = new QPushButton(QIcon(":/icons/buttons/close"), tr("Close"));
-	//		button->setToolTip(tr("Close the preferences window without saving the preferences."));
-	//		connect(button, &QPushButton::clicked, this, &PreferencesDialogue::close);
-	//		buttons->addButton(button, QDialogButtonBox::RejectRole);
-
-	//		vLayout->addWidget(buttons);
-	//		setLayout(vLayout);
-	//	}
 
 
 	/**
@@ -142,37 +83,36 @@ namespace Qync {
 	void PreferencesDialogue::updateWidgets(void) {
 		const GuiPreferences * p = dynamic_cast<const GuiPreferences *>(qyncApp->preferences());
 
-		if(p) {
-			m_ui->rsyncPath->setText(p->rsyncPath());
-			m_ui->presetsToolbar->setChecked(p->showPresetsToolBar());
-			m_ui->synchroniseToolbar->setChecked(p->showSynchroniseToolBar());
-
-			switch(p->toolBarButtonStyle()) {
-				default:
-				case Qt::ToolButtonFollowStyle:
-					m_ui->toolbarStyle->setCurrentIndex(0);
-					break;
-
-				case Qt::ToolButtonIconOnly:
-					m_ui->toolbarStyle->setCurrentIndex(1);
-					break;
-
-				case Qt::ToolButtonTextUnderIcon:
-					m_ui->toolbarStyle->setCurrentIndex(2);
-					break;
-
-				case Qt::ToolButtonTextBesideIcon:
-					m_ui->toolbarStyle->setCurrentIndex(3);
-					break;
-
-				case Qt::ToolButtonTextOnly:
-					m_ui->toolbarStyle->setCurrentIndex(4);
-					break;
-			}
-		}
-		else {
+		if(!p) {
 			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("There are no preferences to edit."), QMessageBox::Ok);
 			close();
+			return;
+		}
+
+		m_ui->rsyncPath->setText(p->rsyncPath());
+		m_ui->presetsToolbar->setChecked(p->showPresetsToolBar());
+		m_ui->synchroniseToolbar->setChecked(p->showSynchroniseToolBar());
+
+		switch(p->toolBarButtonStyle()) {
+			case Qt::ToolButtonFollowStyle:
+				m_ui->toolbarStyle->setCurrentIndex(0);
+				break;
+
+			case Qt::ToolButtonIconOnly:
+				m_ui->toolbarStyle->setCurrentIndex(1);
+				break;
+
+			case Qt::ToolButtonTextUnderIcon:
+				m_ui->toolbarStyle->setCurrentIndex(2);
+				break;
+
+			case Qt::ToolButtonTextBesideIcon:
+				m_ui->toolbarStyle->setCurrentIndex(3);
+				break;
+
+			case Qt::ToolButtonTextOnly:
+				m_ui->toolbarStyle->setCurrentIndex(4);
+				break;
 		}
 	}
 
@@ -183,7 +123,7 @@ namespace Qync {
 	 * The manager's preferences object is updated.
 	 */
 	void PreferencesDialogue::savePreferences(void) {
-		GuiPreferences * p = new GuiPreferences();
+		GuiPreferences * p = new GuiPreferences;
 
 		p->setRsyncPath(m_ui->rsyncPath->text());
 		p->setShowPresetsToolBar(m_ui->presetsToolbar->isChecked());

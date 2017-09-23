@@ -21,11 +21,17 @@
      </property>
      <item>
       <widget class="QLabel" name="logo">
+       <property name="minimumSize">
+        <size>
+         <width>64</width>
+         <height>64</height>
+        </size>
+       </property>
        <property name="text">
         <string/>
        </property>
-       <property name="pixmap">
-        <pixmap resource="../resources/icons.qrc">:/icons/application</pixmap>
+       <property name="scaledContents">
+        <bool>false</bool>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -114,8 +120,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../resources/icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

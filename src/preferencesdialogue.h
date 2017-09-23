@@ -2,7 +2,7 @@
  * \file preferencesdialogue.h
  * \author Darren Edale
  * \date September 2017
- * \version 0.9.7
+ * \version 1.0.0
  *
  * \brief Declaration of the PreferencesDialogue class.
  *
@@ -25,7 +25,7 @@ namespace Qync {
 	}
 
 	class PreferencesDialogue
-	  : public QDialog {
+	: public QDialog {
 		Q_OBJECT
 
 	public:
