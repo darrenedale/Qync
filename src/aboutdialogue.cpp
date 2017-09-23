@@ -48,6 +48,7 @@ namespace Qync {
 
 		m_ui->logo->setPixmap(QIcon(":/icons/application").pixmap(64));
 		m_ui->title->setText(processPlaceholders(m_ui->title->text()));
+		m_ui->author->setText(processPlaceholders(m_ui->author->text()));
 		m_ui->about->setText(processPlaceholders(m_ui->about->text()));
 		m_ui->dependencies->setText(processPlaceholders(m_ui->dependencies->text()));
 		m_ui->website->setText(processPlaceholders(m_ui->website->text()));
@@ -55,7 +56,7 @@ namespace Qync {
 
 		QFont f = m_ui->title->font();
 		f.setBold(true);
-		f.setPointSizeF(f.pointSizeF() * 1.2);
+		f.setPointSizeF(f.pointSizeF() * 1.33);
 		m_ui->title->setFont(f);
 
 		f = m_ui->buildDetails->font();

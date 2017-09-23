@@ -66,30 +66,12 @@ namespace Qync {
 		Process(const QString & cmd, const Preset & preset);
 		virtual ~Process(void);
 
-		static QStringList rsyncArguments(const Preset & preset, const QStringList & forceOptions = {});
-		static QString defaultExitCodeMessage(const Process::ExitCode & code);
-
-		inline QProcess * process(void) {
-			return m_process.get();
-		}
-
-		inline const QString & command(void) const {
-			return m_command;
-		}
-
-		inline const QStringList & arguments(void) const {
-			return m_args;
-		}
-
-		inline const QString & logFile(void) const {
-			return m_logFileName;
-		}
-
 	Q_SIGNALS:
 		void started();
 		void newItemStarted(QString item);
 		void itemProgress(int progress);
 		void itemProgressBytes(int progress);
+		void itemSecondsRemaining(int seconds);
 		void overallProgress(int progress);
 		void transferSpeed(float bytesPerSecond);
 		void finished(Process::ExitCode code);
@@ -97,7 +79,6 @@ namespace Qync {
 		void interrupted(QString msg);
 		void failed(QString msg);
 		void error(QString err);
-		void standardOutputUpdated(QString data);
 
 	public Q_SLOTS:
 		void start(void);
@@ -106,7 +87,11 @@ namespace Qync {
 	private Q_SLOTS:
 		void parseStdout(void);
 		void parseStderr(void);
-		void processFinished(void);
+		void onProcessFinished(void);
+
+	protected:
+		static QStringList rsyncArguments(const Preset & preset, const QStringList & forceOptions = {});
+		static const QString & defaultExitCodeMessage(const Process::ExitCode & code);
 
 	private:
 		std::unique_ptr<QProcess> m_process;

@@ -162,6 +162,9 @@ namespace Qync {
 
 		m_aboutDialogue.reset(new AboutDialogue);
 		m_aboutDialogue->setWindowTitle(tr("About %1").arg(qyncApp->applicationDisplayName()));
+
+		/* ensure UI is in correct state for selected preset */
+		showPreset(m_ui->presets->currentIndex());
 	}
 
 

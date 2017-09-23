@@ -247,7 +247,9 @@ namespace Qync {
 	 *
 	 * \return The explanation.
 	 */
-	QString Process::defaultExitCodeMessage(const Process::ExitCode & code) {
+	const QString & Process::defaultExitCodeMessage(const Process::ExitCode & code) {
+		static const QString emptyString;
+
 		static std::map<ExitCode, QString> s_messages = {
 		  {Success, tr("The rsync process completed successfully.")},
 		  {SyntaxError, tr("The rsync process could not be started because one or more arguments were not valid.")},
@@ -272,7 +274,7 @@ namespace Qync {
 		};
 
 		if(s_messages.end() == s_messages.find(code)) {
-			return {};
+			return emptyString;
 		}
 
 		return s_messages[code];
@@ -332,7 +334,7 @@ namespace Qync {
 
 		m_stdoutConnection = connect(m_process.get(), &QProcess::readyReadStandardOutput, this, &Process::parseStdout);
 		connect(m_process.get(), &QProcess::readyReadStandardError, this, &Process::parseStderr);
-		connect(m_process.get(), static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &Process::processFinished);
+		connect(m_process.get(), static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &Process::onProcessFinished);
 		Q_EMIT started();
 	}
 
@@ -375,12 +377,9 @@ namespace Qync {
 		}
 
 		if(!data.isEmpty()) {
-			Q_EMIT standardOutputUpdated(data);
+			/* this parses the output of rsync for lines indicating progress/new item started/completion */
 			m_outputCache.append(data);
-
-			/* this parses the output of rsync for lines indicating progress */
 			m_outputCache = m_outputCache.replace('\r', '\n');
-
 			QStringList lines(m_outputCache.split("\n"));
 
 			for(int i = 0; i < lines.size() - 1; i++) {
@@ -392,10 +391,9 @@ namespace Qync {
 
 				/* WARNING c++17 feature: if initialisation statements */
 				if(QRegularExpressionMatch progressLineMatch = progressLine.match(data); progressLineMatch.hasMatch()) {
-					/* TODO can the thousands separator be ' or . depending on locale? */
 					QStringList caps = progressLineMatch.capturedTexts();
 
-					int itemBytes = caps[1].replace(',', "").toInt();
+					int itemBytes = caps[1].remove("[^0-9]+").toInt();
 					int itemPc = caps[2].toInt();
 					float xferSpeed = caps[3].toFloat();
 
@@ -414,13 +412,12 @@ namespace Qync {
 							break;
 					}
 
-					//[[maybe_unused]] int hours = caps[5].toInt();
-					//[[maybe_unused]] int mins = caps[6].toInt();
-					//[[maybe_unused]] int secs = caps[7].toInt();
+					int seconds = (caps[5].toInt() * 3600) + (caps[6].toInt() * 60) + caps[7].toInt();
 
 					Q_EMIT transferSpeed(xferSpeed);
 					Q_EMIT itemProgressBytes(itemBytes);
 					Q_EMIT itemProgress(itemPc);
+					Q_EMIT itemSecondsRemaining(seconds);
 
 					if(10 <= caps.size()) {
 						int remainingItems = caps[8].toInt();
@@ -438,28 +435,35 @@ namespace Qync {
 				}
 			}
 
-			if(lines.size() > 0) {
-				m_outputCache = lines.at(lines.size() - 1);
+			if(!lines.empty()) {
+				m_outputCache = lines[lines.size() - 1];
 			}
 		}
 	}
 
 
-	void Process::processFinished(void) {
-		Q_ASSERT(m_process);
+	/**
+	 * \brief Called when the QProcess finishes.
+	 *
+	 * This method is connected to the QProcess::finished() signal.
+	 */
+	void Process::onProcessFinished(void) {
+		Q_ASSERT_X(m_process, __PRETTY_FUNCTION__, "called without a QProcess object");
 		m_logFile.close();
+		m_outputCache.clear();
 		ExitCode code = static_cast<ExitCode>(m_process->exitCode());
+		const QString & msg = defaultExitCodeMessage(code);
 		Q_EMIT finished(code);
 
 		switch(code) {
 			case Success:
 			case PartialTransferError:
 			case UnableToWriteLogFile:
-				Q_EMIT finished(Process::defaultExitCodeMessage(code));
+				Q_EMIT finished(msg);
 				break;
 
 			case InterruptReceived:
-				Q_EMIT interrupted(Process::defaultExitCodeMessage(code));
+				Q_EMIT interrupted(msg);
 				break;
 
 			case SyntaxError:
@@ -478,7 +482,7 @@ namespace Qync {
 			case MaximumDeletionsExceeded:
 			case DataTransmissionTimeout:
 			case ConnectionTimeout:
-				Q_EMIT failed(Process::defaultExitCodeMessage(code));
+				Q_EMIT failed(msg);
 				break;
 		}
 	}

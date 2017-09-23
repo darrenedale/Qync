@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>373</width>
-    <height>288</height>
+    <width>389</width>
+    <height>246</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,9 +48,22 @@
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="website">
+         <property name="text">
+          <string>&lt;a href=&quot;{ApplicationWebsite}&quot;&gt;{ApplicationWebsite}&lt;/a&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="about">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A Qt front end for rsync, written by Darren Edale.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A Qt front end for rsync.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -58,36 +71,45 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="website">
+        <widget class="QLabel" name="author">
          <property name="text">
-          <string>&lt;a href=&quot;{ApplicationWebsite}&quot;&gt;{ApplicationWebsite}&lt;/a&gt;</string>
+          <string>Darren Edale, {ReleaseDate}.</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="dependencies">
          <property name="text">
-          <string>&lt;html&gt;
- &lt;head/&gt;
- &lt;body&gt;
-  &lt;p&gt;{ApplicationDisplayName} uses:&lt;/p&gt;
-
-  &lt;p&gt;
-   &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;strong&gt;rsync&lt;/strong&gt; (&lt;a href=&quot;https://rsync.samba.org/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;https://rsync.samba.org/&lt;/span&gt;&lt;/a&gt;)&lt;br /&gt;
-   &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;strong&gt;Qt&lt;/strong&gt; (&lt;a href=&quot;https://www.qt.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;https://www.qt.io/&lt;/span&gt;&lt;/a&gt;)
-  &lt;/p&gt;
- &lt;/body&gt;
-&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;{ApplicationDisplayName} uses &lt;span style=&quot; font-weight:600;&quot;&gt;rsync&lt;/span&gt; (&lt;a href=&quot;https://rsync.samba.org/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;https://rsync.samba.org/&lt;/span&gt;&lt;/a&gt;) and &lt;span style=&quot; font-weight:600;&quot;&gt;Qt&lt;/span&gt; (&lt;a href=&quot;https://www.qt.io/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;https://www.qt.io/&lt;/span&gt;&lt;/a&gt;).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
          </property>
          <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="openExternalLinks">
           <bool>true</bool>
          </property>
         </widget>
        </item>
        <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>87</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="QLabel" name="buildDetails">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;{ReleaseDate} (build {BuildId})&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(build {BuildId})&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -97,19 +119,6 @@
       </layout>
      </item>
     </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>87</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="controls">
