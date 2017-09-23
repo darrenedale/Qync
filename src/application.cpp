@@ -35,7 +35,7 @@
 
 #define QYNC_APP_NAME "Qync"
 #define QYNC_APP_DISPLAY_NAME "Qync"
-#define QYNC_APP_VERSION_STRING "1.0.0"
+#define QYNC_APP_VERSION_STRING "1.0.1"
 #define QYNC_APP_VERSION_DATE "September 2017"
 #define QYNC_APP_BUILD_ID "828c38f"
 #define QYNC_APP_WEBSITE "http://www.equituk.net/"
