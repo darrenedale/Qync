@@ -98,7 +98,7 @@ namespace Qync {
 	 * preferences.
 	 */
 	Process::Process(const Preset & preset)
-	: Process(qyncApp->preferences()->rsyncPath(), preset) {
+	: Process(qyncApp->preferences().rsyncPath(), preset) {
 	}
 
 

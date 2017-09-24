@@ -92,15 +92,18 @@ namespace Qync {
 		setProperty("BuildId", QYNC_APP_BUILD_ID);
 		setProperty("ApplicationWebsite", QYNC_APP_WEBSITE);
 
-		/* we have to do this here rather than in the static initialiser section above
-		 * because we need QStandardPaths to take account of the organisation name/domain and
-		 * application name set in this constructor. in the static init section above, these
-		 * are not yet set */
+		/* do this here rather than in initialisation section above because we need
+		 * QStandardPaths to take account of organisation name/domain and app name set
+		 * in this constructor. in the init section these are not yet set */
 		m_configPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 		m_presetsPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets";
 
-		// ensure presets dir exists
-		QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).mkpath("presets");
+		// ensure presets and config dirs exist
+		auto root = QDir::root();
+		root.mkpath(m_configPath);
+		root.mkpath(m_presetsPath);
+
+		m_prefs.loadFrom(m_configPath + "/guipreferences");
 		loadPresets();
 	}
 
@@ -183,35 +186,6 @@ namespace Qync {
 		MainWindow win;
 		win.show();
 		return QApplication::exec();
-	}
-
-
-	/**
-	 * \brief Get the application preferences.
-	 *
-	 * \return the application preferences.
-	 */
-	const Preferences * Application::preferences(void) const {
-		return m_prefs.get();
-	}
-
-
-	/**
-	 * \brief Set the application preferences.
-	 *
-	 * \param prefs is the new set of application preferences.
-	 *
-	 * If the preferences are successfully set, the preferencesChanged()
-	 * signal is emitted. On success, the preferences object passed to this
-	 * is consumed. On failure, it is not.
-	 *
-	 * \return \b true if the preferences were set, \b false otherwise.
-	 */
-	bool Application::setPreferences(Preferences * prefs) {
-		m_rsyncVersionText = QString(); /* force re-read on next call to rsyncVersionText() as binary might have changed */
-		m_prefs.reset(prefs);
-		Q_EMIT preferencesChanged();
-		return true;
 	}
 
 
@@ -430,11 +404,6 @@ namespace Qync {
 	 * pointer if the preset cannot be simulated.
 	 */
 	Process * Application::simulate(const Preset & preset) const {
-		if(!m_prefs) {
-			qCritical() << __PRETTY_FUNCTION__ << "there is no prefs object therefore the rsync program cannot be located";
-			return nullptr;
-		}
-
 		Process * p = new Process(preset);
 		Q_EMIT processStarted(p);
 		return p;
@@ -486,10 +455,6 @@ namespace Qync {
 	 * pointer if the preset cannot be synchronised.
 	 */
 	Process * Application::synchronise(const Preset & preset) const {
-		if(!m_prefs) {
-			return nullptr;
-		}
-
 		Process * p = new Process(preset);
 		Q_EMIT processStarted(p);
 		return p;
@@ -506,15 +471,23 @@ namespace Qync {
 	 * not valid.
 	 */
 	QString Application::rsyncVersionText(void) {
-		if(m_prefs && m_rsyncVersionText.isEmpty()) {
+		if(m_rsyncVersionText.isEmpty()) {
 			QProcess p(this);
-			p.start(m_prefs->rsyncPath(), QStringList() << "--version", QIODevice::ReadOnly | QIODevice::Text);
+			p.start(m_prefs.rsyncPath(), QStringList() << "--version", QIODevice::ReadOnly | QIODevice::Text);
 			p.waitForFinished();
 			m_rsyncVersionText = p.readAll();
 		}
 
 		return m_rsyncVersionText;
 	}
+
+
+	/**
+	 * \fn Preferences & Application::preferences(void)
+	 * \brief Get the application preferences.
+	 *
+	 * \return the application preferences.
+	 */
 
 
 	/**

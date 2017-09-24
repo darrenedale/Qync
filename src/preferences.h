@@ -22,7 +22,8 @@ namespace Qync {
 
 	class Preferences {
 	public:
-		explicit Preferences(const QString & fileName = {});
+		Preferences(void);
+		explicit Preferences(const QString & fileName);
 		virtual ~Preferences(void) = default;
 
 		bool save(void) const;

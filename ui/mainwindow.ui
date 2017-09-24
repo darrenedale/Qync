@@ -70,6 +70,16 @@
          <widget class="Qync::SourceDestinationWidget" name="basicSourceAndDestination" native="true"/>
         </item>
         <item>
+         <widget class="QCheckBox" name="basicForceFullBackup">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Force a full backup</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="basicUiSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -459,7 +469,8 @@
          <string>Quit</string>
         </property>
         <property name="icon">
-         <iconset theme="application-exit"/>
+         <iconset theme="application-exit">
+          <normaloff>.</normaloff>.</iconset>
         </property>
        </widget>
       </item>
@@ -473,7 +484,7 @@
      <x>0</x>
      <y>0</y>
      <width>708</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

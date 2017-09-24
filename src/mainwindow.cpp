@@ -156,9 +156,6 @@ namespace Qync {
 		setWindowTitle(qyncApp->applicationDisplayName());
 		setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-		GuiPreferences * newPrefs = new GuiPreferences(qyncApp->configurationPath() + "/guipreferences");
-		qyncApp->setPreferences(newPrefs);
-
 		connectApplication();
 		refreshPresets();
 		readPreferences();
@@ -168,6 +165,9 @@ namespace Qync {
 
 		m_aboutDialogue.reset(new AboutDialogue);
 		m_aboutDialogue->setWindowTitle(tr("About %1").arg(qyncApp->applicationDisplayName()));
+
+		/* TODO this feature has not yet been implemented */
+		m_ui->basicForceFullBackup->hide();
 
 		/* ensure UI is in correct state for selected preset */
 		showPreset(m_ui->presets->currentIndex());
@@ -280,14 +280,9 @@ namespace Qync {
 	 * the settings stored in the manager's preferences object.
 	 */
 	void MainWindow::readPreferences(void) {
-		const GuiPreferences * prefs = dynamic_cast<const GuiPreferences *>(qyncApp->preferences());
+		const auto & prefs = qyncApp->preferences();
 
-		if(!prefs) {
-			qWarning() << __PRETTY_FUNCTION__ << "no GuiPreferences object";
-			return;
-		}
-
-		if(prefs->useSimpleUi()) {
+		if(prefs.useSimpleUi()) {
 			if(m_ui->mainStack->currentWidget() != m_ui->basicUi) {
 				m_ui->presetsToolbar->hide();
 				m_ui->synchroniseToolbar->hide();
@@ -297,11 +292,11 @@ namespace Qync {
 		}
 		else {
 			if(m_ui->mainStack->currentWidget() != m_ui->fullUi) {
-				m_ui->presetsToolbar->setToolButtonStyle(prefs->toolBarButtonStyle());
-				m_ui->synchroniseToolbar->setToolButtonStyle(prefs->toolBarButtonStyle());
+				m_ui->presetsToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
+				m_ui->synchroniseToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
 
-				m_ui->presetsToolbar->setVisible(prefs->showPresetsToolBar());
-				m_ui->synchroniseToolbar->setVisible(prefs->showSynchroniseToolBar());
+				m_ui->presetsToolbar->setVisible(prefs.showPresetsToolBar());
+				m_ui->synchroniseToolbar->setVisible(prefs.showSynchroniseToolBar());
 
 				m_ui->mainStack->setCurrentWidget(m_ui->fullUi);
 				adjustSize();

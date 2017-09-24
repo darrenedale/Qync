@@ -33,8 +33,8 @@ namespace Qync {
 		~PreferencesDialogue(void);
 
 	private Q_SLOTS:
-		void savePreferences(void);
-		void savePreferencesAndClose(void);
+		void apply(void);
+		void save(void);
 		void chooseRsyncPath(void);
 
 	protected:

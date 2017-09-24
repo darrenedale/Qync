@@ -70,18 +70,29 @@ namespace Qync {
 	/**
 	 * \brief Create a new Preferences object.
 	 *
+	 * The preferences will be set to default and there will be no file
+	 * name, so load() and save() will fail (use loadFrom() or saveAs()
+	 * to set the file name).
+	 */
+	Preferences::Preferences(void)
+	: m_fileName(),
+	  m_rsyncBinary() {
+		setDefaults();
+	}
+
+
+	/**
+	 * \brief Create a new Preferences object.
+	 *
 	 * \param fileName is the path to the file from which to load the
 	 * preferences.
 	 *
-	 * The file name is optional. If it is not provided, is not a valid
-	 * preferences file path or cannot be loaded for some other reason
-	 * (e.g. the file is not readable), the preferences will be set to
-	 * defaults.
+	 * The preferences will be loaded from the provided file name, if
+	 * it is a valid preferences file.
 	 */
 	Preferences::Preferences(const QString & fileName)
-	: m_fileName(fileName),
-	  m_rsyncBinary() {
-		setDefaults();
+	: Preferences() {
+		m_fileName = fileName;
 		load();
 	}
 

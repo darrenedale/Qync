@@ -20,6 +20,10 @@
 #include "preferencesdialogue.h"
 #include "ui_preferencesdialogue.h"
 
+#include <QDebug>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QGroupBox>
 #include <QString>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -68,6 +72,16 @@ namespace Qync {
 	  m_ui{new Ui::PreferencesDialogue} {
 		m_ui->setupUi(this);
 		updateWidgets();
+
+		connect(m_ui->simpleUi, &QCheckBox::toggled, m_ui->toolbarGroup, &QGroupBox::setDisabled);
+		connect(m_ui->chooseRsyncPath, &QPushButton::clicked, this, &PreferencesDialogue::chooseRsyncPath);
+
+		connect(m_ui->controls->button(QDialogButtonBox::Close), &QPushButton::clicked, this, &PreferencesDialogue::close);
+		connect(m_ui->controls->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &PreferencesDialogue::apply);
+		connect(m_ui->controls->button(QDialogButtonBox::Save), &QPushButton::clicked, [this](void) {
+			save();
+			close();
+		});
 	}
 
 
@@ -81,20 +95,14 @@ namespace Qync {
 	 * state of the preferences in the manager.
 	 */
 	void PreferencesDialogue::updateWidgets(void) {
-		const GuiPreferences * p = dynamic_cast<const GuiPreferences *>(qyncApp->preferences());
+		const auto & prefs = qyncApp->preferences();
 
-		if(!p) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("There are no preferences to edit."), QMessageBox::Ok);
-			close();
-			return;
-		}
+		m_ui->rsyncPath->setText(prefs.rsyncPath());
+		m_ui->simpleUi->setChecked(prefs.useSimpleUi());
+		m_ui->presetsToolbar->setChecked(prefs.showPresetsToolBar());
+		m_ui->synchroniseToolbar->setChecked(prefs.showSynchroniseToolBar());
 
-		m_ui->rsyncPath->setText(p->rsyncPath());
-		m_ui->simpleUi->setChecked(p->useSimpleUi());
-		m_ui->presetsToolbar->setChecked(p->showPresetsToolBar());
-		m_ui->synchroniseToolbar->setChecked(p->showSynchroniseToolBar());
-
-		switch(p->toolBarButtonStyle()) {
+		switch(prefs.toolBarButtonStyle()) {
 			case Qt::ToolButtonFollowStyle:
 				m_ui->toolbarStyle->setCurrentIndex(0);
 				break;
@@ -119,63 +127,56 @@ namespace Qync {
 
 
 	/**
-	 * \brief Save the current preferences.
+	 * \brief Apply the current preferences.
 	 *
-	 * The manager's preferences object is updated.
+	 * The applications's preferences object is updated.
 	 */
-	void PreferencesDialogue::savePreferences(void) {
-		GuiPreferences * p = new GuiPreferences;
+	void PreferencesDialogue::apply(void) {
+		qDebug() << __PRETTY_FUNCTION__ << "applying preferences";
+		auto & prefs = qyncApp->preferences();
 
-		p->setRsyncPath(m_ui->rsyncPath->text());
-		p->setUseSimpleUi(m_ui->simpleUi->isChecked());
-		p->setShowPresetsToolBar(m_ui->presetsToolbar->isChecked());
-		p->setShowSynchroniseToolBar(m_ui->synchroniseToolbar->isChecked());
+		prefs.setRsyncPath(m_ui->rsyncPath->text());
+		prefs.setUseSimpleUi(m_ui->simpleUi->isChecked());
+		prefs.setShowPresetsToolBar(m_ui->presetsToolbar->isChecked());
+		prefs.setShowSynchroniseToolBar(m_ui->synchroniseToolbar->isChecked());
 
 		switch(m_ui->toolbarStyle->currentIndex()) {
 			default:
 			case 0:
-				p->setToolBarButtonStyle(Qt::ToolButtonFollowStyle);
+				prefs.setToolBarButtonStyle(Qt::ToolButtonFollowStyle);
 				break;
 
 			case 1:
-				p->setToolBarButtonStyle(Qt::ToolButtonIconOnly);
+				prefs.setToolBarButtonStyle(Qt::ToolButtonIconOnly);
 				break;
 
 			case 2:
-				p->setToolBarButtonStyle(Qt::ToolButtonTextUnderIcon);
+				prefs.setToolBarButtonStyle(Qt::ToolButtonTextUnderIcon);
 				break;
 
 			case 3:
-				p->setToolBarButtonStyle(Qt::ToolButtonTextBesideIcon);
+				prefs.setToolBarButtonStyle(Qt::ToolButtonTextBesideIcon);
 				break;
 
 			case 4:
-				p->setToolBarButtonStyle(Qt::ToolButtonTextOnly);
+				prefs.setToolBarButtonStyle(Qt::ToolButtonTextOnly);
 				break;
 		}
 
-		/* this should trigger preferencesChanged signal */
-		if(qyncApp->setPreferences(p)) {
-			if(!p->saveAs(qyncApp->configurationPath() + "/guipreferences")) {
-				QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
-			}
-		}
-		else {
-			QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences could not be applied."), QMessageBox::Ok);
-			delete p;
-		}
+		Q_EMIT qyncApp->preferencesChanged();
 	}
 
-
 	/**
-	 * \brief Save the current preferences and close the preferences window.
+	 * \brief Apply the current preferences.
 	 *
-	 * The manager's preferences object is updated and the preferences
-	 * window is closed.
+	 * The applications's preferences object is updated.
 	 */
-	void PreferencesDialogue::savePreferencesAndClose(void) {
-		savePreferences();
-		close();
+	void PreferencesDialogue::save(void) {
+		apply();
+
+		if(!qyncApp->preferences().save()) {
+			QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
+		}
 	}
 
 
@@ -188,6 +189,7 @@ namespace Qync {
 	 */
 	void PreferencesDialogue::chooseRsyncPath(void) {
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Choose rsync executable"), m_ui->rsyncPath->text());
+
 		if(!fileName.isEmpty()) {
 			QFileInfo f(fileName);
 

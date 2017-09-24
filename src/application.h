@@ -22,6 +22,8 @@
 #include <QApplication>
 #include <QString>
 
+#include "guipreferences.h"
+
 namespace Qync {
 
 	class Preset;
@@ -56,8 +58,9 @@ namespace Qync {
 			return property("ApplicationWebsite").toString();
 		}
 
-		const Preferences * preferences(void) const;
-		bool setPreferences(Preferences * prefs);
+		inline GuiPreferences & preferences(void) {
+			return m_prefs;
+		}
 
 		inline int presetCount(void) const {
 			return static_cast<int>(m_presets.size());
@@ -99,8 +102,7 @@ namespace Qync {
 		QString m_presetsPath;
 
 		PresetList m_presets;
-
-		std::unique_ptr<Preferences> m_prefs;
+		GuiPreferences m_prefs;
 
 		mutable QString m_lastError;
 	};

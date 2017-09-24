@@ -57,20 +57,12 @@ namespace Qync {
 	 * defaults.
 	 */
 	GuiPreferences::GuiPreferences(const QString & fileName)
-	: Preferences(fileName),
+	: Preferences(),
 	  m_simpleUi(true),
 	  m_presetsToolbar(true),
 	  m_syncToolbar(true),
 	  m_toolButtonStyle(Qt::ToolButtonFollowStyle) {
-		/* must call this here as well as in base class constructor - when base
-		 * class constructor is called, the GuiPreferences object is not
-		 * initialised and therefore load() uses the copy of parseXml() in the base
-		 * class even though it is a virtual method because the copy of parseXml()
-		 * in this class is not yet available. the extra call here ensures load()
-		 * is called again when the copy of parseXml() in this class is available
-		 * and that the full set of preferences, including gui settings, is loaded.
-		 */
-		load();
+		loadFrom(fileName);
 	}
 
 
