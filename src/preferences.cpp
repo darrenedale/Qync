@@ -140,27 +140,15 @@ namespace Qync {
 	 *
 	 * \return The \b bool value.
 	 */
-	bool Preferences::parseBooleanText(const QString & b, bool * ok) {
-		if(0 == QString::compare("true", b.trimmed(), Qt::CaseInsensitive)) {
-			if(ok) {
-				*ok = true;
-			}
-
+	optional<bool> Preferences::parseBooleanText(const QString & boolString) {
+		if(0 == QString::compare("true", boolString.trimmed(), Qt::CaseInsensitive)) {
 			return true;
 		}
-		else if(0 == QString::compare("false", b.trimmed(), Qt::CaseInsensitive)) {
-			if(ok) {
-				*ok = true;
-			}
-
+		else if(0 == QString::compare("false", boolString.trimmed(), Qt::CaseInsensitive)) {
 			return false;
 		}
 
-		if(ok) {
-			*ok = false;
-		}
-
-		return false;
+		return {};
 	}
 
 

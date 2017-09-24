@@ -304,27 +304,24 @@ namespace Qync {
 			}
 
 			if("simpleui" == xml.name()) {
-				bool ok;
 				QString v = xml.readElementText();
-				bool value = Preferences::parseBooleanText(v, &ok);
+				auto value = parseBooleanText(v);
 
-				if(ok) {
+				if(value.has_value()) {
 					setUseSimpleUi(value);
 				}
 			}
 			else if("presetstoolbar" == xml.name()) {
-				bool ok;
-				bool value = Preferences::parseBooleanText(xml.readElementText(), &ok);
+				auto value = parseBooleanText(xml.readElementText());
 
-				if(ok) {
+				if(value.has_value()) {
 					setShowPresetsToolBar(value);
 				}
 			}
 			else if("synchronisetoolbar" == xml.name()) {
-				bool ok;
-				bool value = Preferences::parseBooleanText(xml.readElementText(), &ok);
+				auto value = parseBooleanText(xml.readElementText());
 
-				if(ok) {
+				if(value.has_value()) {
 					setShowSynchroniseToolBar(value);
 				}
 			}
