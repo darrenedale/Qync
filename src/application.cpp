@@ -20,6 +20,7 @@
 
 #include "application.h"
 
+#include <QtGlobal>
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
@@ -95,7 +96,7 @@ namespace Qync {
 		 * because we need QStandardPaths to take account of the organisation name/domain and
 		 * application name set in this constructor. in the static init section above, these
 		 * are not yet set */
-		m_configPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+		m_configPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 		m_presetsPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets";
 
 		// ensure presets dir exists
@@ -225,7 +226,7 @@ namespace Qync {
 	 * \return the preset at the index provided.
 	 */
 	Preset & Application::preset(int index) const {
-		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 is out of bounds (have presets 0 .. %2)").arg(index).arg(m_presets.size() - 1));
+		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 is out of bounds (have presets 0 .. %2)").arg(index).arg(m_presets.size() - 1).toUtf8().data());
 		return *m_presets[static_cast<PresetList::size_type>(index)];
 	}
 

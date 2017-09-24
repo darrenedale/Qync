@@ -16,10 +16,10 @@
  * <h2>Architecture</h2>
  * The Qync application is built on a modular architecture. At its core is an
  * application class (\ref Qync::Application) that provides access to program features
- * such as presets, and enables the rsync process to be launched. The manager
+ * such as presets, and enables the rsync process to be launched. The Application
  * class also ensures that the core functionality of the application is
  * separated from the user interface, so that it is possible to build different
- * interfaces around the core manager class.
+ * interfaces around the core Application class.
  *
  * Any rsync process launched is wrapped in a process class (\ref Qync::Process)
  * that provides the ability to start, interrupt and monitor the progress of the
@@ -27,14 +27,14 @@
  * used to provide feedback to the end user.
  *
  * Presets are represented as instances of the \ref Qync::Preset class. All
- * presets that are saved are completely administered by the manager - the
- * manager ensures that all presets stored are saved to disk and loaded each
+ * presets that are saved are completely administered by the Application - the
+ * Application ensures that all presets stored are saved to disk and loaded each
  * time the program is started. The preset class can also be used by front ends
- * to build custom settings for the manager to run.
+ * to build custom settings for the Application to run.
  *
  * Finally, a base class is provided for managing application preferences
  * (\ref Qync::Preferences). The base class provides only the core preference
- * settings required for the manager to do its job - currently this is just the
+ * settings required for the Application to do its job - currently this is just the
  * path to the rsync executable file. The majority of its features are designed
  * to enable the base class to be extended to provide other settings for the
  * various possible user interfaces. For example, the \ref Qync::GuiPreferences

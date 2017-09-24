@@ -27,6 +27,7 @@ namespace Qync {
 		explicit Preset(const QString & name = {});
 
 		static Preset * load(const QString & fileName);
+		void setDefaults(void);
 
 		inline bool save(void) const {
 			return saveCopyAs(m_fileName);
@@ -160,8 +161,6 @@ namespace Qync {
 		bool parsePropertyXml(QXmlStreamReader & xml);
 
 	private:
-		void setDefaultProperties(void);
-
 		QString m_fileName;
 		QString m_name;
 

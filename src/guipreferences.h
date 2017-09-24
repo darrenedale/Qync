@@ -30,6 +30,14 @@ namespace Qync {
 		explicit GuiPreferences(const QString & fileName = {});
 		virtual ~GuiPreferences(void);
 
+		inline bool useSimpleUi(void) const {
+			return m_simpleUi;
+		}
+
+		inline void setUseSimpleUi(bool use) {
+			m_simpleUi = use;
+		}
+
 		inline bool showPresetsToolBar(void) const {
 			return m_presetsToolbar;
 		}
@@ -63,11 +71,13 @@ namespace Qync {
 		bool parseGuiPreferencesXml(QXmlStreamReader & xml);
 
 		virtual bool emitXmlElements(QXmlStreamWriter & xml) const override;
+		bool emitSimpleUiXml(QXmlStreamWriter & xml) const;
 		bool emitPresetsToolbarXml(QXmlStreamWriter & xml) const;
 		bool emitSynchroniseToolbarXml(QXmlStreamWriter & xml) const;
 		bool emitToolBarButtonStyleXml(QXmlStreamWriter & xml) const;
 
 	private:
+		bool m_simpleUi;
 		bool m_presetsToolbar;
 		bool m_syncToolbar;
 		Qt::ToolButtonStyle m_toolButtonStyle;

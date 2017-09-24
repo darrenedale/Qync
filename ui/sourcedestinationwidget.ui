@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Qync::SourceDestinationWidget</class>
+ <widget class="QWidget" name="Qync::SourceDestinationWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>482</width>
+    <height>50</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="sourceDestinationLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="sourceLabel">
+     <property name="text">
+      <string>Source</string>
+     </property>
+     <property name="buddy">
+      <cstring>source</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="source">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The source for rsync. This is the file or directory that you wish to synchronise.&lt;/p&gt;&lt;p&gt;The path must contain a trailing &lt;span style=&quot; font-weight:600;&quot;&gt;/&lt;/span&gt; if it is a directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="placeholderText">
+      <string>File or directory to copy...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QToolButton" name="chooseSource">
+     <property name="toolTip">
+      <string>Choose an existing directory for the source.</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="document-open">
+       <normaloff>.</normaloff>.</iconset>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="destinationLabel">
+     <property name="text">
+      <string>Destination</string>
+     </property>
+     <property name="buddy">
+      <cstring>destination</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLineEdit" name="destination">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The destination for rsync. This is where you wish to synchronise your files to.&lt;/p&gt;&lt;p&gt;The path must contain a trailing &lt;span style=&quot; font-weight:600;&quot;&gt;/&lt;/span&gt; if it is a directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="placeholderText">
+      <string>Where to copy the file or directory...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QToolButton" name="chooseDestination">
+     <property name="toolTip">
+      <string>Choose an existing directory for the destination.</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="document-open">
+       <normaloff>.</normaloff>.</iconset>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>chooseSource</sender>
+   <signal>clicked()</signal>
+   <receiver>Qync::SourceDestinationWidget</receiver>
+   <slot>chooseSourceDirectory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>466</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>445</x>
+     <y>82</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chooseDestination</sender>
+   <signal>clicked()</signal>
+   <receiver>Qync::SourceDestinationWidget</receiver>
+   <slot>chooseDestinationDirectory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>476</x>
+     <y>38</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>503</x>
+     <y>56</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>chooseSourceDirectory()</slot>
+  <slot>chooseDestinationDirectory()</slot>
+ </slots>
+</ui>

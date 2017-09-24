@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="rsyncPathLayout">
      <item>
       <widget class="QLabel" name="rsyncPathLabel">
        <property name="text">
@@ -50,7 +50,14 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QCheckBox" name="simpleUi">
+     <property name="text">
+      <string>Simple user interface</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="toolbarGroup">
      <property name="title">
       <string>Toolbars</string>
      </property>
@@ -146,8 +153,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>199</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -162,8 +169,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>199</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -200,6 +207,22 @@
     <hint type="destinationlabel">
      <x>191</x>
      <y>104</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>simpleUi</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>toolbarGroup</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>55</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>54</x>
+     <y>79</y>
     </hint>
    </hints>
   </connection>

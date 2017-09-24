@@ -13,6 +13,8 @@
  */
 
 #include "guipreferences.h"
+
+#include "application.h"
 #include "functions.h"
 
 #include <QDebug>
@@ -56,6 +58,7 @@ namespace Qync {
 	 */
 	GuiPreferences::GuiPreferences(const QString & fileName)
 	: Preferences(fileName),
+	  m_simpleUi(true),
 	  m_presetsToolbar(true),
 	  m_syncToolbar(true),
 	  m_toolButtonStyle(Qt::ToolButtonFollowStyle) {
@@ -118,7 +121,7 @@ namespace Qync {
 
 			return Qt::ToolButtonIconOnly;
 		}
-		if("textonly" == style.trimmed().toLower()) {
+		else if("textonly" == style.trimmed().toLower()) {
 			if(ok) {
 				*ok = true;
 			}
@@ -169,10 +172,26 @@ namespace Qync {
 	bool GuiPreferences::emitXmlElements(QXmlStreamWriter & xml) const {
 		Preferences::emitXmlElements(xml);
 		xml.writeStartElement("guipreferences");
+		emitSimpleUiXml(xml);
 		emitPresetsToolbarXml(xml);
 		emitSynchroniseToolbarXml(xml);
 		emitToolBarButtonStyleXml(xml);
 		xml.writeEndElement(); /* guipreferences */
+		return true;
+	}
+
+
+	/**
+	 * \brief Write the "use simple UI" setting to an XML stream.
+	 *
+	 * \param xml is the stream to which to write.
+	 *
+	 * \return \b true if the setting was written, \b false otherwise.
+	 */
+	bool GuiPreferences::emitSimpleUiXml(QXmlStreamWriter & xml) const {
+		xml.writeStartElement("simpleui");
+		xml.writeCharacters(useSimpleUi() ? "true" : "false");
+		xml.writeEndElement();
 		return true;
 	}
 
@@ -292,7 +311,16 @@ namespace Qync {
 				continue;
 			}
 
-			if("presetstoolbar" == xml.name()) {
+			if("simpleui" == xml.name()) {
+				bool ok;
+				QString v = xml.readElementText();
+				bool value = Preferences::parseBooleanText(v, &ok);
+
+				if(ok) {
+					setUseSimpleUi(value);
+				}
+			}
+			else if("presetstoolbar" == xml.name()) {
 				bool ok;
 				bool value = Preferences::parseBooleanText(xml.readElementText(), &ok);
 
@@ -317,12 +345,31 @@ namespace Qync {
 				}
 			}
 			else {
+				qWarning() << __PRETTY_FUNCTION__ << "found unexpected XML element" << xml.name() << "at line" << xml.lineNumber();
 				Qync::parseUnknownElementXml(xml);
 			}
 		}
 
 		return true;
 	}
+
+
+	/**
+	 * \fn GuiPreferences::simpleUi(void)
+	 * \brief Check whether the simple user interface should be used.
+	 *
+	 * \return \b true if the simple user interface should be used, \b false
+	 * if the full user interface should be used.
+	 */
+
+
+	/**
+	 * \fn GuiPreferences::setSimpleUi( bool use )
+	 * \brief Set whether the simple user interface should be used.
+	 *
+	 * \param use \b true if the simple user interface should be used, \b false
+	 * if the full user interface should be used.
+	 */
 
 
 	/**

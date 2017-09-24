@@ -146,6 +146,12 @@ namespace Qync {
 	  m_aboutDialogue(nullptr) {
 		m_ui->setupUi(this);
 		m_ui->presetsToolbar->insertWidget(m_ui->actionNew, m_ui->presets);
+
+		QFont titleFont = m_ui->basicUiTitle->font();
+		titleFont.setPointSizeF(titleFont.pointSizeF() * 1.5);
+		titleFont.setBold(true);
+		m_ui->basicUiTitle->setFont(titleFont);
+
 		setWindowIcon(QIcon(":/icons/application"));
 		setWindowTitle(qyncApp->applicationDisplayName());
 		setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
@@ -250,8 +256,15 @@ namespace Qync {
 			m_ui->hardlinksAsHardlinks->setChecked(preset.copyHardlinksAsHardlinks());
 			m_ui->itemisedChanges->setChecked(preset.showItemisedChanges());
 
-			m_ui->source->setText(preset.source());
-			m_ui->destination->setText(preset.destination());
+			/* it's quicker and easy to ensure these are manually synchronised rather
+			 * than wait for signals and slots to do it */
+			QSignalBlocker mainSrcDestBlocker(m_ui->sourceAndDestination);
+			QSignalBlocker basicSrcDestBlocker(m_ui->basicSourceAndDestination);
+
+			m_ui->sourceAndDestination->setSource(preset.source());
+			m_ui->sourceAndDestination->setDestination(preset.destination());
+			m_ui->basicSourceAndDestination->setSource(preset.source());
+			m_ui->basicSourceAndDestination->setDestination(preset.destination());
 
 			m_ui->logFile->setText(preset.logFile());
 
@@ -269,18 +282,36 @@ namespace Qync {
 	void MainWindow::readPreferences(void) {
 		const GuiPreferences * prefs = dynamic_cast<const GuiPreferences *>(qyncApp->preferences());
 
-		if(prefs) {
-			m_ui->presetsToolbar->setToolButtonStyle(prefs->toolBarButtonStyle());
-			m_ui->synchroniseToolbar->setToolButtonStyle(prefs->toolBarButtonStyle());
+		if(!prefs) {
+			qWarning() << __PRETTY_FUNCTION__ << "no GuiPreferences object";
+			return;
+		}
 
-			m_ui->presetsToolbar->setVisible(prefs->showPresetsToolBar());
-			m_ui->synchroniseToolbar->setVisible(prefs->showSynchroniseToolBar());
+		if(prefs->useSimpleUi()) {
+			if(m_ui->mainStack->currentWidget() != m_ui->basicUi) {
+				m_ui->presetsToolbar->hide();
+				m_ui->synchroniseToolbar->hide();
+				m_ui->mainStack->setCurrentWidget(m_ui->basicUi);
+				adjustSize();
+			}
+		}
+		else {
+			if(m_ui->mainStack->currentWidget() != m_ui->fullUi) {
+				m_ui->presetsToolbar->setToolButtonStyle(prefs->toolBarButtonStyle());
+				m_ui->synchroniseToolbar->setToolButtonStyle(prefs->toolBarButtonStyle());
+
+				m_ui->presetsToolbar->setVisible(prefs->showPresetsToolBar());
+				m_ui->synchroniseToolbar->setVisible(prefs->showSynchroniseToolBar());
+
+				m_ui->mainStack->setCurrentWidget(m_ui->fullUi);
+				adjustSize();
+			}
 		}
 	}
 
 
 	/**
-	 * \brief Disconnect the manager's signals from the window's slots.
+	 * \brief Disconnect the application's signals from the window's slots.
 	 */
 	void MainWindow::disconnectApplication(void) {
 		qyncApp->disconnect(this);
@@ -288,7 +319,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Connect the manager's signals to the window's slots.
+	 * \brief Connect the application's signals to the window's slots.
 	 */
 	void MainWindow::connectApplication(void) {
 		connect(qyncApp, &Application::presetsChanged, this, &MainWindow::refreshPresets);
@@ -324,79 +355,6 @@ namespace Qync {
 
 
 	/**
-	 * \brief Choose a local file for the rsync source.
-	 *
-	 * A local file browser is presented for the user to to choose a source
-	 * for rsync. If the user does not cancel the dialogue, the chosen file
-	 * is set as the text in the source line edit.
-	 */
-	void MainWindow::chooseSourceFile(void) {
-		QString newSource = QFileDialog::getOpenFileName(this, tr("Choose source"), m_ui->source->text());
-
-		if(!newSource.isNull()) {
-			m_ui->source->setText(newSource);
-		}
-	}
-
-
-	/**
-	 * \brief Choose a local file for the rsync destination.
-	 *
-	 * A local file browser is presented for the user to to choose a
-	 * destination for rsync. If the user does not cancel the dialogue, the
-	 * chosen file is set as the text in the destination line edit.
-	 */
-	void MainWindow::chooseDestinationFile(void) {
-		QString newDest = QFileDialog::getOpenFileName(this, tr("Choose destination"), m_ui->destination->text());
-
-		if(!newDest.isNull()) {
-			m_ui->destination->setText(newDest);
-		}
-	}
-
-
-	/**
-	 * \brief Choose a local directory for the rsync source.
-	 *
-	 * A local directory browser is presented for the user to to choose a
-	 * source for rsync. If the user does not cancel the dialogue, the
-	 * chosen directory is set as the text in the source line edit.
-	 */
-	void MainWindow::chooseSourceDirectory(void) {
-		QString newSource = QFileDialog::getExistingDirectory(this, tr("Choose source"), m_ui->source->text());
-
-		if(!newSource.isNull()) {
-			if(!newSource.endsWith(("/"))) {
-				newSource.append("/");
-			}
-
-			m_ui->source->setText(newSource);
-		}
-	}
-
-
-	/**
-	 * \brief Choose a local directory for the rsync destination.
-	 *
-	 * A local directory browser is presented for the user to to choose a
-	 * destination for rsync. If the user does not cancel the dialogue, the
-	 * chosen directory is set as the text in the destination line edit.
-	 */
-	void chooseDestinationDirectory(void);
-	void MainWindow::chooseDestinationDirectory(void) {
-		QString newDest = QFileDialog::getExistingDirectory(this, tr("Choose destination"), m_ui->destination->text());
-
-		if(!newDest.isNull()) {
-			if(!newDest.endsWith(("/"))) {
-				newDest.append("/");
-			}
-
-			m_ui->destination->setText(newDest);
-		}
-	}
-
-
-	/**
 	 * \brief Choose a local file for the rsycn output log.
 	 *
 	 * A local file browser is presented for the user to to choose a log
@@ -416,9 +374,7 @@ namespace Qync {
 	 * \brief Switch the content of the source and destination line edits.
 	 */
 	void MainWindow::switchSourceAndDestination(void) {
-		QString t = m_ui->source->text();
-		m_ui->source->setText(m_ui->destination->text());
-		m_ui->destination->setText(t);
+		m_ui->sourceAndDestination->swapSourceAndDestination();
 	}
 
 
@@ -616,50 +572,58 @@ namespace Qync {
 	 * \brief Fill a preset with the current settings.
 	 */
 	void MainWindow::fillPreset(Preset & p) const {
-		p.setPreserveGroup(m_ui->preserveGroup->isChecked());
-		p.setPreserveOwner(m_ui->preserveOwner->isChecked());
-		p.setPreservePermissions(m_ui->preservePermissions->isChecked());
-		p.setPreserveTime(m_ui->preserveTime->isChecked());
-
-		p.setWindowsCompatability(m_ui->windowsCompatible->isChecked());
-		p.setHonourDeletions(m_ui->honourDeletions->isChecked());
-
-		p.setAlwaysCompareChecksums(m_ui->alwaysCompareChecksums->isChecked());
-		p.setPreserveDevices(m_ui->preserveDevices->isChecked());
-		p.setKeepPartialTransfers(m_ui->keepPartialFiles->isChecked());
-		p.setCopySymlinksAsSymlinks(m_ui->symlinksAsSymlinks->isChecked());
-		p.setMakeBackups(m_ui->makeBackups->isChecked());
-
-		p.setUseTransferCompression(m_ui->compressInTransit->isChecked());
-
-		switch(m_ui->includeInSynchronisation->currentIndex()) {
-			case OnlyUpdateExisting:
-				p.setOnlyUpdateExistingEntries(true);
-				p.setDontUpdateExistingEntries(false);
-				break;
-
-			case DontUpdateExisting:
-				p.setOnlyUpdateExistingEntries(false);
-				p.setDontUpdateExistingEntries(true);
-				break;
-
-			default:
-				qWarning() << __PRETTY_FUNCTION__ << "unexpeced selected index" << m_ui->includeInSynchronisation->currentIndex() << "in \"what to sync\" combo box";
-				[[fallthrough]];
-			case UpdateEverything:
-				p.setOnlyUpdateExistingEntries(false);
-				p.setDontUpdateExistingEntries(false);
-				break;
+		/* check which UI is in use and act accordingly */
+		if(m_ui->mainStack->currentWidget() == m_ui->basicUi) {
+			p.setDefaults();
+			p.setSource(m_ui->basicSourceAndDestination->source());
+			p.setDestination(m_ui->basicSourceAndDestination->destination());
 		}
+		else {
+			p.setPreserveGroup(m_ui->preserveGroup->isChecked());
+			p.setPreserveOwner(m_ui->preserveOwner->isChecked());
+			p.setPreservePermissions(m_ui->preservePermissions->isChecked());
+			p.setPreserveTime(m_ui->preserveTime->isChecked());
 
-		p.setDontMapUsersAndGroups(m_ui->dontMapUidGid->isChecked());
-		p.setCopyHardlinksAsHardlinks(m_ui->hardlinksAsHardlinks->isChecked());
-		p.setShowItemisedChanges(m_ui->itemisedChanges->isChecked());
+			p.setWindowsCompatability(m_ui->windowsCompatible->isChecked());
+			p.setHonourDeletions(m_ui->honourDeletions->isChecked());
 
-		p.setSource(m_ui->source->text());
-		p.setDestination(m_ui->destination->text());
+			p.setAlwaysCompareChecksums(m_ui->alwaysCompareChecksums->isChecked());
+			p.setPreserveDevices(m_ui->preserveDevices->isChecked());
+			p.setKeepPartialTransfers(m_ui->keepPartialFiles->isChecked());
+			p.setCopySymlinksAsSymlinks(m_ui->symlinksAsSymlinks->isChecked());
+			p.setMakeBackups(m_ui->makeBackups->isChecked());
 
-		p.setLogFile(m_ui->logFile->text());
+			p.setUseTransferCompression(m_ui->compressInTransit->isChecked());
+
+			switch(m_ui->includeInSynchronisation->currentIndex()) {
+				case OnlyUpdateExisting:
+					p.setOnlyUpdateExistingEntries(true);
+					p.setDontUpdateExistingEntries(false);
+					break;
+
+				case DontUpdateExisting:
+					p.setOnlyUpdateExistingEntries(false);
+					p.setDontUpdateExistingEntries(true);
+					break;
+
+				default:
+					qWarning() << __PRETTY_FUNCTION__ << "unexpeced selected index" << m_ui->includeInSynchronisation->currentIndex() << "in \"what to sync\" combo box";
+					[[fallthrough]];
+				case UpdateEverything:
+					p.setOnlyUpdateExistingEntries(false);
+					p.setDontUpdateExistingEntries(false);
+					break;
+			}
+
+			p.setDontMapUsersAndGroups(m_ui->dontMapUidGid->isChecked());
+			p.setCopyHardlinksAsHardlinks(m_ui->hardlinksAsHardlinks->isChecked());
+			p.setShowItemisedChanges(m_ui->itemisedChanges->isChecked());
+
+			p.setSource(m_ui->sourceAndDestination->source());
+			p.setDestination(m_ui->sourceAndDestination->destination());
+
+			p.setLogFile(m_ui->logFile->text());
+		}
 	}
 
 

@@ -13,7 +13,8 @@ HEADERS += \
     src/preset.h \
     src/process.h \
     src/processdialogue.h \
-    src/aboutdialogue.h
+    src/aboutdialogue.h \
+    src/sourcedestinationwidget.h
 
 SOURCES += \
 	src/qync.cpp \
@@ -26,7 +27,8 @@ SOURCES += \
     src/preset.cpp \
     src/process.cpp \
     src/processdialogue.cpp \
-    src/aboutdialogue.cpp
+    src/aboutdialogue.cpp \
+    src/sourcedestinationwidget.cpp
 
 RESOURCES += resources/icons.qrc
 
@@ -54,4 +56,5 @@ FORMS += \
     ui/processdialogue.ui \
     ui/mainwindow.ui \
     ui/preferencesdialogue.ui \
-    ui/aboutdialogue.ui
+    ui/aboutdialogue.ui \
+    ui/sourcedestinationwidget.ui

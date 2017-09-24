@@ -161,7 +161,7 @@ namespace Qync {
 	 * \param name is the name for the new preset.
 	 */
 	Preset::Preset(const QString & name) {
-		setDefaultProperties();
+		setDefaults();
 		setName(name);
 	}
 
@@ -370,7 +370,7 @@ namespace Qync {
 	 */
 	bool Preset::parseXml(QXmlStreamReader & xml) {
 		Q_ASSERT_X(xml.isStartElement() && "qyncpreset" == xml.name(), __PRETTY_FUNCTION__, "XML stream is not at the start of a \"qyncpreset\" element");
-		setDefaultProperties();
+		setDefaults();
 
 		while(!xml.atEnd()) {
 			xml.readNext();
@@ -508,7 +508,7 @@ namespace Qync {
 	/**
 	 * \brief Set all settings to default values.
 	 */
-	void Preset::setDefaultProperties(void) {
+	void Preset::setDefaults(void) {
 		m_name = QString();
 
 		m_source = QString();

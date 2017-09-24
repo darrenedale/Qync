@@ -356,6 +356,7 @@ namespace Qync {
 		}
 
 		QXmlStreamWriter xml(&file);
+		xml.setAutoFormatting(true);
 		return emitXmlStream(xml);
 	}
 
@@ -369,11 +370,12 @@ namespace Qync {
 	 * \return \b true if the settings were loaded, \b false otherwise.
 	 */
 	bool Preferences::load(void) {
-		if(loadFrom(m_fileName)) {
-			return true;
+		if(m_fileName.isEmpty()) {
+			qWarning() << __PRETTY_FUNCTION__ << "can't load prefs with no file name";
+			return false;
 		}
 
-		return false;
+		return loadFrom(m_fileName);
 	}
 
 
@@ -388,6 +390,11 @@ namespace Qync {
 	 * \return \b true if the settings were loaded, \b false otherwise.
 	 */
 	bool Preferences::loadFrom(const QString & fileName) {
+		if(fileName.isEmpty()) {
+			qCritical() << __PRETTY_FUNCTION__ << "empty file name provided";
+			return false;
+		}
+
 		QFile file(fileName);
 
 		if(!file.open(QIODevice::ReadOnly)) {

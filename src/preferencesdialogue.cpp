@@ -90,6 +90,7 @@ namespace Qync {
 		}
 
 		m_ui->rsyncPath->setText(p->rsyncPath());
+		m_ui->simpleUi->setChecked(p->useSimpleUi());
 		m_ui->presetsToolbar->setChecked(p->showPresetsToolBar());
 		m_ui->synchroniseToolbar->setChecked(p->showSynchroniseToolBar());
 
@@ -126,6 +127,7 @@ namespace Qync {
 		GuiPreferences * p = new GuiPreferences;
 
 		p->setRsyncPath(m_ui->rsyncPath->text());
+		p->setUseSimpleUi(m_ui->simpleUi->isChecked());
 		p->setShowPresetsToolBar(m_ui->presetsToolbar->isChecked());
 		p->setShowSynchroniseToolBar(m_ui->synchroniseToolbar->isChecked());
 
@@ -152,6 +154,7 @@ namespace Qync {
 				break;
 		}
 
+		/* this should trigger preferencesChanged signal */
 		if(qyncApp->setPreferences(p)) {
 			if(!p->saveAs(qyncApp->configurationPath() + "/guipreferences")) {
 				QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);

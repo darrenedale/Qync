@@ -48,7 +48,7 @@ namespace Qync {
 	 * reimplement its own means of ignoring such elements.
 	 */
 	void parseUnknownElementXml(QXmlStreamReader & xml) {
-		Q_ASSERT(xml.isStartElement());
+		Q_ASSERT_X(xml.isStartElement(), __PRETTY_FUNCTION__, "stream is not at the start of an element");
 
 		while(!xml.atEnd()) {
 			xml.readNext();
