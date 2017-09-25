@@ -33,6 +33,7 @@
 #include "application.h"
 #include "process.h"
 #include "functions.h"
+#include "units.h"
 
 
 namespace Qync {
@@ -207,20 +208,17 @@ namespace Qync {
 	void ProcessDialogue::updateTransferSpeed(float speed) {
 		QString unit = "B/s";
 
-		/* TODO this is lazy - do it properly so it's not so wasteful! */
-		if(speed > 2048) {
-			speed /= 1024;
-			unit = "kB/s";
-
-			if(speed > 2048) {
-				speed /= 1024;
-				unit = "MB/s";
-
-				if(speed > 2048) {
-					speed /= 1024;
-					unit = "GB/s";
-				}
-			}
+		if(static_cast<long double>(speed) > 2.0_gib) {
+			speed /= 1.0_gib;
+			unit = "GiB/s";
+		}
+		else if(static_cast<long double>(speed) > 2.0_mib) {
+			speed /= 1.0_mib;
+			unit = "MiB/s";
+		}
+		else if(static_cast<long double>(speed) > 2.0_kib) {
+			speed /= 1.0_kib;
+			unit = "KiB/s";
 		}
 
 		m_ui->transferSpeed->setText(QLocale().toString(static_cast<double>(speed), 'f', 2) + " " + unit);

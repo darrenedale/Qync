@@ -14,7 +14,8 @@ HEADERS += \
     src/process.h \
     src/processdialogue.h \
     src/aboutdialogue.h \
-    src/sourcedestinationwidget.h
+    src/sourcedestinationwidget.h \
+    src/units.h
 
 SOURCES += \
 	src/qync.cpp \
