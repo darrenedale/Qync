@@ -1,6 +1,3 @@
-#ifndef QYNC_UNITS_H
-#define QYNC_UNITS_H
-
 /**
  * \file units.h
  *
@@ -18,85 +15,88 @@
  * The user-defined literals are available only in the Qync namespace.
  */
 
+#ifndef QYNC_UNITS_H
+#define QYNC_UNITS_H
+
 namespace Qync {
 	/** \brief Enable expression of floating-point sizes in IEC Gib. */
 	constexpr long double operator"" _gib(long double gib) {
-		/* 1 gib = 1024mb; 1mib = 1024kib; 1kib = 1024 bytes
+		/* 1 gib = 1024mib; 1mib = 1024kib; 1kib = 1024 bytes
 		 * compiler should optimise this so keep it long-form for clarity */
 		return gib * 1024.0L * 1024.0L * 1024.0L;
 	}
 
 	/** \brief Enable expression of integral sizes in IEC Gib. */
 	constexpr unsigned long long operator"" _gib(unsigned long long gib) {
-		/* 1 gib = 1024mb; 1mib = 1024kib; 1kib = 1024 bytes
+		/* 1 gib = 1024mib; 1mib = 1024kib; 1kib = 1024 bytes
 		 * compiler should optimise this so keep it long-form for clarity */
 		return gib * 1024ULL * 1024ULL * 1024ULL;
 	}
 
 	/** \brief Enable expression of floating-point sizes in SI Gb. */
-	long double operator"" _gb(long double gb) {
+	constexpr long double operator"" _gb(long double gb) {
 		/* 1 gb = 1000mb; 1mb = 1000kb; 1kb = 1000 bytes
 		 * compiler should optimise this, so keep it long-form for clarity */
 		return gb * 1000.0L * 1000.0L * 1000.0L;
 	}
 
 	/** \brief Enable expression of integral sizes in SI Gb. */
-	unsigned long long operator"" _gb(unsigned long long gb) {
+	constexpr unsigned long long operator"" _gb(unsigned long long gb) {
 		/* 1 gb = 1000mb; 1mb = 1000kb; 1kb = 1000 bytes
 		 * compiler should optimise this, so keep it long-form for clarity */
 		return gb * 1000ULL * 1000ULL * 1000ULL;
 	}
 
 	/** \brief Enable expression of floating-point sizes in IEC Mib. */
-	long double operator"" _mib(long double mib) {
+	constexpr long double operator"" _mib(long double mib) {
 		/* 1mib = 1024kib; 1kib = 1024 bytes
 		 * compiler should optimise this so keep it long-form for clarity */
 		return mib * 1024.0L * 1024.0L;
 	}
 
 	/** \brief Enable expression of integral sizes in IEC Mib. */
-	unsigned long long operator"" _mib(unsigned long long mib) {
+	constexpr unsigned long long operator"" _mib(unsigned long long mib) {
 		/* 1mib = 1024kib; 1kib = 1024 bytes
 		 * compiler should optimise this so keep it long-form for clarity */
 		return mib * 1024ULL * 1024ULL;
 	}
 
 	/** \brief Enable expression of floating-point sizes in SI Mb. */
-	long double operator"" _mb(long double mb) {
+	constexpr long double operator"" _mb(long double mb) {
 		/* 1mb = 1000kb; 1kb = 1000 bytes
 		 * compiler should optimise this, so keep it long-form for clarity */
 		return mb * 1000.0L * 1000.0L;
 	}
 
 	/** \brief Enable expression of integral sizes in SI Mb. */
-	unsigned long long operator"" _mb(unsigned long long mb) {
+	constexpr unsigned long long operator"" _mb(unsigned long long mb) {
 		/* 1mb = 1000kb; 1kb = 1000 bytes
 		 * compiler should optimise this, so keep it long-form for clarity */
 		return mb * 1000ULL * 1000ULL;
 	}
 
 	/** \brief Enable expression of floating-point sizes in IEC Kib. */
-	long double operator"" _kib(long double kib) {
+	constexpr long double operator"" _kib(long double kib) {
 		/* 1kib = 1024 bytes
 		 * compiler should optimise this so keep it long-form for clarity */
 		return kib * 1024.0L;
 	}
 
 	/** \brief Enable expression of integral sizes in IEC Kib. */
-	unsigned long long operator"" _kib(unsigned long long kib) {
+	constexpr unsigned long long operator"" _kib(unsigned long long kib) {
 		/* 1kib = 1024 bytes
 		 * compiler should optimise this so keep it long-form for clarity */
 		return kib * 1024ULL;
 	}
 
 	/** \brief Enable expression of floating-point sizes in SI Kb. */
-	long double operator"" _kb(long double kb) {
+	constexpr long double operator"" _kb(long double kb) {
 		/* 1kb = 1000 bytes */
 		return kb * 1000.0L;
 	}
 
 	/** \brief Enable expression of integral sizes in SI Kb. */
-	unsigned long long operator"" _kb(unsigned long long kb) {
+	constexpr unsigned long long operator"" _kb(unsigned long long kb) {
 		/* 1kb = 1000 bytes */
 		return kb * 1000ULL;
 	}
@@ -108,7 +108,7 @@ namespace Qync {
 	 * are the same for both SI and IEC unit systems. This UDL simply facilitates
 	 * code expressiveness.
 	 */
-	unsigned long long operator"" _b(unsigned long long bytes) {
+	constexpr unsigned long long operator"" _b(unsigned long long bytes) {
 		return bytes;
 	}
 
@@ -119,7 +119,7 @@ namespace Qync {
 	 * are the same for both SI and IEC unit systems. This UDL simply facilitates
 	 * code expressiveness.
 	 */
-	long double operator"" _b(long double bytes) {
+	constexpr long double operator"" _b(long double bytes) {
 		return bytes;
 	}
 }  // namespace Qync

@@ -1,4 +1,18 @@
-#include "src/sourcedestinationwidget.h"
+/**
+ * \file sourcedestinationwidget.cpp
+ * \author Darren Edale
+ * \date September 2017
+ * \version 1.0.0
+ *
+ * \brief Implementation of the SourceDestinationWidget class.
+ *
+ * \dep
+ * - sourcedestinationwidget.h
+ * - sourcedestinationwidget.ui
+ * - QFileDialog
+ */
+
+#include "sourcedestinationwidget.h"
 #include "ui_sourcedestinationwidget.h"
 
 #include <QFileDialog>

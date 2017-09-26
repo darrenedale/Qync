@@ -1,3 +1,16 @@
+/**
+ * \file sourcedestinationwidget.h
+ * \author Darren Edale
+ * \date September 2017
+ * \version 1.0.0
+ *
+ * \brief Declaration of the SourceDestinationWidget class.
+ *
+ * \dep
+ * - memory
+ * - QWidget
+ */
+
 #ifndef QYNC_SOURCEDESTINATIONWIDGET_H
 #define QYNC_SOURCEDESTINATIONWIDGET_H
 
