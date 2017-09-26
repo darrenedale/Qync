@@ -17,6 +17,8 @@
    id="svg8"
    inkscape:version="0.92.1 r15371"
    sodipodi:docname="application.svg">
+  <title
+     id="title5166">Qync application icon</title>
   <defs
      id="defs2">
     <linearGradient
@@ -177,18 +179,6 @@
        y1="161.11671"
        x2="-94.354103"
        y2="164.56688" />
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath4636">
-      <rect
-         y="65.863716"
-         x="40.151054"
-         height="16.216433"
-         width="27.991854"
-         id="rect4638"
-         style="fill:#00b604;fill-opacity:1;stroke:none;stroke-width:14.28797817;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-         inkscape:label="BottomArrowClip" />
-    </clipPath>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4652"
@@ -207,45 +197,6 @@
        x2="40.128075"
        y2="60.278801"
        gradientUnits="userSpaceOnUse" />
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath4696">
-      <rect
-         inkscape:label="TopArrowClip"
-         style="fill:#00b604;fill-opacity:1;stroke:none;stroke-width:14.28797817;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
-         id="rect4698"
-         width="27.991854"
-         height="16.216433"
-         x="40.151058"
-         y="49.647285" />
-    </clipPath>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4652"
-       id="linearGradient4714"
-       gradientUnits="userSpaceOnUse"
-       x1="47.170124"
-       y1="71.835442"
-       x2="68.096725"
-       y2="71.804291" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4652"
-       id="linearGradient4716"
-       gradientUnits="userSpaceOnUse"
-       x1="47.170124"
-       y1="71.835442"
-       x2="68.096725"
-       y2="71.804291" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4652"
-       id="linearGradient4718"
-       gradientUnits="userSpaceOnUse"
-       x1="47.170124"
-       y1="71.835442"
-       x2="68.096725"
-       y2="71.804291" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4652"
@@ -254,34 +205,8 @@
        x1="47.170124"
        y1="71.835442"
        x2="68.096725"
-       y2="71.804291" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4831"
-       id="linearGradient4727"
-       gradientUnits="userSpaceOnUse"
-       x1="61.235214"
-       y1="60.346092"
-       x2="40.128075"
-       y2="60.278801" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4831"
-       id="linearGradient4729"
-       gradientUnits="userSpaceOnUse"
-       x1="61.235214"
-       y1="60.346092"
-       x2="40.128075"
-       y2="60.278801" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4831"
-       id="linearGradient4731"
-       gradientUnits="userSpaceOnUse"
-       x1="61.235214"
-       y1="60.346092"
-       x2="40.128075"
-       y2="60.278801" />
+       y2="71.804291"
+       gradientTransform="matrix(30.024696,0,0,30.024696,-1116.2638,-1465.5381)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4831"
@@ -290,7 +215,8 @@
        x1="61.235214"
        y1="60.346092"
        x2="40.128075"
-       y2="60.278801" />
+       y2="60.278801"
+       gradientTransform="matrix(30.024696,0,0,30.024696,-1116.2638,-1465.5381)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -300,10 +226,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="491.73513"
-     inkscape:cy="450.98023"
+     inkscape:cx="9.796889"
+     inkscape:cy="473.79528"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g8567"
      showgrid="false"
      units="px"
      inkscape:window-width="1920"
@@ -319,7 +245,24 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title>Qync application icon</dc:title>
+        <dc:description>Composed from upper-case bold Q in Nimbus Sans font.</dc:description>
+        <dc:date>September 2017</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Darren Edale</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>BitCraft</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Darren Edale</dc:title>
+          </cc:Agent>
+        </dc:contributor>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -332,39 +275,23 @@
        id="g8567"
        transform="matrix(0.95196745,0,0,1.0030536,9.5115428,-0.63421247)"
        inkscape:label="QyncLogo">
-      <flowRoot
-         xml:space="preserve"
+      <path
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;line-height:125%;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4720);fill-opacity:1;stroke:none;stroke-width:30.02469635px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         clip-path="none"
+         d="m 89.259766,512 v 19.94727 c 8.001568,116.39437 51.902894,224.2393 121.171874,298.91992 75.6635,81.66854 175.34696,121.30273 299.05078,121.30273 90.0756,0 157.33177,-18.0155 226.99024,-60.05078 l 103.28711,97.28125 89.94726,-95.86328 v -2.68164 l -94.75,-90.01367 c 52.38112,-64.14015 87.63311,-166.33947 94.75,-271.0293 V 512 h -179.0918 c -1.97241,65.10044 -15.08795,123.79309 -39.36328,172.34375 l -98.48242,-93.67773 -91.27734,97.28125 92.47851,87.67382 c -27.62318,14.4121 -67.25719,22.81836 -105.68945,22.81836 C 369.08706,798.43945 274.71603,685.28226 268.42578,512 Z"
+         transform="matrix(0.27793317,0,0,0.26377786,-9.991458,26.619577)"
          id="BottomArrow"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;line-height:125%;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4720);fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         transform="matrix(8.3448589,0,0,7.9198501,-320.23819,-359.95694)"
-         inkscape:label="BottomArrowLine"
-         clip-path="url(#clipPath4636)"><flowRegion
-           id="flowRegion4525"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4716);fill-opacity:1;stroke:none;stroke-opacity:1"><rect
-             id="rect4527"
-             width="947.52307"
-             height="939.44183"
-             x="38.385796"
-             y="44.152039"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4714);fill-opacity:1;stroke:none;stroke-opacity:1" /></flowRegion><flowPara
-           id="flowPara4529"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4718);fill-opacity:1;stroke:none;stroke-opacity:1">Q</flowPara></flowRoot>      <flowRoot
-         xml:space="preserve"
+         inkscape:connector-curvature="0"
+         inkscape:label="BottomArrowLine" />
+      <path
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;line-height:125%;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4733);fill-opacity:1;stroke:none;stroke-width:30.02469635px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         clip-path="none"
+         d="m 509.48242,34.599609 c -124.90483,0 -223.38728,39.632238 -299.05078,121.300781 -69.26924,74.6809 -113.170546,182.527 -121.171874,298.92188 V 512 H 268.42578 c -0.22264,-6.13332 -0.3457,-12.3336 -0.3457,-18.61523 0,-183.75423 96.08037,-305.05665 241.40234,-305.05665 146.52298,0 241.40235,120.10158 241.40235,306.25782 0,5.85504 -0.0951,11.65674 -0.26954,17.41406 h 179.0918 V 453.06445 C 921.70574,338.42751 877.80248,230.58133 808.5332,155.90039 732.8697,74.231847 634.38725,34.599609 509.48242,34.599609 Z"
+         transform="matrix(0.27793317,0,0,0.26377786,-9.991458,26.619577)"
          id="TopArrow"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;line-height:125%;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4733);fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         transform="matrix(8.344859,0,0,7.9198501,-320.23819,-359.95694)"
-         inkscape:label="TopArrowLine"
-         clip-path="url(#clipPath4696)"><flowRegion
-           id="flowRegion4525-7"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4729);fill-opacity:1;stroke:none;stroke-opacity:1"><rect
-             id="rect4527-8"
-             width="947.52307"
-             height="939.44183"
-             x="38.385796"
-             y="44.152039"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4727);fill-opacity:1;stroke:none;stroke-opacity:1" /></flowRegion><flowPara
-           id="flowPara4529-0"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.00067139px;font-family:'Nimbus Sans L';-inkscape-font-specification:'Nimbus Sans L, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient4731);fill-opacity:1;stroke:none;stroke-opacity:1">Q</flowPara></flowRoot>      <path
+         inkscape:connector-curvature="0"
+         inkscape:label="TopArrowLine" />
+      <path
          sodipodi:type="star"
          style="fill:#00b604;fill-opacity:1;stroke:none;stroke-width:500;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
          id="TopArrowHead"
