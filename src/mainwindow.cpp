@@ -176,9 +176,6 @@ namespace Qync {
 		m_aboutDialogue.reset(new AboutDialogue);
 		m_aboutDialogue->setWindowTitle(tr("About %1").arg(qyncApp->applicationDisplayName()));
 
-		/* TODO this feature has not yet been implemented */
-		m_ui->simpleBackupType->hide();
-
 		/* ensure UI is in correct state for selected preset */
 		showPreset(m_ui->presets->currentIndex());
 	}
@@ -244,6 +241,7 @@ namespace Qync {
 			m_ui->windowsCompatible->setChecked(preset.windowsCompatability());
 			m_ui->honourDeletions->setChecked(preset.honourDeletions());
 
+			m_ui->simpleDoFullBackup->setChecked(preset.ignoreTimes());
 			m_ui->alwaysCompareChecksums->setChecked(preset.alwaysCompareChecksums());
 			m_ui->preserveDevices->setChecked(preset.preserveDevices());
 			m_ui->keepPartialFiles->setChecked(preset.keepPartialTransfers());
@@ -266,8 +264,8 @@ namespace Qync {
 			m_ui->hardlinksAsHardlinks->setChecked(preset.copyHardlinksAsHardlinks());
 			m_ui->itemisedChanges->setChecked(preset.showItemisedChanges());
 
-			/* it's quicker and easy to ensure these are manually synchronised rather
-			 * than wait for signals and slots to do it */
+			/* it's easy, and quicker, to ensure these are manually synchronised rather
+			 * than wait for propagation of the signal */
 			QSignalBlocker mainSrcDestBlocker(m_ui->sourceAndDestination);
 			QSignalBlocker basicSrcDestBlocker(m_ui->simpleSourceAndDestination);
 
@@ -594,8 +592,37 @@ namespace Qync {
 			p.setDefaults();
 			p.setSource(m_ui->simpleSourceAndDestination->source());
 			p.setDestination(m_ui->simpleSourceAndDestination->destination());
+
+			p.setCopyHardlinksAsHardlinks(false);
+			p.setCopySymlinksAsSymlinks(false);
+			p.setDontMapUsersAndGroups(true);
+			p.setDontUpdateExistingEntries(false);
+			p.setHonourDeletions(true);
+			p.setKeepPartialTransfers(false);
+			p.setMakeBackups(false);
+			p.setOnlyUpdateExistingEntries(false);
+			p.setPreserveDevices(false);
+			p.setPreserveGroup(true);
+			p.setPreserveOwner(true);
+			p.setPreservePermissions(true);
+			p.setPreserveTime(true);
+			p.setShowItemisedChanges(false);
+			p.setUseTransferCompression(true);
+			p.setWindowsCompatability(false);
+
+			if(m_ui->simpleDoFullBackup->isChecked()) {
+				p.setAlwaysCompareChecksums(false);
+				p.setIgnoreTimes(true);
+			}
+			else {
+				p.setAlwaysCompareChecksums(true);
+				p.setIgnoreTimes(false);
+			}
 		}
 		else {
+			/* this setting is not (yet?) in the UI */
+			p.setIgnoreTimes(false);
+
 			p.setPreserveGroup(m_ui->preserveGroup->isChecked());
 			p.setPreserveOwner(m_ui->preserveOwner->isChecked());
 			p.setPreservePermissions(m_ui->preservePermissions->isChecked());

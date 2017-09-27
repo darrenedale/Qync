@@ -18,6 +18,9 @@
  * - application.h
  * - process.h
  * - functions.h
+ *
+ * \todo Separate into ProcessWidget and ProcessDialogue so that widget can be embedded
+ * into simple UI
  */
 
 #include "processdialogue.h"

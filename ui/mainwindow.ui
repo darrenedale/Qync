@@ -76,17 +76,26 @@
            <widget class="Qync::SourceDestinationWidget" name="simpleSourceAndDestination" native="true"/>
           </item>
           <item>
-           <widget class="QComboBox" name="simpleBackupType">
-            <item>
-             <property name="text">
-              <string>Do an incremental backup</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Do a full backup</string>
-             </property>
-            </item>
+           <widget class="QRadioButton" name="simpleDoIncrementalBackup">
+            <property name="text">
+             <string>Do an incremental backup of files and directories that have changed since the last backup</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">simpleBackupType</string>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="simpleDoFullBackup">
+            <property name="text">
+             <string>Do a full backup of all files and directories</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">simpleBackupType</string>
+            </attribute>
            </widget>
           </item>
           <item>
@@ -481,7 +490,7 @@
      <x>0</x>
      <y>0</y>
      <width>708</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1095,4 +1104,7 @@
   <slot>synchronise()</slot>
   <slot>onIncludeInSynchronisationChanged(int)</slot>
  </slots>
+ <buttongroups>
+  <buttongroup name="simpleBackupType"/>
+ </buttongroups>
 </ui>

@@ -153,7 +153,6 @@ namespace Qync {
 			return {};
 		}
 
-		/* TODO use --info= instead of --progress (see rsync --info=help for details of how) */
 		QStringList args(forceOptions);
 		args.push_back("--recursive");
 		args.push_back("--progress");
@@ -186,6 +185,10 @@ namespace Qync {
 		}
 
 		/* advanced settings */
+		if(preset.ignoreTimes()) {
+			args.push_back("--ignore-times");
+		}
+
 		if(preset.alwaysCompareChecksums()) {
 			args.push_back("--checksum");
 		}

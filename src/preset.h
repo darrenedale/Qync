@@ -70,6 +70,7 @@ namespace Qync {
 		bool setWindowsCompatability(const bool & compatible);
 		bool setHonourDeletions(const bool & honour);
 		bool setAlwaysCompareChecksums(const bool & checksums);
+		bool setIgnoreTimes(const bool & ignore);
 		bool setPreserveDevices(const bool & preserve);
 		bool setKeepPartialTransfers(const bool & keep);
 		bool setCopySymlinksAsSymlinks(const bool & links);
@@ -116,6 +117,10 @@ namespace Qync {
 
 		inline const bool & alwaysCompareChecksums(void) const {
 			return m_alwaysChecksum;
+		}
+
+		inline const bool & ignoreTimes(void) const {
+			return m_ignoreTimes;
 		}
 
 		inline const bool & preserveDevices(void) const {
@@ -189,6 +194,7 @@ namespace Qync {
 		bool m_deleteOnDestination;
 
 		bool m_alwaysChecksum;
+		bool m_ignoreTimes;
 		bool m_preserveDevices;
 		bool m_keepParitalTransfers;
 		bool m_symlinksAsSymlinks;

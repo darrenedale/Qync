@@ -80,6 +80,7 @@ namespace Qync {
 		  {"honourDeletions", {&Preset::honourDeletions, &Preset::setHonourDeletions}},
 
 		  {"alwaysCompareChecksums", {&Preset::alwaysCompareChecksums, &Preset::setAlwaysCompareChecksums}},
+		  {"ignoreTimes", {&Preset::ignoreTimes, &Preset::setIgnoreTimes}},
 		  {"preserveDevices", {&Preset::preserveDevices, &Preset::setPreserveDevices}},
 		  {"keepPartialTransfers", {&Preset::keepPartialTransfers, &Preset::setKeepPartialTransfers}},
 		  {"copySymlinksAsSymlinks", {&Preset::copySymlinksAsSymlinks, &Preset::setCopySymlinksAsSymlinks}},
@@ -523,6 +524,7 @@ namespace Qync {
 		m_deleteOnDestination = false;
 
 		m_alwaysChecksum = false;
+		m_ignoreTimes = false;
 		m_preserveDevices = false;
 		m_keepParitalTransfers = false;
 		m_symlinksAsSymlinks = false;
@@ -692,6 +694,23 @@ namespace Qync {
 	 */
 	bool Preset::setAlwaysCompareChecksums(const bool & compare) {
 		m_alwaysChecksum = compare;
+		return true;
+	}
+
+
+	/**
+	 * \brief Set whether or not to ignore file times.
+	 *
+	 * \param ignore indicates whether times should be ignored.
+	 *
+	 * Ignoring times generally means all files will be updated in the destination,
+	 * regardless of whether the source is actually different or not. (But see
+	 * setAlwyasCompareChecksums()).
+	 *
+	 * \return \b true if the setting was set, \b false otherwise.
+	 */
+	bool Preset::setIgnoreTimes(const bool & ignore) {
+		m_ignoreTimes = ignore;
 		return true;
 	}
 
