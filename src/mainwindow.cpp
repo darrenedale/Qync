@@ -147,6 +147,9 @@ namespace Qync {
 		m_ui->setupUi(this);
 		m_ui->presetsToolbar->insertWidget(m_ui->actionNew, m_ui->presets);
 
+		m_ui->basicSourceAndDestination->setSourceLabel(tr("Backup"));
+		m_ui->basicSourceAndDestination->setDestinationLabel(tr("To"));
+
 		QFont titleFont = m_ui->basicUiTitle->font();
 		titleFont.setPointSizeF(titleFont.pointSizeF() * 1.5);
 		titleFont.setBold(true);

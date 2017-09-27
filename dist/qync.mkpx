@@ -1,6 +1,47 @@
-<makisuproject name="qync" version="1.0.0" packagerevision="1" section="utils" priority="optional" arch="amd64"><maintainer>Darren Edale</maintainer><maintaineremail>darren at equituk dot net</maintaineremail><maintainerchangelog type="file"></maintainerchangelog><outputpath>/home/darren/Documents/Development/qync/dist/linux/</outputpath><description>A file backup/synchronisation utility.
-A Qt user interface for rsyc aimed at easy creation of incremental file and directory backups.</description><dependencylist><dependency type="Depends"><alternative package="libc6" relation="LaterOrEqual" version="2.4"/></dependency><dependency type="Depends"><alternative package="rsync" relation="LaterOrEqual" version="3.0.7"/></dependency><dependency type="Depends"><alternative package="libqt5core5a" relation="LaterOrEqual" version="5.7"/></dependency><dependency type="Depends"><alternative package="libqt5widgets5" relation="LaterOrEqual" version="5.7"/></dependency><dependency type="Depends"><alternative package="libstdc++6" relation="LaterOrEqual" version="4.1.1"/></dependency><dependency type="Depends"><alternative package="libqt5gui5" relation="LaterOrEqual" version="5.7"/></dependency></dependencylist><filelist><file type="NormalFile" path="/usr/bin/" name="qync" source="/home/darren/Documents/Development/qync/dist/linux/bin/amd64/Qync" owner="root" group="root" ownerId="0" groupId="0" permissions="rwxr-xr-x" compress="false"/><file type="NormalFile" path="/usr/share/doc/qync/" name="changelog.gz" source="/home/darren/Documents/Development/qync/dist/linux/doc/qync/changelog" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="true"/><file type="NormalFile" path="/usr/share/doc/qync/" name="changelog.Debian.gz" source="/home/darren/Documents/Development/qync/dist/linux/doc/qync/changelog.Debian" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="true"/><file type="NormalFile" path="/usr/share/doc/qync/" name="copyright" source="/home/darren/Documents/Development/qync/dist/linux/doc/qync/copyright" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/><file type="NormalFile" path="/usr/share/man/man1/" name="qync.1.gz" source="/home/darren/Documents/Development/qync/dist/linux/man/man1/qync.1" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="true"/><file type="NormalFile" path="/usr/share/icons/hicolor/scalable/apps/" name="qync.svg" source="/home/darren/Documents/Development/qync/resources/icons/application.svg" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/><file type="NormalFile" path="/usr/share/applications/" name="qync.desktop" source="/home/darren/Documents/Development/qync/dist/linux/qync.desktop" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/><file type="NormalFile" path="/usr/share/pixmaps/" name="qync.xpm" source="/home/darren/Documents/Development/qync/resources/icons/application32.xpm" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/><file type="NormalFile" path="/usr/share/menu/" name="qync" source="/home/darren/Documents/Development/qync/dist/linux/qync.menu" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/></filelist><script type="PreInstall">#! /bin/bash
-# pre-install script for Qync</script><script type="PostInstall">#! /bin/bash
-# post-install script for Qync</script><script type="PreRemove">#! /bin/bash
-# pre-remove script for Qync</script><script type="PostRemove">#! /bin/bash
-# post-remove script for Qync</script></makisuproject>
+<?xml version="1.0"?>
+<makisuproject name="qync" version="1.0.0" packagerevision="1" section="utils" priority="optional" arch="amd64">
+  <maintainer>Darren Edale</maintainer>
+  <maintaineremail>darren at equituk dot net</maintaineremail>
+  <maintainerchangelog type="file"/>
+  <outputpath>/home/darren/Documents/Development/qync/dist/linux/</outputpath>
+  <description>A file backup/synchronisation utility.
+A Qt user interface for rsync aimed at easy creation of incremental file and directory backups.</description>
+  <dependencylist>
+    <dependency type="Depends">
+      <alternative package="libc6" relation="LaterOrEqual" version="2.4"/>
+    </dependency>
+    <dependency type="Depends">
+      <alternative package="rsync" relation="LaterOrEqual" version="3.0.7"/>
+    </dependency>
+    <dependency type="Depends">
+      <alternative package="libqt5core5a" relation="LaterOrEqual" version="5.7"/>
+    </dependency>
+    <dependency type="Depends">
+      <alternative package="libqt5widgets5" relation="LaterOrEqual" version="5.7"/>
+    </dependency>
+    <dependency type="Depends">
+      <alternative package="libstdc++6" relation="LaterOrEqual" version="4.1.1"/>
+    </dependency>
+    <dependency type="Depends">
+      <alternative package="libqt5gui5" relation="LaterOrEqual" version="5.7"/>
+    </dependency>
+  </dependencylist>
+  <filelist>
+    <file type="NormalFile" path="/usr/bin/" name="qync" source="/home/darren/Documents/Development/qync/dist/linux/bin/amd64/Qync" owner="root" group="root" ownerId="0" groupId="0" permissions="rwxr-xr-x" compress="false"/>
+    <file type="NormalFile" path="/usr/share/doc/qync/" name="changelog.gz" source="/home/darren/Documents/Development/qync/dist/linux/doc/qync/changelog" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="true"/>
+    <file type="NormalFile" path="/usr/share/doc/qync/" name="changelog.Debian.gz" source="/home/darren/Documents/Development/qync/dist/linux/doc/qync/changelog.Debian" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="true"/>
+    <file type="NormalFile" path="/usr/share/doc/qync/" name="copyright" source="/home/darren/Documents/Development/qync/dist/linux/doc/qync/copyright" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/>
+    <file type="NormalFile" path="/usr/share/man/man1/" name="qync.1.gz" source="/home/darren/Documents/Development/qync/dist/linux/man/man1/qync.1" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="true"/>
+    <file type="NormalFile" path="/usr/share/icons/hicolor/scalable/apps/" name="qync.svg" source="/home/darren/Documents/Development/qync/resources/icons/application.svg" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/>
+    <file type="NormalFile" path="/usr/share/applications/" name="qync.desktop" source="/home/darren/Documents/Development/qync/dist/linux/qync.desktop" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/>
+    <file type="NormalFile" path="/usr/share/menu/" name="qync" source="/home/darren/Documents/Development/qync/dist/linux/qync.menu" owner="root" group="root" ownerId="0" groupId="0" permissions="rw-r--r--" compress="false"/>
+  </filelist>
+  <script type="PreInstall">#! /bin/bash
+# pre-install script for Qync</script>
+  <script type="PostInstall">#! /bin/bash
+# post-install script for Qync</script>
+  <script type="PreRemove">#! /bin/bash
+# pre-remove script for Qync</script>
+  <script type="PostRemove">#! /bin/bash
+# post-remove script for Qync</script>
+</makisuproject>

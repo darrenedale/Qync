@@ -53,6 +53,16 @@ namespace Qync {
 	}
 
 
+	void SourceDestinationWidget::setSourceLabel(const QString & label) {
+		m_ui->sourceLabel->setText(label);
+	}
+
+
+	void SourceDestinationWidget::setDestinationLabel(const QString & label) {
+		m_ui->destinationLabel->setText(label);
+	}
+
+
 	void SourceDestinationWidget::setDestination(const QString & dest) {
 		if(dest != m_ui->destination->text()) {
 			m_ui->destination->setText(dest);

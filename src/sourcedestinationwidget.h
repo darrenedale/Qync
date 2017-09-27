@@ -34,6 +34,9 @@ namespace Qync {
 		QString source(void) const;
 		QString destination(void) const;
 
+		void setSourceLabel(const QString & label);
+		void setDestinationLabel(const QString & label);
+
 	Q_SIGNALS:
 		void sourceChanged(const QString &);
 		void destinationChanged(const QString &);
