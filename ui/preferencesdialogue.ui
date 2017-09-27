@@ -51,6 +51,9 @@
    </item>
    <item>
     <widget class="QCheckBox" name="simpleUi">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The simple user interface is suitable for simple backup operations. The full user interface provides access to more advanced options.&lt;/p&gt;&lt;p&gt;You can temporarily switch between the UIs using &lt;span style=&quot; font-weight:600;&quot;&gt;Ctrl-U, S&lt;/span&gt; for the simple UI or &lt;span style=&quot; font-weight:600;&quot;&gt;Ctrl-U, F&lt;/span&gt; for the fullUI. Switching this way does not alter your preferences.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Simple user interface</string>
      </property>

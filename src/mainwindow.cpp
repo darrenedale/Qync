@@ -149,13 +149,11 @@ namespace Qync {
 		titleFont.setBold(true);
 		m_ui->simpleUiTitle->setFont(titleFont);
 
-		connect(m_ui->actionSimpleUi, &QAction::toggled, [& action = m_ui->actionFullUi](bool uncheck) {
-			action->setChecked(!uncheck);
-		});
-
-		connect(m_ui->actionFullUi, &QAction::toggled, [& action = m_ui->actionSimpleUi](bool uncheck) {
-			action->setChecked(!uncheck);
-		});
+		/* group is owned by MainWindow and will be deleted when QWidget
+		 * base class destructor is called */
+		QActionGroup * uiSwitchGroup = new QActionGroup(this);
+		uiSwitchGroup->addAction(m_ui->actionSimpleUi);
+		uiSwitchGroup->addAction(m_ui->actionFullUi);
 
 		connect(m_ui->actionSimpleUi, &QAction::triggered, [this](void) {
 			useSimpleUi(true);

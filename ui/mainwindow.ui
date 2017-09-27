@@ -488,12 +488,25 @@
     <property name="title">
      <string>Synchronisation</string>
     </property>
+    <widget class="QMenu" name="menuQuit">
+     <property name="title">
+      <string>Quit</string>
+     </property>
+    </widget>
+    <widget class="QMenu" name="menuInterface">
+     <property name="title">
+      <string>Interface</string>
+     </property>
+     <addaction name="actionSimpleUi"/>
+     <addaction name="actionFullUi"/>
+    </widget>
     <addaction name="actionSimulate"/>
     <addaction name="actionSync"/>
     <addaction name="separator"/>
+    <addaction name="menuInterface"/>
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
+    <addaction name="menuQuit"/>
    </widget>
    <widget class="QMenu" name="menuPresets">
     <property name="title">
@@ -540,8 +553,6 @@
    <addaction name="actionSave"/>
    <addaction name="actionSaveAs"/>
    <addaction name="actionRemove"/>
-   <addaction name="actionSimpleUi"/>
-   <addaction name="actionFullUi"/>
   </widget>
   <widget class="QToolBar" name="synchroniseToolbar">
    <property name="windowTitle">
@@ -690,21 +701,6 @@
     <string>Ctrl+P</string>
    </property>
   </action>
-  <action name="actionQuit">
-   <property name="icon">
-    <iconset theme="application-exit" resource="../resources/icons.qrc">
-     <normaloff>:/icons/menu/file/quit</normaloff>:/icons/menu/file/quit</iconset>
-   </property>
-   <property name="text">
-    <string>Quit</string>
-   </property>
-   <property name="toolTip">
-    <string>Eqit Qync.</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Q</string>
-   </property>
-  </action>
   <action name="actionNew">
    <property name="icon">
     <iconset theme="document-new" resource="../resources/icons.qrc">
@@ -730,6 +726,9 @@
    <property name="toolTip">
     <string>Use the simple user interface, suitable for making simple backups.</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+U, S</string>
+   </property>
   </action>
   <action name="actionFullUi">
    <property name="checkable">
@@ -740,6 +739,9 @@
    </property>
    <property name="toolTip">
     <string>Use the full user interface with advanced options.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U, F</string>
    </property>
   </action>
  </widget>
@@ -883,22 +885,6 @@
    <signal>triggered()</signal>
    <receiver>Qync::MainWindow</receiver>
    <slot>showPreferences()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionQuit</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
