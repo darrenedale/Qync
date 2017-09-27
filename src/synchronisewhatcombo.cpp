@@ -1,4 +1,6 @@
-#include "src/synchronisewhatcombo.h"
+#include "synchronisewhatcombo.h"
+
+#include <QComboBox>
 
 namespace Qync {
 
