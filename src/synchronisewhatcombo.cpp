@@ -1,3 +1,16 @@
+/**
+ * \file synchronisewhatcombo.cpp
+ * \author Darren Edale
+ * \date September 2017
+ * \version 1.0.0
+ *
+ * \brief Implementation of the SynchroniseWhatCombo widget class.
+ *
+ * \dep
+ * - synchronisewhatcombo.h
+ * - QComboBox
+ */
+
 #include "synchronisewhatcombo.h"
 
 #include <QComboBox>
@@ -9,6 +22,21 @@ Q_DECLARE_METATYPE(Qync::SynchroniseWhatCombo::What)
 namespace Qync {
 
 
+	/**
+	 * \class SynchroniseWhatCombo
+	 * \author Darren Edale
+	 * \date September 2017
+	 * \version 1.0.0
+	 *
+	 * \brief A custom combo box for choosing what to synchronise.
+	 */
+
+
+	/**
+	 * \brief Create a "what to synchronise" combo box.
+	 *
+	 * \param parent The parent of the created combo box.
+	 */
 	SynchroniseWhatCombo::SynchroniseWhatCombo(QWidget * parent)
 	: QComboBox(parent) {
 		insertItem(0, tr("Everything"));
@@ -23,6 +51,11 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief The current "what to synchronise" chosen.
+	 *
+	 * \return The current "what to synchronise" value.
+	 */
 	SynchroniseWhatCombo::What SynchroniseWhatCombo::what(void) const {
 		/* if not set, will return 0 which does not cast to a valid What
 		 * enumeration */
@@ -30,6 +63,11 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Set the current "what to synchronise".
+	 *
+	 * \param newWhat The new "what to synchronise".
+	 */
 	void SynchroniseWhatCombo::setWhat(const SynchroniseWhatCombo::What & newWhat) {
 		if(newWhat != what()) {
 			setCurrentIndex(findData(static_cast<unsigned char>(newWhat), WhatRole));

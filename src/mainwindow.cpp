@@ -25,9 +25,6 @@
  * - preferencesdialogue.h
  * - aboutdialogue.h
  * - functions.h
- *
- * \todo convert includeInSynchronisation in .ui file to a custom subclass of
- * QComboBox
  */
 
 #include "mainwindow.h"

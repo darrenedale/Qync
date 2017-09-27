@@ -12,8 +12,6 @@
  * - QString
  * - QIcon
  * - application.h
- *
- * \todo Rethink the main content of the dialogue
  */
 
 #include "aboutdialogue.h"
@@ -48,10 +46,7 @@ namespace Qync {
 
 		m_ui->logo->setPixmap(QIcon(":/icons/application").pixmap(64));
 		m_ui->title->setText(processPlaceholders(m_ui->title->text()));
-		m_ui->author->setText(processPlaceholders(m_ui->author->text()));
 		m_ui->about->setText(processPlaceholders(m_ui->about->text()));
-		m_ui->dependencies->setText(processPlaceholders(m_ui->dependencies->text()));
-		m_ui->website->setText(processPlaceholders(m_ui->website->text()));
 		m_ui->buildDetails->setText(processPlaceholders(m_ui->buildDetails->text()));
 
 		QFont f = m_ui->title->font();

@@ -1,5 +1,17 @@
-#ifndef SYNCHRONISEWHATCOMBO_H
-#define SYNCHRONISEWHATCOMBO_H
+/**
+ * \file synchronisewhatcombo.h
+ * \author Darren Edale
+ * \date September 2017
+ * \version 1.0.0
+ *
+ * \brief Declaration of the SynchroniseWhatCombo widget class.
+ *
+ * \dep
+ * - QComboBox
+ */
+
+#ifndef QYNC_SYNCHRONISEWHATCOMBO_H
+#define QYNC_SYNCHRONISEWHATCOMBO_H
 
 #include <QComboBox>
 
@@ -32,4 +44,4 @@ namespace Qync {
 
 }  // namespace Qync
 
-#endif  // SYNCHRONISEWHATCOMBO_H
+#endif  // QYNC_SYNCHRONISEWHATCOMBO_H

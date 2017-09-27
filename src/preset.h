@@ -9,7 +9,20 @@
  * \dep
  * - QString
  *
- * \todo consider using std::string instead of QString (portability)
+ * In an ideal world the implementation here would be de-coupled from Qt.
+ * Moving to std::string would be simple, but the use of Qt's XML reading
+ * and writing makes it harder. It would be possible to use a different
+ * XML handling library, but this would just remove one dependency for
+ * another, which is of little utility since the UI uses Qt anyway. The
+ * other alternatives are to:
+ * - implement our own XML parser
+ * - use a different format for storing presets for which it is simpler
+ *   to implement a parser
+ * The former option would be time-consuming and error prone for little
+ * gain, since the Qt XML parsing code works well; the latter is a better
+ * option since it would enable removal of the Qt dependency without
+ * introducing another and the data to store is not particularly complex.
+ * INI style files would be possible.
  */
 
 #ifndef QYNC_PRESET_H
