@@ -71,7 +71,7 @@ namespace Qync {
 	 *
 	 * The main window is the hub of user interaction with the Qync application. It
 	 * provides the user with the ability to manipulate the list of presets stored
-	 * in the manager, customise presets either for one-off rsync processes or to
+	 * in the application, customise presets either for one-off rsync processes or to
 	 * alter the saved preset, and to launch simulations or synchronisations. It
 	 * also provides access to the preferences window.
 	 *
@@ -81,7 +81,7 @@ namespace Qync {
 	 * has a full menu and two toolbars from which options can be chosen.
 	 *
 	 * The presets toolbar and presets menu both provide facilities to add, update
-	 * and remove presets from the set stored in the manager. The menu also has
+	 * and remove presets from the set stored in the application. The menu also has
 	 * options to import and export presets to and from external files.
 	 *
 	 * The synchronise toolbar provides options to execute the current settings
@@ -90,11 +90,11 @@ namespace Qync {
 	 *
 	 * The core functionality exposed to the user derives from a QyncManager
 	 * object that is stored in the main window object. The main window does not
-	 * take ownership of the manager and the creator of the manager is responsible
-	 * for its timely destruction. The manager that the window is using can
-	 * be retrieved using the manager() method. It can be set using the protected
-	 * setManager() method, which will cause the old manager to be deleted.
-	 * Subclasses can also connect and disconnect the manager's signals and slots
+	 * take ownership of the application and the creator of the application is responsible
+	 * for its timely destruction. The application that the window is using can
+	 * be retrieved using the application() method. It can be set using the protected
+	 * setManager() method, which will cause the old application to be deleted.
+	 * Subclasses can also connect and disconnect the application's signals and slots
 	 * from the window's using the connectManager() and disconnectManager()
 	 * methods if signal processing needs to be suspended for an internal operation.
 	 *
@@ -113,10 +113,10 @@ namespace Qync {
 	 * Finally, the preferences item in the file menu calls the showPreferences()
 	 * slot.
 	 *
-	 * The manager provides some useful signals that the window makes use of. It
+	 * The application provides some useful signals that the window makes use of. It
 	 * emits the presetsChanged() signal which is connected to the refreshPresets()
 	 * slot so that the combo box showing the list of presets is always
-	 * synchronised with the set of presets stored in the manager. It also emits
+	 * synchronised with the set of presets stored in the application. It also emits
 	 * the preferencesChanged() signal, which is connected to the readPreferences()
 	 * slot to ensure that the GUI is always styled according to the user's
 	 * preferences.
@@ -131,13 +131,6 @@ namespace Qync {
 
 	/**
 	 * \brief Create a new QyncMainWindow.
-	 *
-	 * \param manager is the manager for the main window.
-	 *
-	 * The manager is used to provide the application functionality
-	 * controlled by the window. The window does not take ownership of the
-	 * manager as a manager may be used by more than one interface. The
-	 * creator of the manager is responsible for its timely destruction.
 	 */
 	MainWindow::MainWindow(void)
 	: QMainWindow(nullptr),
@@ -147,14 +140,30 @@ namespace Qync {
 		m_ui->setupUi(this);
 		m_ui->presetsToolbar->insertWidget(m_ui->actionNew, m_ui->presets);
 
-		m_ui->basicLogo->setPixmap(QIcon(":/icons/application").pixmap(64));
-		m_ui->basicSourceAndDestination->setSourceLabel(tr("Backup"));
-		m_ui->basicSourceAndDestination->setDestinationLabel(tr("To"));
+		m_ui->simpleLogo->setPixmap(QIcon(":/icons/application").pixmap(64));
+		m_ui->simpleSourceAndDestination->setSourceLabel(tr("Backup"));
+		m_ui->simpleSourceAndDestination->setDestinationLabel(tr("To"));
 
-		QFont titleFont = m_ui->basicUiTitle->font();
+		QFont titleFont = m_ui->simpleUiTitle->font();
 		titleFont.setPointSizeF(titleFont.pointSizeF() * 1.5);
 		titleFont.setBold(true);
-		m_ui->basicUiTitle->setFont(titleFont);
+		m_ui->simpleUiTitle->setFont(titleFont);
+
+		connect(m_ui->actionSimpleUi, &QAction::toggled, [& action = m_ui->actionFullUi](bool uncheck) {
+			action->setChecked(!uncheck);
+		});
+
+		connect(m_ui->actionFullUi, &QAction::toggled, [& action = m_ui->actionSimpleUi](bool uncheck) {
+			action->setChecked(!uncheck);
+		});
+
+		connect(m_ui->actionSimpleUi, &QAction::triggered, [this](void) {
+			useSimpleUi(true);
+		});
+
+		connect(m_ui->actionFullUi, &QAction::triggered, [this](void) {
+			useSimpleUi(false);
+		});
 
 		setWindowIcon(QIcon(":/icons/application"));
 		setWindowTitle(qyncApp->applicationDisplayName());
@@ -162,7 +171,9 @@ namespace Qync {
 
 		connectApplication();
 		refreshPresets();
-		readPreferences();
+
+		/* force the UI to follow the preferences on startup */
+		onPreferencesChanged();
 
 		m_prefsWindow.reset(new PreferencesDialogue);
 		m_prefsWindow->setWindowTitle(tr("%1 Preferences").arg(qyncApp->applicationDisplayName()));
@@ -171,7 +182,7 @@ namespace Qync {
 		m_aboutDialogue->setWindowTitle(tr("About %1").arg(qyncApp->applicationDisplayName()));
 
 		/* TODO this feature has not yet been implemented */
-		m_ui->basicBackupType->hide();
+		m_ui->simpleBackupType->hide();
 
 		/* ensure UI is in correct state for selected preset */
 		showPreset(m_ui->presets->currentIndex());
@@ -189,7 +200,7 @@ namespace Qync {
 	 *
 	 * The preset is determined by examining the action that sent the
 	 * signal. The index of the preset is stored in the action's data. The
-	 * preset is fetched from the manager and the widgets in the window
+	 * preset is fetched from the application and the widgets in the window
 	 * are updated to reflect the settings in the preset.
 	 */
 	void MainWindow::showPresetFromMenu(void) {
@@ -213,11 +224,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Show the details of a preset from the manager.
+	 * \brief Show the details of a preset from the application.
 	 *
 	 * \param index is the index of the preset to show.
 	 *
-	 * The preset is fetched from the manager and the widgets in the window
+	 * The preset is fetched from the application and the widgets in the window
 	 * are updated to reflect the settings in the preset.
 	 */
 	void MainWindow::showPreset(int index) {
@@ -263,12 +274,12 @@ namespace Qync {
 			/* it's quicker and easy to ensure these are manually synchronised rather
 			 * than wait for signals and slots to do it */
 			QSignalBlocker mainSrcDestBlocker(m_ui->sourceAndDestination);
-			QSignalBlocker basicSrcDestBlocker(m_ui->basicSourceAndDestination);
+			QSignalBlocker basicSrcDestBlocker(m_ui->simpleSourceAndDestination);
 
 			m_ui->sourceAndDestination->setSource(preset.source());
 			m_ui->sourceAndDestination->setDestination(preset.destination());
-			m_ui->basicSourceAndDestination->setSource(preset.source());
-			m_ui->basicSourceAndDestination->setDestination(preset.destination());
+			m_ui->simpleSourceAndDestination->setSource(preset.source());
+			m_ui->simpleSourceAndDestination->setDestination(preset.destination());
 
 			m_ui->logFile->setText(preset.logFile());
 
@@ -278,30 +289,13 @@ namespace Qync {
 
 
 	/**
-	 * \brief (Re)read the preferences from the manager.
+	 * \brief (Re)read the preferences from the application.
 	 *
 	 * This slot essentially makes the visual appearance of the GUI match
-	 * the settings stored in the manager's preferences object.
+	 * the settings stored in the application's preferences object.
 	 */
-	void MainWindow::readPreferences(void) {
-		const auto & prefs = qyncApp->preferences();
-
-		if(prefs.useSimpleUi()) {
-			m_ui->presetsToolbar->hide();
-			m_ui->synchroniseToolbar->hide();
-			m_ui->mainStack->setCurrentWidget(m_ui->basicUi);
-			adjustSize();
-		}
-		else {
-			m_ui->presetsToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
-			m_ui->synchroniseToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
-
-			m_ui->presetsToolbar->setVisible(prefs.showPresetsToolBar());
-			m_ui->synchroniseToolbar->setVisible(prefs.showSynchroniseToolBar());
-
-			m_ui->mainStack->setCurrentWidget(m_ui->fullUi);
-			adjustSize();
-		}
+	void MainWindow::onPreferencesChanged(void) {
+		useSimpleUi(qyncApp->preferences().useSimpleUi());
 	}
 
 
@@ -318,7 +312,40 @@ namespace Qync {
 	 */
 	void MainWindow::connectApplication(void) {
 		connect(qyncApp, &Application::presetsChanged, this, &MainWindow::refreshPresets);
-		connect(qyncApp, &Application::preferencesChanged, this, &MainWindow::readPreferences);
+		connect(qyncApp, &Application::preferencesChanged, this, &MainWindow::onPreferencesChanged);
+	}
+
+
+	/**
+	 * \brief Choose between the simple and full UIs.
+	 *
+	 * \param useSimple \b true to use the simple user interface, \b false to
+	 * use the full user interface.
+	 */
+	void MainWindow::useSimpleUi(bool useSimple) {
+		if(useSimple) {
+			m_ui->actionSimpleUi->setChecked(true);
+			m_ui->actionFullUi->setChecked(false);
+
+			m_ui->presetsToolbar->hide();
+			m_ui->synchroniseToolbar->hide();
+			m_ui->mainStack->setCurrentWidget(m_ui->simpleUi);
+			adjustSize();
+		}
+		else {
+			m_ui->actionSimpleUi->setChecked(false);
+			m_ui->actionFullUi->setChecked(true);
+
+			const auto & prefs = qyncApp->preferences();
+			m_ui->presetsToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
+			m_ui->synchroniseToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
+
+			m_ui->presetsToolbar->setVisible(prefs.showPresetsToolBar());
+			m_ui->synchroniseToolbar->setVisible(prefs.showSynchroniseToolBar());
+
+			m_ui->mainStack->setCurrentWidget(m_ui->fullUi);
+			adjustSize();
+		}
 	}
 
 
@@ -326,7 +353,7 @@ namespace Qync {
 	 * \brief Refresh the presets combo box.
 	 *
 	 * The list of presets in the combo box is discarded and it is
-	 * repopulated with the set of presets queried from the manager.
+	 * repopulated with the set of presets queried from the application.
 	 */
 	void MainWindow::refreshPresets(void) {
 		m_ui->presets->clear();
@@ -376,7 +403,7 @@ namespace Qync {
 	/**
 	 * \brief Save the current settings to the currently-selected preset.
 	 *
-	 * The current preset is retrieved from the manager and updated with
+	 * The current preset is retrieved from the application and updated with
 	 * the settings set in all the widgets in the window.
 	 */
 	void MainWindow::saveSettingsToCurrentPreset(void) {
@@ -399,7 +426,7 @@ namespace Qync {
 	/**
 	 * \brief Remove the currently selected preset.
 	 *
-	 * The current preset is removed from the manager. This triggers a
+	 * The current preset is removed from the application. This triggers a
 	 * refresh of the presets list.
 	 */
 	void MainWindow::removeCurrentPreset(void) {
@@ -420,7 +447,7 @@ namespace Qync {
 	 *
 	 * A dialogue box is presented for the user to enter a name for the
 	 * new preset. If the dialogue is not cancelled, a new preset is
-	 * created using the current settings and added to the manager.
+	 * created using the current settings and added to the application.
 	 */
 	void MainWindow::newPresetFromSettings(void) {
 		newPreset(true);
@@ -478,7 +505,7 @@ namespace Qync {
 	 * A file dialogue is presented for the user to choose a file from which
 	 * to import a preset. If the user does not cancel the dialogue and the
 	 * file s/he chooses is a valid preset file, the preset is added to
-	 * the manager. Any failures to do so, other than the user cancelling
+	 * the application. Any failures to do so, other than the user cancelling
 	 * the dialogue, are reported to the user.
 	 */
 	void MainWindow::importPreset(void) {
@@ -492,7 +519,7 @@ namespace Qync {
 				return;
 			}
 
-			/* don't refresh on presetesChanged() signal from manager - we'll do it ourselves */
+			/* don't refresh on presetesChanged() signal from application - we'll do it ourselves */
 			disconnectApplication();
 
 			if(qyncApp->addPreset(p)) {
@@ -568,10 +595,10 @@ namespace Qync {
 	 */
 	void MainWindow::fillPreset(Preset & p) const {
 		/* check which UI is in use and act accordingly */
-		if(m_ui->mainStack->currentWidget() == m_ui->basicUi) {
+		if(m_ui->mainStack->currentWidget() == m_ui->simpleUi) {
 			p.setDefaults();
-			p.setSource(m_ui->basicSourceAndDestination->source());
-			p.setDestination(m_ui->basicSourceAndDestination->destination());
+			p.setSource(m_ui->simpleSourceAndDestination->source());
+			p.setDestination(m_ui->simpleSourceAndDestination->destination());
 		}
 		else {
 			p.setPreserveGroup(m_ui->preserveGroup->isChecked());
@@ -590,21 +617,18 @@ namespace Qync {
 
 			p.setUseTransferCompression(m_ui->compressInTransit->isChecked());
 
-			switch(m_ui->includeInSynchronisation->currentIndex()) {
-				case OnlyUpdateExisting:
+			switch(m_ui->includeInSynchronisation->what()) {
+				case SynchroniseWhatCombo::What::OnlyPreExisting:
 					p.setOnlyUpdateExistingEntries(true);
 					p.setDontUpdateExistingEntries(false);
 					break;
 
-				case DontUpdateExisting:
+				case SynchroniseWhatCombo::What::OnlyNonExistant:
 					p.setOnlyUpdateExistingEntries(false);
 					p.setDontUpdateExistingEntries(true);
 					break;
 
-				default:
-					qWarning() << __PRETTY_FUNCTION__ << "unexpeced selected index" << m_ui->includeInSynchronisation->currentIndex() << "in \"what to sync\" combo box";
-					[[fallthrough]];
-				case UpdateEverything:
+				case SynchroniseWhatCombo::What::Everything:
 					p.setOnlyUpdateExistingEntries(false);
 					p.setDontUpdateExistingEntries(false);
 					break;

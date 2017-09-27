@@ -53,6 +53,7 @@ namespace Qync {
 
 		void chooseLogFile(void);
 
+		void useSimpleUi(bool);
 		void showPreferences(void);
 
 		void simulate(void);
@@ -64,7 +65,7 @@ namespace Qync {
 	private Q_SLOTS:
 		void showPresetFromMenu(void);
 		void showPreset(int index);
-		void readPreferences(void);
+		void onPreferencesChanged(void);
 
 	protected:
 		void disconnectApplication(void);
