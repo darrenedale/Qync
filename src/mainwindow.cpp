@@ -147,6 +147,7 @@ namespace Qync {
 		m_ui->setupUi(this);
 		m_ui->presetsToolbar->insertWidget(m_ui->actionNew, m_ui->presets);
 
+		m_ui->basicLogo->setPixmap(QIcon(":/icons/application").pixmap(64));
 		m_ui->basicSourceAndDestination->setSourceLabel(tr("Backup"));
 		m_ui->basicSourceAndDestination->setDestinationLabel(tr("To"));
 
@@ -170,7 +171,7 @@ namespace Qync {
 		m_aboutDialogue->setWindowTitle(tr("About %1").arg(qyncApp->applicationDisplayName()));
 
 		/* TODO this feature has not yet been implemented */
-		m_ui->basicForceFullBackup->hide();
+		m_ui->basicBackupType->hide();
 
 		/* ensure UI is in correct state for selected preset */
 		showPreset(m_ui->presets->currentIndex());
@@ -286,24 +287,20 @@ namespace Qync {
 		const auto & prefs = qyncApp->preferences();
 
 		if(prefs.useSimpleUi()) {
-			if(m_ui->mainStack->currentWidget() != m_ui->basicUi) {
-				m_ui->presetsToolbar->hide();
-				m_ui->synchroniseToolbar->hide();
-				m_ui->mainStack->setCurrentWidget(m_ui->basicUi);
-				adjustSize();
-			}
+			m_ui->presetsToolbar->hide();
+			m_ui->synchroniseToolbar->hide();
+			m_ui->mainStack->setCurrentWidget(m_ui->basicUi);
+			adjustSize();
 		}
 		else {
-			if(m_ui->mainStack->currentWidget() != m_ui->fullUi) {
-				m_ui->presetsToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
-				m_ui->synchroniseToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
+			m_ui->presetsToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
+			m_ui->synchroniseToolbar->setToolButtonStyle(prefs.toolBarButtonStyle());
 
-				m_ui->presetsToolbar->setVisible(prefs.showPresetsToolBar());
-				m_ui->synchroniseToolbar->setVisible(prefs.showSynchroniseToolBar());
+			m_ui->presetsToolbar->setVisible(prefs.showPresetsToolBar());
+			m_ui->synchroniseToolbar->setVisible(prefs.showSynchroniseToolBar());
 
-				m_ui->mainStack->setCurrentWidget(m_ui->fullUi);
-				adjustSize();
-			}
+			m_ui->mainStack->setCurrentWidget(m_ui->fullUi);
+			adjustSize();
 		}
 	}
 
