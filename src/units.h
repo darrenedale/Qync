@@ -11,6 +11,7 @@
  * - _gb (SI Gigabytes, 1000 Megabytes)
  * - _mb (SI Megabytes, 1000 Kilobytes)
  * - _kb (SI Kilobytes, 1000 bytes)
+ * - _b (bytes, same for both IEC and SI)
  *
  * The user-defined literals are available only in the Qync namespace.
  */
