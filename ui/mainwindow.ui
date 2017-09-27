@@ -126,7 +126,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Advanced synchronisation settings.&lt;/p&gt;&lt;p&gt;Changing these settings is only for users who are reasonably familiar with rsync.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="basicSettings">
            <property name="toolTip">
@@ -496,7 +496,7 @@
      <x>0</x>
      <y>0</y>
      <width>708</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
