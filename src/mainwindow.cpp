@@ -16,7 +16,6 @@
  * - QMessageBox
  * - QFileDialog
  * - QInputDialog
- * - QApplication
  * - QStandardPaths
  * - application.h
  * - guipreferences.h
@@ -27,7 +26,8 @@
  * - functions.h
  *
  * \todo In simple ui, when a backup is in progress disable all widgets except
- * Quit and the process widget and forbid changing the UI
+ * Quit and the process widget
+ * \todo migrate to custom combo box for presets combo
  */
 
 #include "mainwindow.h"
@@ -40,7 +40,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QInputDialog>
-#include <QApplication>
 #include <QStandardPaths>
 
 #include "application.h"
