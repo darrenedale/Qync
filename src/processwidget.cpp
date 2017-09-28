@@ -37,7 +37,7 @@ namespace Qync {
 		connect(process, &Process::itemProgress, this, &ProcessWidget::updateItemProgress);
 		connect(process, &Process::transferSpeed, this, &ProcessWidget::updateTransferSpeed);
 		connect(process, &Process::overallProgress, this, &ProcessWidget::updateOverallProgress);
-		connect(process, &Process::newItemStarted, this, &ProcessWidget::updateItemInProgress);
+		connect(process, &Process::newItemStarted, this, &ProcessWidget::onNewItemStarted);
 		connect(process, &Process::error, this, &ProcessWidget::showError);
 	}
 
@@ -53,6 +53,7 @@ namespace Qync {
 	 * The current item progress bar is updated to the value provided.
 	 */
 	void ProcessWidget::updateItemProgress(int pc) {
+		m_ui->itemProgress->setMaximum(100);
 		m_ui->itemProgress->setValue(pc);
 	}
 
@@ -64,7 +65,7 @@ namespace Qync {
 	 *
 	 * The current item line edit is updated to show the new item path.
 	 */
-	void ProcessWidget::updateItemInProgress(const QString & item) {
+	void ProcessWidget::onNewItemStarted(const QString & item) {
 		m_ui->itemName->setText(item);
 	}
 
@@ -77,6 +78,7 @@ namespace Qync {
 	 * The overall progress bar is updated to the value provided.
 	 */
 	void ProcessWidget::updateOverallProgress(int pc) {
+		m_ui->overallProgress->setMaximum(100);
 		m_ui->overallProgress->setValue(pc);
 	}
 
@@ -120,6 +122,8 @@ namespace Qync {
 		m_ui->transferSpeed->setText({});
 		m_ui->itemProgress->setValue(0);
 		m_ui->overallProgress->setValue(0);
+		m_ui->itemProgress->setMaximum(0);
+		m_ui->overallProgress->setMaximum(0);
 	}
 
 
@@ -133,7 +137,7 @@ namespace Qync {
 	void ProcessWidget::onProcessFinished(const QString & msg) {
 		m_ui->itemProgress->setValue(100);
 		m_ui->overallProgress->setValue(100);
-		m_ui->itemName->setText(QString("<strong>%1</strong>").arg(tr("Synchronisation complete")));
+		m_ui->itemName->setText(QString("<strong>%1</strong>").arg(tr("Finished")));
 
 		/* transfer speed will be set to the overall speed as emitted by rsync
 		 * process in its stdout, so we don't clear it */

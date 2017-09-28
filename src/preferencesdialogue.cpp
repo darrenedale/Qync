@@ -99,6 +99,7 @@ namespace Qync {
 
 		m_ui->rsyncPath->setText(prefs.rsyncPath());
 		m_ui->simpleUi->setChecked(prefs.useSimpleUi());
+		m_ui->toolbarGroup->setDisabled(prefs.useSimpleUi());
 		m_ui->presetsToolbar->setChecked(prefs.showPresetsToolBar());
 		m_ui->synchroniseToolbar->setChecked(prefs.showSynchroniseToolBar());
 

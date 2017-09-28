@@ -19,9 +19,6 @@
  * - preset.h
  * - application.h
  * - preferences.h
- *
- * FIXME overall progress doesn't seem to be being updated in the UI. check it is
- * being emitted correctly.
  */
 
 #include "process.h"
@@ -371,8 +368,28 @@ namespace Qync {
 
 
 	void Process::parseStdout(void) {
-		static QRegularExpression progressLine(" *(\\d+|\\d+(?:,\\d{3})*) *(\\d+)% *(\\d+\\.\\d{2})(.)B/s *(\\d+):(\\d{2}):(\\d{2}).*(?:\\(.*, (?:to|ir)\\-chk=(\\d+)/(\\d+)\\))?");
+		// captures:
+		// 1: current item bytes transferred
+		// 2: current item transferred %
+		// 3: current transfer speed
+		// 4: transfer speed unit (M, k or G for Mb, kb or Gb per second respectively)
+		// 5: transfer time, # of hours
+		// 6: transfer time, # of minutes
+		// 7: transfer time, # of seconds
+		// 8: (optional) transfer number
+		// 9: (optional) # of items left to check
+		// 10: (optinal) total number of items
+		static QRegularExpression progressLine(" *(\\d+|\\d+(?:,\\d{3})*) *(\\d+)% *(\\d+\\.\\d{2})(.)B/s *(\\d+):(\\d{2}):(\\d{2})(?: +\\(xfr#(\\d+), (?:to|ir)-chk.(\\d+)\\/(\\d+)\\))?");
+
+		// captures:
+		// 1: new item path
+		// 2: new item size in bytes
 		static QRegularExpression newItemLine("f(.*) (\\d+)");
+
+		// captures:
+		// 1: total bytes sent
+		// 2: total bytes received
+		// 3: overall speed in bytes per second
 		static QRegularExpression completedLine("sent (\\d+|\\d+(?:,\\d{3})*) bytes *received (\\d+|\\d+(?:,\\d{3})*) bytes *((?:\\d+|\\d+(?:,\\d{3})*)(?:\\.(\\d{2}))?) bytes/sec");
 
 		Q_ASSERT_X(m_process, __PRETTY_FUNCTION__, "no process from which to read output");
@@ -388,7 +405,10 @@ namespace Qync {
 			m_outputCache = m_outputCache.replace('\r', '\n');
 			QStringList lines(m_outputCache.split("\n"));
 
-			for(int i = 0; i < lines.size() - 1; i++) {
+			/* parse all but the last line (since the last line might not be complete */
+			int n = lines.size() - 1;
+
+			for(int i = 0; i < n; i++) {
 				data = lines[i];
 
 				if(data.isEmpty()) {
@@ -425,9 +445,10 @@ namespace Qync {
 					Q_EMIT itemProgress(itemPc);
 					Q_EMIT itemSecondsRemaining(seconds);
 
-					if(10 <= caps.size()) {
-						int remainingItems = caps[8].toInt();
-						int totalItems = caps[9].toInt();
+					if(11 <= caps.size()) {
+						/* transferNumber = capture # 8 */
+						int remainingItems = caps[9].toInt();
+						int totalItems = caps[10].toInt();
 						int completedItems = totalItems - remainingItems;
 						float overallPc = static_cast<float>((completedItems * 100.0) / totalItems);
 						Q_EMIT overallProgress(static_cast<int>(overallPc));
@@ -436,8 +457,8 @@ namespace Qync {
 				else if(QRegularExpressionMatch newItemMatch = newItemLine.match(data); newItemMatch.hasMatch()) {
 					Q_EMIT newItemStarted(newItemMatch.captured(1));
 				}
-				else if(QRegularExpressionMatch myMatch = completedLine.match(data); myMatch.hasMatch()) {
-					Q_EMIT transferSpeed(myMatch.captured(3).replace(',', "").toFloat());
+				else if(QRegularExpressionMatch completedLineMatch = completedLine.match(data); completedLineMatch.hasMatch()) {
+					Q_EMIT transferSpeed(completedLineMatch.captured(3).replace(',', "").toFloat());
 				}
 			}
 

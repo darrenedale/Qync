@@ -26,7 +26,8 @@
  * - aboutdialogue.h
  * - functions.h
  *
- * \todo Add list selector to simple UI to selec preset
+ * \todo In simple ui, when a backup is in progress disable all widgets except
+ * Quit and the process widget and forbid changing the UI
  */
 
 #include "mainwindow.h"
@@ -160,15 +161,6 @@ namespace Qync {
 
 		connect(m_ui->actionFullUi, &QAction::triggered, [this](void) {
 			useSimpleUi(false);
-		});
-
-		connect(m_ui->mainStack, &QStackedWidget::currentChanged, [this](void) {
-			if(m_ui->mainStack->currentWidget() == m_ui->simpleUi) {
-				m_ui->synchroniseButton->setText(tr("Backup"));
-			}
-			else {
-				m_ui->synchroniseButton->setText(tr("Synchronise"));
-			}
 		});
 
 		setWindowIcon(QIcon(":/icons/application"));
@@ -334,6 +326,7 @@ namespace Qync {
 			m_ui->presetsToolbar->hide();
 			m_ui->synchroniseToolbar->hide();
 			m_ui->mainStack->setCurrentWidget(m_ui->simpleUi);
+			m_ui->synchroniseButton->setText(tr("Backup"));
 			adjustSize();
 		}
 		else {
@@ -348,6 +341,7 @@ namespace Qync {
 			m_ui->synchroniseToolbar->setVisible(prefs.showSynchroniseToolBar());
 
 			m_ui->mainStack->setCurrentWidget(m_ui->fullUi);
+			m_ui->synchroniseButton->setText(tr("Synchronise"));
 			adjustSize();
 		}
 	}

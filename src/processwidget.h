@@ -25,7 +25,7 @@ namespace Qync {
 
 	private Q_SLOTS:
 		void updateItemProgress(int pc);
-		void updateItemInProgress(const QString & item);
+		void onNewItemStarted(const QString & item);
 		void updateOverallProgress(int pc);
 		void updateTransferSpeed(float bytesPerSecond);
 
