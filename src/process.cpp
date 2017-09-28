@@ -19,6 +19,9 @@
  * - preset.h
  * - application.h
  * - preferences.h
+ *
+ * FIXME overall progress doesn't seem to be being updated in the UI. check it is
+ * being emitted correctly.
  */
 
 #include "process.h"
