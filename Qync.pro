@@ -16,7 +16,8 @@ HEADERS += \
     src/aboutdialogue.h \
     src/sourcedestinationwidget.h \
     src/units.h \
-    src/synchronisewhatcombo.h
+    src/synchronisewhatcombo.h \
+    src/processwidget.h
 
 SOURCES += \
 	src/qync.cpp \
@@ -31,7 +32,8 @@ SOURCES += \
     src/processdialogue.cpp \
     src/aboutdialogue.cpp \
     src/sourcedestinationwidget.cpp \
-    src/synchronisewhatcombo.cpp
+    src/synchronisewhatcombo.cpp \
+    src/processwidget.cpp
 
 RESOURCES += resources/icons.qrc
 
@@ -60,4 +62,5 @@ FORMS += \
     ui/mainwindow.ui \
     ui/preferencesdialogue.ui \
     ui/aboutdialogue.ui \
-    ui/sourcedestinationwidget.ui
+    ui/sourcedestinationwidget.ui \
+    ui/processwidget.ui

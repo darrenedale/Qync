@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Qync::ProcessWidget</class>
+ <widget class="QWidget" name="Qync::ProcessWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>104</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="nameAndSpeedLayout" stretch="1,0">
+     <item>
+      <widget class="QLabel" name="itemName">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="transferSpeed">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="itemProgress">
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="format">
+      <string>%p%</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="overallProgress">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

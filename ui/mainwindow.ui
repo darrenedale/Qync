@@ -40,7 +40,7 @@
     <item>
      <widget class="QStackedWidget" name="mainStack">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="simpleUi">
        <layout class="QHBoxLayout" name="basicLayout" stretch="0,1">
@@ -96,6 +96,16 @@
             <attribute name="buttonGroup">
              <string notr="true">simpleBackupType</string>
             </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="Qync::ProcessWidget" name="simpleProcessWidget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>20</height>
+             </size>
+            </property>
            </widget>
           </item>
           <item>
@@ -470,6 +480,17 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="synchroniseButton">
+        <property name="text">
+         <string>Synchronise</string>
+        </property>
+        <property name="icon">
+         <iconset theme="media-playback-start">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="quitButton">
         <property name="text">
          <string>Quit</string>
@@ -490,7 +511,7 @@
      <x>0</x>
      <y>0</y>
      <width>708</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -756,6 +777,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>Qync::ProcessWidget</class>
+   <extends>QWidget</extends>
+   <header>src/processwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>Qync::SourceDestinationWidget</class>
    <extends>QWidget</extends>
    <header>src/sourcedestinationwidget.h</header>
@@ -800,8 +827,8 @@
    <slot>chooseLogFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>695</x>
-     <y>312</y>
+     <x>90</x>
+     <y>95</y>
     </hint>
     <hint type="destinationlabel">
      <x>706</x>
@@ -992,12 +1019,12 @@
    <slot>setSource(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>353</x>
-     <y>118</y>
+     <x>381</x>
+     <y>104</y>
     </hint>
     <hint type="destinationlabel">
      <x>51</x>
-     <y>130</y>
+     <y>84</y>
     </hint>
    </hints>
   </connection>
@@ -1008,12 +1035,12 @@
    <slot>setDestination(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>353</x>
-     <y>118</y>
+     <x>381</x>
+     <y>104</y>
     </hint>
     <hint type="destinationlabel">
      <x>51</x>
-     <y>130</y>
+     <y>84</y>
     </hint>
    </hints>
   </connection>
@@ -1025,11 +1052,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
-     <y>130</y>
+     <y>84</y>
     </hint>
     <hint type="destinationlabel">
-     <x>353</x>
-     <y>118</y>
+     <x>381</x>
+     <y>104</y>
     </hint>
    </hints>
   </connection>
@@ -1041,11 +1068,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
-     <y>130</y>
+     <y>84</y>
     </hint>
     <hint type="destinationlabel">
-     <x>353</x>
-     <y>118</y>
+     <x>381</x>
+     <y>104</y>
     </hint>
    </hints>
   </connection>
@@ -1056,8 +1083,8 @@
    <slot>showPreferences()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>27</x>
-     <y>440</y>
+     <x>29</x>
+     <y>388</y>
     </hint>
     <hint type="destinationlabel">
      <x>69</x>
@@ -1072,12 +1099,28 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>636</x>
-     <y>434</y>
+     <x>703</x>
+     <y>388</y>
     </hint>
     <hint type="destinationlabel">
      <x>640</x>
      <y>490</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>synchroniseButton</sender>
+   <signal>clicked()</signal>
+   <receiver>actionSync</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>569</x>
+     <y>377</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
    </hints>
   </connection>

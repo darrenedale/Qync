@@ -25,6 +25,8 @@
  * - preferencesdialogue.h
  * - aboutdialogue.h
  * - functions.h
+ *
+ * \todo Add list selector to simple UI to selec preset
  */
 
 #include "mainwindow.h"
@@ -158,6 +160,15 @@ namespace Qync {
 
 		connect(m_ui->actionFullUi, &QAction::triggered, [this](void) {
 			useSimpleUi(false);
+		});
+
+		connect(m_ui->mainStack, &QStackedWidget::currentChanged, [this](void) {
+			if(m_ui->mainStack->currentWidget() == m_ui->simpleUi) {
+				m_ui->synchroniseButton->setText(tr("Backup"));
+			}
+			else {
+				m_ui->synchroniseButton->setText(tr("Synchronise"));
+			}
 		});
 
 		setWindowIcon(QIcon(":/icons/application"));
@@ -390,6 +401,7 @@ namespace Qync {
 	 */
 	void MainWindow::switchSourceAndDestination(void) {
 		m_ui->sourceAndDestination->swapSourceAndDestination();
+		m_ui->simpleSourceAndDestination->swapSourceAndDestination();
 	}
 
 
@@ -698,10 +710,18 @@ namespace Qync {
 		Process * process = qyncApp->synchronise(temp);
 
 		if(process) {
-			/* dialogue consumes the process */
-			ProcessDialogue * w = new ProcessDialogue(process, this);
-			w->setWindowTitle(tr("%1 Synchronisation: %2").arg(qyncApp->applicationDisplayName()).arg(m_ui->presets->currentText()));
-			w->show();
+			if(m_ui->simpleUi == m_ui->mainStack->currentWidget()) {
+				/* widget consumes the process */
+				m_ui->simpleProcessWidget->setProcess(process);
+			}
+			else {
+				/* dialogue consumes the process */
+				/* dialogue deletes itself on closure */
+				ProcessDialogue * w = new ProcessDialogue(process, this);
+				w->setWindowTitle(tr("%1 Synchronisation: %2").arg(qyncApp->applicationDisplayName()).arg(m_ui->presets->currentText()));
+				w->show();
+			}
+
 			process->start();
 		}
 		else {

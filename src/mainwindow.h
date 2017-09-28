@@ -38,10 +38,6 @@ namespace Qync {
 
 	public Q_SLOTS:
 		void refreshPresets(void);
-		//		void chooseSourceDirectory(void);
-		//		void chooseDestinationDirectory(void);
-		//		void chooseSourceFile(void);
-		//		void chooseDestinationFile(void);
 		void switchSourceAndDestination(void);
 
 		void saveSettingsToCurrentPreset(void);

@@ -48,11 +48,7 @@ namespace Qync {
 		void hideDetailedText(void);
 
 	private Q_SLOTS:
-		void updateItemProgress(int pc);
-		void updateItemInProgress(const QString & item);
-		void updateOverallProgress(int pc);
-		void updateTransferSpeed(float bytesPerSecond);
-
+		void appendToDetails(const QString &);
 		void saveOutput(void);
 
 		void onProcessStarted(void);
@@ -60,16 +56,11 @@ namespace Qync {
 		void onProcessInterrupted(const QString & msg = {});
 		void onProcessFailed(const QString & msg = {});
 
-		void showError(const QString & err);
-
 	protected:
 		virtual void closeEvent(QCloseEvent *) override;
 
 	private:
 		std::unique_ptr<Ui::ProcessDialogue> m_ui;
-
-		std::unique_ptr<Process> m_process;
-		QString m_outputCache;
 
 		/* pointers to these are kept for convenience. they are valid for as long
 		 * as m_ui is valid (i.e. the lifetime of the object) */
