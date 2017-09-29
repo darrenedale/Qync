@@ -18,7 +18,8 @@ HEADERS += \
     src/units.h \
     src/synchronisewhatcombo.h \
     src/processwidget.h \
-    src/presetcombo.h
+    src/presetcombo.h \
+    src/presetmenu.h
 
 SOURCES += \
 	src/qync.cpp \
@@ -35,7 +36,8 @@ SOURCES += \
     src/sourcedestinationwidget.cpp \
     src/synchronisewhatcombo.cpp \
     src/processwidget.cpp \
-    src/presetcombo.cpp
+    src/presetcombo.cpp \
+    src/presetmenu.cpp
 
 RESOURCES += resources/icons.qrc
 

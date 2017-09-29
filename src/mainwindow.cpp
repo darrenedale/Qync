@@ -1,5 +1,5 @@
 /**
- * \file MainWindow.cpp
+ * \file mainwindow.cpp
  * \author Darren Edale
  * \date September, 2017
  * \version 1.0.0
@@ -27,7 +27,6 @@
  *
  * \todo In simple ui, when a backup is in progress disable all widgets except
  * Quit and the process widget
- * \todo migrate to custom combo box for presets combo
  */
 
 #include "mainwindow.h"
@@ -154,20 +153,18 @@ namespace Qync {
 		uiSwitchGroup->addAction(m_ui->actionSimpleUi);
 		uiSwitchGroup->addAction(m_ui->actionFullUi);
 
-		connect(m_ui->actionSimpleUi, &QAction::triggered, [this](void) {
-			useSimpleUi(true);
+		connect(m_ui->actionSimpleUi, &QAction::toggled, [this](bool useSimple) {
+			useSimpleUi(useSimple);
 		});
 
-		connect(m_ui->actionFullUi, &QAction::triggered, [this](void) {
-			useSimpleUi(false);
-		});
+		connect(m_ui->presets, &PresetCombo::currentPresetChanged, this, &MainWindow::showPreset);
+		connect(m_ui->menuMyPresets, &PresetMenu::presetIndexTriggered, m_ui->presets, &QComboBox::setCurrentIndex);
 
 		setWindowIcon(QIcon(":/icons/application"));
 		setWindowTitle(qyncApp->applicationDisplayName());
 		setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
 		connectApplication();
-		refreshPresets();
 
 		/* force the UI to follow the preferences on startup */
 		onPreferencesChanged();
@@ -179,7 +176,9 @@ namespace Qync {
 		m_aboutDialogue->setWindowTitle(tr("About %1").arg(qyncApp->applicationDisplayName()));
 
 		/* ensure UI is in correct state for selected preset */
-		showPreset(m_ui->presets->currentIndex());
+		if(!m_ui->presets->currentItemIsNewPreset()) {
+			showPreset(m_ui->presets->currentPreset());
+		}
 	}
 
 
@@ -190,34 +189,6 @@ namespace Qync {
 
 
 	/**
-	 * \brief Show the details of a preset selected from the menu.
-	 *
-	 * The preset is determined by examining the action that sent the
-	 * signal. The index of the preset is stored in the action's data. The
-	 * preset is fetched from the application and the widgets in the window
-	 * are updated to reflect the settings in the preset.
-	 */
-	void MainWindow::showPresetFromMenu(void) {
-		QAction * action = qobject_cast<QAction *>(sender());
-
-		if(!action) {
-			qCritical() << __PRETTY_FUNCTION__ << "showPresetFromMenu() slot call did not result from trigger of action from My Presets menu";
-			return;
-		}
-
-		int index = action->data().toInt();
-
-		if(index < 0 || index >= qyncApp->presetCount()) {
-			qCritical() << __PRETTY_FUNCTION__ << "action from My Presets menu contains invalid preset index";
-			refreshPresets();
-			return;
-		}
-
-		m_ui->presets->setCurrentIndex(index);
-	}
-
-
-	/**
 	 * \brief Show the details of a preset from the application.
 	 *
 	 * \param index is the index of the preset to show.
@@ -225,61 +196,51 @@ namespace Qync {
 	 * The preset is fetched from the application and the widgets in the window
 	 * are updated to reflect the settings in the preset.
 	 */
-	void MainWindow::showPreset(int index) {
-		/* NOTE index can be > last preset because combo box has <New Preset> if no presets */
-		if(0 == index && QYNC_MAINWINDOW_NEW_PRESET_TAG == m_ui->presets->itemData(0).toInt()) {
-			/* <New Preset> chosen */
-			m_ui->actionRemove->setEnabled(false);
-			return;
+	void MainWindow::showPreset(const Preset & preset) {
+		m_ui->preserveTime->setChecked(preset.preserveTime());
+		m_ui->preservePermissions->setChecked(preset.preservePermissions());
+		m_ui->preserveOwner->setChecked(preset.preserveOwner());
+		m_ui->preserveGroup->setChecked(preset.preserveGroup());
+
+		m_ui->windowsCompatible->setChecked(preset.windowsCompatability());
+		m_ui->honourDeletions->setChecked(preset.honourDeletions());
+
+		m_ui->simpleDoFullBackup->setChecked(preset.ignoreTimes());
+		m_ui->alwaysCompareChecksums->setChecked(preset.alwaysCompareChecksums());
+		m_ui->preserveDevices->setChecked(preset.preserveDevices());
+		m_ui->keepPartialFiles->setChecked(preset.keepPartialTransfers());
+		m_ui->symlinksAsSymlinks->setChecked(preset.copySymlinksAsSymlinks());
+		m_ui->makeBackups->setChecked(preset.makeBackups());
+
+		m_ui->compressInTransit->setChecked(preset.useTransferCompression());
+
+		if(preset.onlyUpdateExistingEntries()) {
+			m_ui->includeInSynchronisation->setCurrentIndex(OnlyUpdateExisting);
+		}
+		else if(preset.dontUpdateExistingEntries()) {
+			m_ui->includeInSynchronisation->setCurrentIndex(DontUpdateExisting);
+		}
+		else {
+			m_ui->includeInSynchronisation->setCurrentIndex(UpdateEverything);
 		}
 
-		if(0 <= index && qyncApp->presetCount() > index) {
-			const Preset & preset = qyncApp->preset(index);
-			m_ui->preserveTime->setChecked(preset.preserveTime());
-			m_ui->preservePermissions->setChecked(preset.preservePermissions());
-			m_ui->preserveOwner->setChecked(preset.preserveOwner());
-			m_ui->preserveGroup->setChecked(preset.preserveGroup());
+		m_ui->dontMapUidGid->setChecked(preset.dontMapUsersAndGroups());
+		m_ui->hardlinksAsHardlinks->setChecked(preset.copyHardlinksAsHardlinks());
+		m_ui->itemisedChanges->setChecked(preset.showItemisedChanges());
 
-			m_ui->windowsCompatible->setChecked(preset.windowsCompatability());
-			m_ui->honourDeletions->setChecked(preset.honourDeletions());
+		/* it's easy, and quicker, to ensure these are manually synchronised rather
+		 * than wait for propagation of the signal */
+		QSignalBlocker mainSrcDestBlocker(m_ui->sourceAndDestination);
+		QSignalBlocker basicSrcDestBlocker(m_ui->simpleSourceAndDestination);
 
-			m_ui->simpleDoFullBackup->setChecked(preset.ignoreTimes());
-			m_ui->alwaysCompareChecksums->setChecked(preset.alwaysCompareChecksums());
-			m_ui->preserveDevices->setChecked(preset.preserveDevices());
-			m_ui->keepPartialFiles->setChecked(preset.keepPartialTransfers());
-			m_ui->symlinksAsSymlinks->setChecked(preset.copySymlinksAsSymlinks());
-			m_ui->makeBackups->setChecked(preset.makeBackups());
+		m_ui->sourceAndDestination->setSource(preset.source());
+		m_ui->sourceAndDestination->setDestination(preset.destination());
+		m_ui->simpleSourceAndDestination->setSource(preset.source());
+		m_ui->simpleSourceAndDestination->setDestination(preset.destination());
 
-			m_ui->compressInTransit->setChecked(preset.useTransferCompression());
+		m_ui->logFile->setText(preset.logFile());
 
-			if(preset.onlyUpdateExistingEntries()) {
-				m_ui->includeInSynchronisation->setCurrentIndex(OnlyUpdateExisting);
-			}
-			else if(preset.dontUpdateExistingEntries()) {
-				m_ui->includeInSynchronisation->setCurrentIndex(DontUpdateExisting);
-			}
-			else {
-				m_ui->includeInSynchronisation->setCurrentIndex(UpdateEverything);
-			}
-
-			m_ui->dontMapUidGid->setChecked(preset.dontMapUsersAndGroups());
-			m_ui->hardlinksAsHardlinks->setChecked(preset.copyHardlinksAsHardlinks());
-			m_ui->itemisedChanges->setChecked(preset.showItemisedChanges());
-
-			/* it's easy, and quicker, to ensure these are manually synchronised rather
-			 * than wait for propagation of the signal */
-			QSignalBlocker mainSrcDestBlocker(m_ui->sourceAndDestination);
-			QSignalBlocker basicSrcDestBlocker(m_ui->simpleSourceAndDestination);
-
-			m_ui->sourceAndDestination->setSource(preset.source());
-			m_ui->sourceAndDestination->setDestination(preset.destination());
-			m_ui->simpleSourceAndDestination->setSource(preset.source());
-			m_ui->simpleSourceAndDestination->setDestination(preset.destination());
-
-			m_ui->logFile->setText(preset.logFile());
-
-			m_ui->actionRemove->setEnabled(true);
-		}
+		m_ui->actionRemove->setEnabled(true);
 	}
 
 
@@ -306,7 +267,7 @@ namespace Qync {
 	 * \brief Connect the application's signals to the window's slots.
 	 */
 	void MainWindow::connectApplication(void) {
-		connect(qyncApp, &Application::presetsChanged, this, &MainWindow::refreshPresets);
+		//		connect(qyncApp, &Application::presetsChanged, this, &MainWindow::refreshPresets);
 		connect(qyncApp, &Application::preferencesChanged, this, &MainWindow::onPreferencesChanged);
 	}
 
@@ -352,25 +313,10 @@ namespace Qync {
 	 * The list of presets in the combo box is discarded and it is
 	 * repopulated with the set of presets queried from the application.
 	 */
-	void MainWindow::refreshPresets(void) {
-		m_ui->presets->clear();
-		m_ui->menuMyPresets->clear();
-
-		int i = 0;
-
-		for(const auto & preset : qyncApp->presets()) {
-			m_ui->presets->addItem(preset->name());
-			QAction * action = m_ui->menuMyPresets->addAction(preset->name());
-			connect(action, &QAction::triggered, this, &MainWindow::showPresetFromMenu);
-			action->setData(i);
-			++i;
-		}
-
-		if(0 == i) {
-			m_ui->presets->addItem(tr("<New Preset>"));
-			m_ui->presets->setItemData(0, QYNC_MAINWINDOW_NEW_PRESET_TAG);
-		}
-	}
+	//	void MainWindow::refreshPresets(void) {
+	//		m_ui->presets->refresh();
+	//		m_ui->menuMyPresets->refresh();
+	//	}
 
 
 	/**
@@ -405,19 +351,15 @@ namespace Qync {
 	 * the settings set in all the widgets in the window.
 	 */
 	void MainWindow::saveSettingsToCurrentPreset(void) {
-		int i = m_ui->presets->currentIndex();
-
-		if(0 == i && QYNC_MAINWINDOW_NEW_PRESET_TAG == m_ui->presets->itemData(0)) {
+		if(m_ui->presets->currentItemIsNewPreset()) {
 			/* saving to <new preset> items so creaet a new one instead */
 			newPresetFromSettings();
 			return;
 		}
 
-		/* get current settings */
-		Preset & myPreset = qyncApp->preset(i);
+		Preset & myPreset = m_ui->presets->currentPreset();
 		fillPreset(myPreset);
 		myPreset.save();
-		showPreset(i);
 	}
 
 
@@ -481,7 +423,7 @@ namespace Qync {
 		disconnectApplication(); /* don't refresh on presetesChanged() signal from app - we'll do it ourselves */
 
 		if(qyncApp->addPreset(p)) {
-			refreshPresets();
+			//			refreshPresets();
 			/* it was added successfully, therefore we know the list contains at least one
 			 * item, and we know also that as it is not empty the <New Preset> item won't
 			 * be present, so we know that the index of the item we just added should be
@@ -521,7 +463,7 @@ namespace Qync {
 			disconnectApplication();
 
 			if(qyncApp->addPreset(p)) {
-				refreshPresets();
+				//				refreshPresets();
 				/* it was added successfully, therefore we know the list contains at least one
 				 * item, and we know also that as it is not empty the <New Preset> item won't
 				 * be present, so we know that the index of the item we just added should be
@@ -739,7 +681,7 @@ namespace Qync {
 	void MainWindow::about(void) {
 		m_aboutDialogue->show();
 		m_aboutDialogue->raise();
-		m_aboutDialogue->setFocus();
+		m_aboutDialogue->activateWindow();
 	}
 
 

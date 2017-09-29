@@ -1,3 +1,17 @@
+/**
+ * \file presetcombo.cpp
+ * \author Darren Edale
+ * \date September, 2017
+ * \version 1.0.0
+ *
+ * \brief Implementation of the PresetCombo class.
+ *
+ * \dep
+ * - presetcombo.h
+ * - application.h
+ * - preset.h
+ */
+
 #include "presetcombo.h"
 
 #include "application.h"

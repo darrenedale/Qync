@@ -31,7 +31,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QComboBox" name="presets">
+     <widget class="Qync::PresetCombo" name="presets">
       <property name="toolTip">
        <string>Choose a preset from your saved set.</string>
       </property>
@@ -535,7 +535,7 @@
      <x>0</x>
      <y>0</y>
      <width>708</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -566,7 +566,7 @@
     <property name="title">
      <string>Presets</string>
     </property>
-    <widget class="QMenu" name="menuMyPresets">
+    <widget class="Qync::PresetMenu" name="menuMyPresets">
      <property name="title">
       <string>My presets</string>
      </property>
@@ -823,27 +823,21 @@
    <extends>QComboBox</extends>
    <header>src/synchronisewhatcombo.h</header>
   </customwidget>
+  <customwidget>
+   <class>Qync::PresetCombo</class>
+   <extends>QComboBox</extends>
+   <header>src/presetcombo.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Qync::PresetMenu</class>
+   <extends>QMenu</extends>
+   <header>src/presetmenu.h</header>
+  </customwidget>
  </customwidgets>
  <resources>
   <include location="../resources/icons.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>presets</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>showPreset(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>223</x>
-     <y>68</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>708</x>
-     <y>74</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>chooseLogFile</sender>
    <signal>clicked()</signal>
@@ -852,7 +846,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>90</x>
-     <y>95</y>
+     <y>132</y>
     </hint>
     <hint type="destinationlabel">
      <x>706</x>
@@ -1043,12 +1037,12 @@
    <slot>setSource(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>381</x>
-     <y>104</y>
+     <x>410</x>
+     <y>114</y>
     </hint>
     <hint type="destinationlabel">
      <x>51</x>
-     <y>84</y>
+     <y>92</y>
     </hint>
    </hints>
   </connection>
@@ -1059,12 +1053,12 @@
    <slot>setDestination(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>381</x>
-     <y>104</y>
+     <x>410</x>
+     <y>114</y>
     </hint>
     <hint type="destinationlabel">
      <x>51</x>
-     <y>84</y>
+     <y>92</y>
     </hint>
    </hints>
   </connection>
@@ -1076,11 +1070,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
-     <y>84</y>
+     <y>92</y>
     </hint>
     <hint type="destinationlabel">
-     <x>381</x>
-     <y>104</y>
+     <x>410</x>
+     <y>114</y>
     </hint>
    </hints>
   </connection>
@@ -1092,11 +1086,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>51</x>
-     <y>84</y>
+     <y>92</y>
     </hint>
     <hint type="destinationlabel">
-     <x>381</x>
-     <y>104</y>
+     <x>410</x>
+     <y>114</y>
     </hint>
    </hints>
   </connection>

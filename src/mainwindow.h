@@ -37,7 +37,7 @@ namespace Qync {
 		virtual ~MainWindow(void);
 
 	public Q_SLOTS:
-		void refreshPresets(void);
+		//		void refreshPresets(void);
 		void switchSourceAndDestination(void);
 
 		void saveSettingsToCurrentPreset(void);
@@ -59,8 +59,7 @@ namespace Qync {
 		void aboutRsync(void);
 
 	private Q_SLOTS:
-		void showPresetFromMenu(void);
-		void showPreset(int index);
+		void showPreset(const Preset & preset);
 		void onPreferencesChanged(void);
 
 	protected:
