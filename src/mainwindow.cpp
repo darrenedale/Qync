@@ -24,9 +24,6 @@
  * - preferencesdialogue.h
  * - aboutdialogue.h
  * - functions.h
- *
- * \todo In simple ui, when a backup is in progress disable all widgets except
- * Quit and the process widget
  */
 
 #include "mainwindow.h"
@@ -646,6 +643,20 @@ namespace Qync {
 
 		if(process) {
 			if(m_ui->simpleUi == m_ui->mainStack->currentWidget()) {
+				/* while simple backup in process, prevent any other being started */
+				m_ui->simpleDoFullBackup->setEnabled(false);
+				m_ui->simpleDoIncrementalBackup->setEnabled(false);
+				m_ui->simpleSourceAndDestination->setEnabled(false);
+				m_ui->synchroniseButton->setEnabled(false);
+
+				/* re-enable the UI when the process has finished */
+				connect(process, static_cast<void (Process::*)(Process::ExitCode)>(&Process::finished), [this](void) {
+					m_ui->simpleDoFullBackup->setEnabled(true);
+					m_ui->simpleDoIncrementalBackup->setEnabled(true);
+					m_ui->simpleSourceAndDestination->setEnabled(true);
+					m_ui->synchroniseButton->setEnabled(true);
+				});
+
 				/* widget consumes the process */
 				m_ui->simpleProcessWidget->setProcess(process);
 			}
