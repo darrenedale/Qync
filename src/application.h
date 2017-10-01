@@ -87,9 +87,6 @@ namespace Qync {
 		void preferencesChanged(void);
 
 	protected:
-		struct PresetFromFileTag {};
-
-
 		void setLastError(const QString & err) const;
 
 	private:
