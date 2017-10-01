@@ -62,7 +62,9 @@ namespace Qync {
 			return m_prefs;
 		}
 
-		inline int presetCount(void) const;
+		inline int presetCount(void) const {
+			return static_cast<int>(presets().size());
+		}
 
 		const PresetList & presets(void) const {
 			return m_presets;

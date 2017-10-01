@@ -406,9 +406,6 @@ namespace Qync {
 	 *
 	 * \return The number of presets.
 	 */
-	int Application::presetCount() const {
-		return static_cast<int>(presets().size());
-	}
 
 
 	/**
@@ -423,31 +420,8 @@ namespace Qync {
 	 * \fn Application::presets(void)
 	 * \brief Retrieve the presets stored in the application.
 	 *
-	 * The pointers in the set returned are still owned by the application.
-	 * Your code may not delete any of them.
-	 *
 	 * \return the presets (or an empty set if the application does not have
 	 * any presets stored.
-	 */
-
-
-	/**
-	 * \fn Application::presetAdded(Preset *, int)
-	 * \brief Emitted when a preset has been added.
-	 *
-	 * \param preset is a pointer to the preset that was added.
-	 *
-	 * When emitted, this signal is always emitted before presetsChanged(),
-	 * never after.
-	 */
-
-
-	/**
-	 * \fn Application::presetRemoved(void)
-	 * \brief Emitted when a preset has been removed.
-	 *
-	 * When emitted, this signal is always emitted before presetsChanged(),
-	 * never after.
 	 */
 
 
@@ -463,27 +437,6 @@ namespace Qync {
 	/**
 	 * \fn Application::preferencesChanged(void)
 	 * \brief Emitted when the application preferences have changed.
-	 */
-
-
-	/**
-	 * \fn Application::processStarted(Process *) const
-	 * \brief Emitted when a process has been started.
-	 *
-	 * \param process is the process created.
-	 *
-	 * Extreme care needs to be taken when connecting to this signal. It is
-	 * emitted whenever a call to simulate() or execute() produces a valid
-	 * process. The process provided with the signal is owned elsewhere. The
-	 * application does not guarantee its lifespan and the class(es) connecting
-	 * to the signal do not own it. The process could therefore be deleted
-	 * at any time without notice. Connecting classes may listen for signals
-	 * from the process and connect to its slots, but may not call any
-	 * method or otherwise manipulate the process.
-	 *
-	 * This means that the process may be invalid by the time your class
-	 * receives this signal, that the process may never get started and that
-	 * the process may never emit any signals at all.
 	 */
 
 
