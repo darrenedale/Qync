@@ -211,11 +211,9 @@ namespace Qync {
 	 *
 	 * \param index is index of the preset to remove.
 	 *
-	 * Indices are 0-based. If the index is found to be out of bounds,
-	 * no action will be taken.
+	 * Indices are 0-based. The provided index must not be out of bounds.
 	 *
-	 * If the index is within bounds the preset at that index is removed
-	 * from the collection and deleted.
+	 * The preset at the provided index is removed from the collection.
 	 *
 	 * If this method returns \b true, one or more pointers in a
 	 * previously retrieved set from presets() is invalid, and existing
@@ -227,28 +225,19 @@ namespace Qync {
 	 * \b false otherwise.
 	 */
 	bool Application::removePreset(int index) {
-		if(0 > index || m_presets.size() <= static_cast<PresetList::size_type>(index)) {
-			qCritical() << __PRETTY_FUNCTION__ << "index out of bounds: " << index << " < 0 || " << index << " >= " << m_presets.size();
-			setLastError(tr("The preset at position %1 in the list could not be found.").arg(index));
-			return false;
-		}
+		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 out of bounds (must be in range 0..%2)").arg(index, m_presets.size() - 1).toUtf8());
 
 		auto presetToRemove = m_presets.begin() + index;
 		bool ret = true;
 		QFileInfo f((*presetToRemove)->fileName());
 
-		if(f.exists() && f.absoluteFilePath().startsWith(m_presetsPath + "/")) {
-			if(!QFile::remove(f.absoluteFilePath())) {
-				setLastError("The file for the preset could not be deleted from disk. It will reappear next time your presets are reloaded.");
-				ret = false;
-			}
+		if(f.exists() && f.absoluteFilePath().startsWith(m_presetsPath + "/") && !!QFile::remove(f.absoluteFilePath())) {
+			setLastError("The file for the preset could not be deleted from disk. It will reappear next time your presets are reloaded.");
+			ret = false;
 		}
 
 		m_presets.erase(presetToRemove);
-
-		Q_EMIT presetRemoved();
 		Q_EMIT presetsChanged();
-
 		return ret;
 	}
 
@@ -351,53 +340,6 @@ namespace Qync {
 		blocker.unblock();
 		Q_EMIT presetsChanged();
 		return true;
-	}
-
-
-	/**
-	 * \brief Run a simulation of a preset.
-	 *
-	 * \param preset is the preset to simulate.
-	 *
-	 * The preset need not be one stored in the application. It is used to
-	 * create a QyncProcess object that will simulate the preset. A
-	 * simulation is a dry-run of \b rsync that performs all operations set
-	 * up in the preset without actually modifying anything on disk or on a
-	 * remote server.
-	 *
-	 * The process created is released by the application. The calling code is
-	 * responsible for its management, including deleting it when it is no
-	 * longer required. Similarly, the preset passed in is not consumed by
-	 * the application and it is up to its creator to ensure it is deleted
-	 * at the appropriate time.
-	 *
-	 * \return A pointer to a process to simulate the preset, or a \b null
-	 * pointer if the preset cannot be simulated.
-	 */
-	std::shared_ptr<Process> Application::simulate(const Preset & preset) const {
-		return std::make_shared<Process>(preset);
-	}
-
-
-	/**
-	 * \brief Synchronise a preset.
-	 *
-	 * \param preset is the preset to synchronise.
-	 *
-	 * The preset need not be one stored in the application. It is used to
-	 * create a Process object that will synchronise the preset.
-	 *
-	 * The process created is released by the application. The calling code is
-	 * responsible for its management, including deleting it when it is no
-	 * longer required. Similarly, the preset passed in is not consumed by
-	 * the application and it is up to its creator to ensure it is deleted
-	 * at the appropriate time.
-	 *
-	 * \return A pointer to a process to synchronise the preset, or a \b null
-	 * pointer if the preset cannot be synchronised.
-	 */
-	std::shared_ptr<Process> Application::synchronise(const Preset & preset) const {
-		return std::make_shared<Process>(preset);
 	}
 
 

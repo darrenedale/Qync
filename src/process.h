@@ -62,9 +62,22 @@ namespace Qync {
 			ConnectionTimeout = 35
 		};
 
-		Process(const Preset & preset);
-		Process(const QString & cmd, const Preset & preset);
+		enum class RunType : unsigned char {
+			Normal = 0,
+			DryRun,
+		};
+
+		Process(const Preset & preset, RunType type = RunType::Normal);
+		Process(const QString & cmd, const Preset & preset, RunType type = RunType::Normal);
 		virtual ~Process(void);
+
+		inline RunType runType(void) const {
+			return m_runType;
+		}
+
+		inline bool isDryRun(void) const {
+			return RunType::DryRun == m_runType;
+		}
 
 	Q_SIGNALS:
 		void started();
@@ -96,6 +109,7 @@ namespace Qync {
 	private:
 		std::unique_ptr<QProcess> m_process;
 		QString m_command;
+		RunType m_runType;
 		QStringList m_args;
 		QString m_logFileName;
 		QFile m_logFile;

@@ -97,8 +97,8 @@ namespace Qync {
 	 * The rsync command to run is gathered directly from the application
 	 * preferences.
 	 */
-	Process::Process(const Preset & preset)
-	: Process(qyncApp->preferences().rsyncPath(), preset) {
+	Process::Process(const Preset & preset, RunType type)
+	: Process(qyncApp->preferences().rsyncPath(), preset, type) {
 	}
 
 
@@ -108,12 +108,19 @@ namespace Qync {
 	 * \param cmd is the path to the rsync command to run.
 	 * \param preset is the preset from which to create the process.
 	 */
-	Process::Process(const QString & cmd, const Preset & preset)
+	Process::Process(const QString & cmd, const Preset & preset, RunType type)
 	: QObject(),
 	  m_process(new QProcess),
-	  m_command(cmd) {
+	  m_command(cmd),
+	  m_runType(type) {
 		m_logFileName = preset.logFile();
-		m_args = rsyncArguments(preset);
+
+		if(RunType::DryRun == type) {
+			m_args = rsyncArguments(preset, {"--dry-run"});
+		}
+		else {
+			m_args = rsyncArguments(preset);
+		}
 	}
 
 

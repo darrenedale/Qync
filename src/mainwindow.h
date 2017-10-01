@@ -69,13 +69,12 @@ namespace Qync {
 		void connectApplication(void);
 
 	private:
-		using ProcessFactory = std::shared_ptr<Process> (Application::*)(const Preset &) const;
 		static const int UpdateEverything;
 		static const int OnlyUpdateExisting;
 		static const int DontUpdateExisting;
 
 		void fillPreset(Preset &) const;
-		bool runProcess(ProcessFactory);
+		bool runProcess(std::shared_ptr<Process> &);
 
 		std::unique_ptr<Ui::MainWindow> m_ui;
 		std::unique_ptr<PreferencesDialogue> m_prefsWindow;

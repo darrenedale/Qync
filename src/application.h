@@ -76,17 +76,12 @@ namespace Qync {
 
 		void clearPresets(void);
 
-		std::shared_ptr<Process> simulate(const Preset & preset) const;
-		std::shared_ptr<Process> synchronise(const Preset & preset) const;
-
 		QString lastError(void) const;
 
-	public Q_SLOTS:
 		bool loadPresets(void);
 		bool loadPresets(const QString & path);
 
 	Q_SIGNALS:
-		void presetRemoved(void);
 		void presetsChanged(void);
 		void preferencesChanged(void);
 

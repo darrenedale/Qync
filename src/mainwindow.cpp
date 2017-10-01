@@ -387,7 +387,7 @@ namespace Qync {
 			return;
 		}
 
-		Preset * p = new Preset();
+		auto p = new Preset();
 
 		if(fill) {
 			fillPreset(*p);
@@ -422,7 +422,7 @@ namespace Qync {
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Import %1 preset").arg(qyncApp->applicationDisplayName()));
 
 		if(!fileName.isEmpty()) {
-			Preset * p = Preset::load(fileName);
+			auto p = Preset::load(fileName);
 
 			if(!p) {
 				QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The file \"%1\" was not a valid %2 preset file.").arg(fileName).arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
@@ -589,15 +589,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the Process was created and started, \b false otherwise.
 	 */
-	bool MainWindow::runProcess(ProcessFactory factory) {
-		Preset temp;
-		fillPreset(temp);
-		auto process = (qyncApp->*factory)(temp);
-
-		if(!process) {
-			return false;
-		}
-
+	bool MainWindow::runProcess(std::shared_ptr<Process> & process) {
 		if(m_ui->simpleUi == m_ui->mainStack->currentWidget()) {
 			// while simple backup in process, prevent any other being started
 			m_ui->simpleDoFullBackup->setEnabled(false);
@@ -613,14 +605,14 @@ namespace Qync {
 				m_ui->synchroniseButton->setEnabled(true);
 			});
 
-			// widget consumes the process
+			// widget shares ownership of the process
 			m_ui->simpleProcessWidget->setProcess(process);
 		}
 		else {
-			// dialogue consumes the process
+			// dialogue shares ownership of the process
 			// dialogue deletes itself on closure
 			ProcessDialogue * w = new ProcessDialogue(process, this);
-			w->setWindowTitle(tr("%1: %2").arg(qyncApp->applicationDisplayName(), m_ui->presets->currentText()));
+			w->setWindowTitle(tr("%1 %2: %3").arg(qyncApp->applicationDisplayName(), (process->isDryRun() ? tr("simulation") : tr("synchronisation")), m_ui->presets->currentText()));
 			w->show();
 		}
 
@@ -631,9 +623,18 @@ namespace Qync {
 
 	/**
 	 * \brief Start a simulation based on the current settings.
+	 *
+	 * The current settings are used to create a Process object that will
+	 * simulate the synchronisation. A simulation is a dry-run of \b rsync
+	 * that performs all operations defined by the settings without actually
+	 * modifying anything on disk or on a remote server.
 	 */
 	void MainWindow::simulate(void) {
-		if(!runProcess(&Application::simulate)) {
+		Preset preset;
+		fillPreset(preset);
+		auto process = std::make_shared<Process>(preset, Process::RunType::DryRun);
+
+		if(!runProcess(process)) {
 			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The simulation failed:\n\n" + qyncApp->lastError());
 		}
 	}
@@ -641,10 +642,17 @@ namespace Qync {
 
 	/**
 	 * \brief Start a synchronisation based on the current settings.
+	 *
+	 * The current settings are used to create a Process object that will
+	 * execute the synchronisation.
 	 */
 	void MainWindow::synchronise(void) {
-		if(!runProcess(&Application::synchronise)) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The synchronisation failed:\n\n" + qyncApp->lastError());
+		Preset preset;
+		fillPreset(preset);
+		auto process = std::make_shared<Process>(preset);
+
+		if(!runProcess(process)) {
+			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The simulation failed:\n\n" + qyncApp->lastError());
 		}
 	}
 
