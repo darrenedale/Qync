@@ -387,25 +387,13 @@ namespace Qync {
 			return;
 		}
 
-		auto p = new Preset();
+		Preset & p = qyncApp->addPreset(name);
 
 		if(fill) {
-			fillPreset(*p);
+			fillPreset(p);
 		}
 
-		p->setName(name);
-		disconnectApplication(); /* don't refresh on presetesChanged() signal from app - we'll do it ourselves */
-
-		if(qyncApp->addPreset(p)) {
-			// added successfully, so select it
-			m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
-		}
-		else {
-			delete p;
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The new preset could not be created:\n\n%1").arg(qyncApp->lastError()));
-		}
-
-		connectApplication();
+		m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
 	}
 
 
@@ -421,25 +409,16 @@ namespace Qync {
 	void MainWindow::importPreset(void) {
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Import %1 preset").arg(qyncApp->applicationDisplayName()));
 
-		if(!fileName.isEmpty()) {
-			auto p = Preset::load(fileName);
-
-			if(!p) {
-				QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The file \"%1\" was not a valid %2 preset file.").arg(fileName).arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
-				return;
-			}
-
-			if(qyncApp->addPreset(p)) {
-				// added successfully, so select it
-				m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
-			}
-			else {
-				delete p;
-				QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The imported %1 preset could not be created:\n\n%2").arg(qyncApp->applicationDisplayName()).arg(qyncApp->lastError()));
-			}
-
-			connectApplication();
+		if(fileName.isEmpty()) {
+			return;
 		}
+
+		if(!qyncApp->loadPreset(fileName)) {
+			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The file \"%1\" was not a valid %2 preset file.").arg(fileName).arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
+			return;
+		}
+
+		m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
 	}
 
 

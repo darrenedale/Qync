@@ -62,17 +62,16 @@ namespace Qync {
 			return m_prefs;
 		}
 
-		inline int presetCount(void) const {
-			return static_cast<int>(m_presets.size());
-		}
+		inline int presetCount(void) const;
 
 		const PresetList & presets(void) const {
 			return m_presets;
 		}
 
-		Preset & preset(int index) const;
+		Preset & preset(int index);
 		bool removePreset(int index);
-		bool addPreset(Preset * preset);
+		Preset & addPreset(const QString & name);
+		bool loadPreset(const QString & fileName);
 
 		void clearPresets(void);
 
@@ -86,6 +85,9 @@ namespace Qync {
 		void preferencesChanged(void);
 
 	protected:
+		struct PresetFromFileTag {};
+
+
 		void setLastError(const QString & err) const;
 
 	private:

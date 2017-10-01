@@ -21,6 +21,7 @@
 #include "application.h"
 
 #include <QtGlobal>
+#include <QStringBuilder>
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
@@ -199,7 +200,7 @@ namespace Qync {
 	 *
 	 * \return the preset at the index provided.
 	 */
-	Preset & Application::preset(int index) const {
+	Preset & Application::preset(int index) {
 		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 is out of bounds (have presets 0 .. %2)").arg(index).arg(m_presets.size() - 1).toUtf8().data());
 		return *m_presets[static_cast<PresetList::size_type>(index)];
 	}
@@ -247,33 +248,27 @@ namespace Qync {
 	 *
 	 * \param preset is the preset to add.
 	 *
-	 * The Application object takes ownership of the Preset.
+	 * The Application object moves the Preset into the list. The provided
+	 * Preset is therefore invalid after the call.
 	 *
 	 * \return \b \c true if the preset was added, \b \c false otherwise.
 	 */
-	bool Application::addPreset(Preset * preset) {
-		Q_ASSERT_X(preset, __PRETTY_FUNCTION__, "null Preset pointer provided");
+	Preset & Application::addPreset(const QString & name) {
+		m_presets.emplace_back(std::make_unique<Preset>(name));
+		Preset & preset = *m_presets.back();
+		QString fileName;
+		QDir presetDir(m_presetsPath);
+		int index = 0;
 
-		m_presets.push_back(std::unique_ptr<Preset>(preset));
-		QFileInfo f(preset->fileName());
+		do {
+			fileName = "preset" + QString::number(++index);
+		} while(presetDir.exists(fileName));
 
-		/* if the file is not in the presets dir, give it a new filename */
-		if(!f.absoluteFilePath().startsWith(m_presetsPath + "/")) {
-			QString fileName;
-			QDir presetDir(m_presetsPath);
-			int index = 0;
+		preset.setFileName(presetDir.absoluteFilePath(fileName));
 
-			do {
-				fileName = "preset" + QString::number(++index);
-			} while(presetDir.exists(fileName));
-
-			preset->setFileName(presetDir.absoluteFilePath(fileName));
-		}
-
-		preset->save();
+		preset.save();
 		Q_EMIT presetsChanged();
-
-		return true;
+		return preset;
 	}
 
 
@@ -327,12 +322,9 @@ namespace Qync {
 		clearPresets();
 
 		for(const auto & fileName : d.entryList(QDir::Files | QDir::Readable)) {
-			Preset * preset = Preset::load(d.absoluteFilePath(fileName));
+			Preset preset;
 
-			if(preset) {
-				addPreset(preset);
-			}
-			else {
+			if(!loadPreset(d.absoluteFilePath(fileName))) {
 				qWarning() << __PRETTY_FUNCTION__ << "failed to load preset from file" << fileName;
 			}
 		}
@@ -340,6 +332,50 @@ namespace Qync {
 		blocker.unblock();
 		Q_EMIT presetsChanged();
 		return true;
+	}
+
+
+	/**
+	 * \brief Load a preset from a file.
+	 *
+	 * \param fileName The path to the file to load.
+	 *
+	 * The preset is loaded from the file. If successful, it is added to the
+	 * application's list of presets, and saved to the presets directory on
+	 * disk.
+	 *
+	 * If it was loaded successfully, the loaded Preset is guaranteed to be
+	 * the last in the stored list of presets.
+	 *
+	 * \return \b true if the preset was loaded successfully, \b false if not.
+	 */
+	bool Application::loadPreset(const QString & fileName) {
+		m_presets.emplace_back(std::make_unique<Preset>());
+		Preset & preset = *m_presets.back();
+		bool ret = preset.load(fileName);
+
+		if(!ret) {
+			m_presets.erase(m_presets.end());
+		}
+		else {
+			if(!QFileInfo(fileName).absolutePath().startsWith(m_presetsPath)) {
+				int i = 0;
+				QString newFileName;
+
+				do {
+					++i;
+					newFileName = m_presetsPath % "/preset" % QString::number(i);
+				} while(QFileInfo::exists(newFileName));
+
+				if(!preset.saveAs(newFileName)) {
+					qWarning() << "failed to save preset to" << newFileName;
+				}
+			}
+
+			Q_EMIT presetsChanged();
+		}
+
+		return ret;
 	}
 
 
@@ -365,18 +401,21 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preferences & Application::preferences(void)
-	 * \brief Get the application preferences.
-	 *
-	 * \return the application preferences.
-	 */
-
-
-	/**
 	 * \fn Application::presetCount(void)
 	 * \brief Get the number of presets stored in the application.
 	 *
 	 * \return The number of presets.
+	 */
+	int Application::presetCount() const {
+		return static_cast<int>(presets().size());
+	}
+
+
+	/**
+	 * \fn Preferences & Application::preferences(void)
+	 * \brief Get the application preferences.
+	 *
+	 * \return the application preferences.
 	 */
 
 
@@ -389,20 +428,6 @@ namespace Qync {
 	 *
 	 * \return the presets (or an empty set if the application does not have
 	 * any presets stored.
-	 */
-
-
-	/**
-	 * \fn Application::addPreset(Preset *)
-	 * \brief Add a preset to the end of the collection stored in the
-	 * application.
-	 *
-	 * \param preset is the preset to add.
-	 *
-	 * The application takes ownership of the preset and will delete it at
-	 * the appropriate time.
-	 *
-	 * \return \b \c true if the preset was added, \b \c false otherwise.
 	 */
 
 

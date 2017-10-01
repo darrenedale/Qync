@@ -38,9 +38,12 @@ namespace Qync {
 	class Preset {
 	public:
 		explicit Preset(const QString & name = {});
+		Preset(const Preset & other) = delete;
+		Preset(Preset && other) = default;
+		~Preset(void);
 
-		static Preset * load(const QString & fileName);
 		void setDefaults(void);
+		bool load(const QString & fileName);
 
 		inline bool save(void) const {
 			return saveCopyAs(m_fileName);

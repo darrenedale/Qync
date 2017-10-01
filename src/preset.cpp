@@ -38,15 +38,13 @@ namespace Qync {
 
 
 	namespace PresetDetail {
-		/*
-		 * These aid with loading from and saving to XML. It is not necessary to
-		 * implement any added features as properties, but doing so means that the
-		 * XML reading/writing code will automatically handle them without having
-		 * to write any XML parsing code (which can be a bit verbose).
-		 */
+		// These aid with loading from and saving to XML. It is not necessary to
+		// implement any added features as properties, but doing so means that the
+		// XML reading/writing code will automatically handle them without having
+		// to write any XML parsing code (which can be a bit verbose).
 
-		/* data structure containing the getter and setter for a property
-		 * getters and setters are member functions of Preset. */
+		// data structure containing the getter and setter for a property
+		// getters and setters are member functions of Preset.
 		template<typename T>
 		struct PresetProperty {
 			using Type = T;
@@ -57,19 +55,18 @@ namespace Qync {
 			const Setter setter;
 		};
 
-		/* Alias for a set of properties of a given type. it's a map of
-		 * property-name => PresetProperty, with property-name a std::string
-		 *
-		 * so for any given property "myproperty" the value contains the getter
-		 * and setter for "myproperty". So properties["myproperty"].setter(value)
-		 * sets the value of "myproperty" and properties["myproperties"].getter()
-		 * retrieves the value. The actual call syntax is more complicated because
-		 * it needs an object to operate on.
-		 */
+		// Alias for a set of properties of a given type. it's a map of
+		// property-name => PresetProperty, with property-name a std::string
+		//
+		// so for any given property "myproperty" the value contains the getter
+		// and setter for "myproperty". So properties["myproperty"].setter(value)
+		// sets the value of "myproperty" and properties["myproperties"].getter()
+		// retrieves the value. The actual call syntax is more complicated because
+		// it needs an object to operate on.
 		template<typename T>
 		using PresetProperties = std::unordered_map<std::string, PresetProperty<T>>;
 
-		/* the boolean properties for Preset objects */
+		// the boolean properties for Preset objects
 		static PresetProperties<bool> booleanPresetProperties = {
 		  {"preserveTime", {&Preset::preserveTime, &Preset::setPreserveTime}},
 		  {"preservePermissions", {&Preset::preservePermissions, &Preset::setPreservePermissions}},
@@ -94,7 +91,7 @@ namespace Qync {
 		  {"showItemisedChanges", {&Preset::showItemisedChanges, &Preset::setShowItemisedChanges}},
 		};
 
-		/* the string properties for Preset objects */
+		// the string properties for Preset objects
 		static PresetProperties<QString> stringPresetProperties = {
 		  {"logFile", {&Preset::logFile, &Preset::setLogFile}},
 		};
@@ -168,37 +165,42 @@ namespace Qync {
 
 
 	/**
+	 * \brief Destroy a Preset.
+	 */
+	Preset::~Preset() = default;
+
+
+	/**
 	 * \brief Load a Preset from a file.
 	 *
 	 * \param fileName is the path to the file to load.
 	 *
-	 * If the file is a valid Preset file, the file is loaded and a new
-	 * Preset object is returned. If not, no Preset is returned. If
-	 * successful, the returned preset is owned by the calling code, and it
-	 * is responsible for the destruction of the preset at the appropriate
-	 * time.
+	 * If the file is a valid Preset file, the file is loaded into the preset
+	 * object. If not, the preset is reset to its default state (which is not
+	 * necessarily the same state as it was before the call).
 	 *
-	 * \return A new preset, or \b null if one could not be loaded.
+	 * \return \b true if the file was loaded successfully, \b false otherwise.
 	 */
-	Preset * Preset::load(const QString & fileName) {
-		/* parse the preset from the file */
+	bool Preset::load(const QString & fileName) {
+		setDefaults();
+
+		// parse the preset from the file
 		QFile file(fileName);
 
 		if(!file.open(QIODevice::ReadOnly)) {
 			qCritical() << __PRETTY_FUNCTION__ << "failed to open file" << fileName << "for reading";
-			return nullptr;
+			return false;
 		}
 
-		Preset * ret = new Preset;
-		ret->setFileName(fileName);
+		setFileName(fileName);
 		QXmlStreamReader xml(&file);
 
 		while(!xml.atEnd()) {
 			xml.readNext();
 
 			if(xml.isStartElement()) {
-				if("qyncpreset" == xml.name() && ret->parseXml(xml)) {
-					return ret;
+				if("qyncpreset" == xml.name() && parseXml(xml)) {
+					return true;
 				}
 				else {
 					xml.readElementText();
@@ -207,8 +209,8 @@ namespace Qync {
 		}
 
 		qCritical() << __PRETTY_FUNCTION__ << "file" << fileName << "does not contain a valid qync preset";
-		delete ret;
-		return nullptr;
+		setDefaults();
+		return false;
 	}
 
 
@@ -345,7 +347,7 @@ namespace Qync {
 			xml.writeAttribute("name", QString::fromStdString(propertyDef.first));
 			xml.writeAttribute("type", "boolean");
 			xml.writeCharacters((this->*(propertyDef.second.getter))() ? "true" : "false");
-			xml.writeEndElement(); /* property */
+			xml.writeEndElement();  // property
 		}
 
 		for(const auto & propertyDef : PresetDetail::stringPresetProperties) {
@@ -353,10 +355,10 @@ namespace Qync {
 			xml.writeAttribute("name", QString::fromStdString(propertyDef.first));
 			xml.writeAttribute("type", "string");
 			xml.writeCharacters((this->*(propertyDef.second.getter))());
-			xml.writeEndElement(); /* property */
+			xml.writeEndElement();  // property
 		}
 
-		xml.writeEndElement(); /* properties */
+		xml.writeEndElement();  // properties
 		return true;
 	}
 
@@ -385,7 +387,7 @@ namespace Qync {
 					qWarning() << __PRETTY_FUNCTION__ << "Preset::parseXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				}
 
-				/* ignore extraneous characters */
+				// ignore extraneous characters
 				continue;
 			}
 
@@ -433,7 +435,7 @@ namespace Qync {
 					qWarning() << __PRETTY_FUNCTION__ << "Preset::parsePropertiesXml() - ignoring extraneous non-whitespace content at line" << xml.lineNumber() << "column" << xml.columnNumber();
 				}
 
-				/* ignore extraneous characters */
+				// ignore extraneous characters
 				continue;
 			}
 
