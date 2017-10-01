@@ -24,9 +24,11 @@ namespace Qync {
 		class MainWindow;
 	}
 
+	class Application;
 	class Preset;
 	class PreferencesDialogue;
 	class AboutDialogue;
+	class Process;
 
 	class MainWindow
 	: public QMainWindow {
@@ -67,11 +69,13 @@ namespace Qync {
 		void connectApplication(void);
 
 	private:
+		using ProcessFactory = std::shared_ptr<Process> (Application::*)(const Preset &) const;
 		static const int UpdateEverything;
 		static const int OnlyUpdateExisting;
 		static const int DontUpdateExisting;
 
 		void fillPreset(Preset &) const;
+		bool runProcess(ProcessFactory);
 
 		std::unique_ptr<Ui::MainWindow> m_ui;
 		std::unique_ptr<PreferencesDialogue> m_prefsWindow;

@@ -357,35 +357,6 @@ namespace Qync {
 	/**
 	 * \brief Run a simulation of a preset.
 	 *
-	 * \param i is the index of the preset to simulate.
-	 *
-	 * The preset identified by its index is used to create a QyncProcess
-	 * object that will simulate the preset. A simulation is a dry-run of
-	 * rsync that performs all operations set up in the preset without
-	 * actually modifying anything on disk or on a remote server.
-	 *
-	 * The process created is released by the application. The calling code is
-	 * responsible for its management, including deleting it when it is no
-	 * longer required.
-	 *
-	 * If the index is out of bounds, \b null will be returned.
-	 *
-	 * \return A pointer to a process to simulate the preset, or a \b null
-	 * pointer if the preset cannot be simulated.
-	 */
-	Process * Application::simulate(int i) const {
-		if(0 > i || m_presets.size() <= static_cast<PresetList::size_type>(i)) {
-			qCritical() << __PRETTY_FUNCTION__ << "preset with index" << i << "does not exist (valid indices in range 0 .." << (m_presets.size() - 1);
-			return nullptr;
-		}
-
-		return simulate(preset(i));
-	}
-
-
-	/**
-	 * \brief Run a simulation of a preset.
-	 *
 	 * \param preset is the preset to simulate.
 	 *
 	 * The preset need not be one stored in the application. It is used to
@@ -403,37 +374,8 @@ namespace Qync {
 	 * \return A pointer to a process to simulate the preset, or a \b null
 	 * pointer if the preset cannot be simulated.
 	 */
-	Process * Application::simulate(const Preset & preset) const {
-		Process * p = new Process(preset);
-		Q_EMIT processStarted(p);
-		return p;
-	}
-
-
-	/**
-	 * \brief Synchronise a preset.
-	 *
-	 * \param i is the index of the preset to synchronise.
-	 *
-	 * The preset identified by its index is used to create a Process
-	 * object that will synchronise the preset.
-	 *
-	 * The process created is released by the application. The calling code is
-	 * responsible for its management, including deleting it when it is no
-	 * longer required.
-	 *
-	 * If the index is out of bounds, \b null will be returned.
-	 *
-	 * \return A pointer to a process to synchronise the preset, or a \b null
-	 * pointer if the preset cannot be synchronised.
-	 */
-	Process * Application::synchronise(int i) const {
-		if(0 > i || m_presets.size() <= static_cast<PresetList::size_type>(i)) {
-			qCritical() << __PRETTY_FUNCTION__ << "preset with index" << i << "does not exist (valid indices in range 0 .." << (m_presets.size() - 1);
-			return nullptr;
-		}
-
-		return synchronise(preset(i));
+	std::shared_ptr<Process> Application::simulate(const Preset & preset) const {
+		return std::make_shared<Process>(preset);
 	}
 
 
@@ -454,10 +396,8 @@ namespace Qync {
 	 * \return A pointer to a process to synchronise the preset, or a \b null
 	 * pointer if the preset cannot be synchronised.
 	 */
-	Process * Application::synchronise(const Preset & preset) const {
-		Process * p = new Process(preset);
-		Q_EMIT processStarted(p);
-		return p;
+	std::shared_ptr<Process> Application::synchronise(const Preset & preset) const {
+		return std::make_shared<Process>(preset);
 	}
 
 

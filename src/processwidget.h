@@ -18,10 +18,10 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		explicit ProcessWidget(QWidget * parent = nullptr, Process * process = nullptr);
+		explicit ProcessWidget(QWidget * parent = nullptr, const std::shared_ptr<Process> & process = nullptr);
 		~ProcessWidget(void);
 
-		void setProcess(Process * process);
+		void setProcess(const std::shared_ptr<Process> & process);
 
 	private Q_SLOTS:
 		void updateItemProgress(int pc);
@@ -38,7 +38,7 @@ namespace Qync {
 
 	private:
 		std::unique_ptr<Ui::ProcessWidget> m_ui;
-		std::unique_ptr<Process> m_process;
+		std::shared_ptr<Process> m_process;
 	};
 
 

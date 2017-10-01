@@ -66,7 +66,7 @@ namespace Qync {
 	 * The provided process is owned and will be deleted when the dialogue is
 	 * destroyed.
 	 */
-	ProcessDialogue::ProcessDialogue(Process * process, QWidget * parent)
+	ProcessDialogue::ProcessDialogue(const std::shared_ptr<Process> & process, QWidget * parent)
 	: QDialog(parent),
 	  m_ui{new Ui::ProcessDialogue},
 	  m_saveButton{nullptr},
@@ -79,11 +79,12 @@ namespace Qync {
 		m_saveButton = m_ui->controls->button(QDialogButtonBox::Save);
 		m_abortButton = m_ui->controls->button(QDialogButtonBox::Abort);
 
-		connect(process, &Process::started, this, &ProcessDialogue::onProcessStarted);
-		connect(process, static_cast<void (Process::*)(QString)>(&Process::finished), this, &ProcessDialogue::onProcessFinished);
-		connect(process, &Process::interrupted, this, &ProcessDialogue::onProcessInterrupted);
-		connect(process, &Process::failed, this, &ProcessDialogue::onProcessFailed);
-		connect(process, &Process::newItemStarted, this, &ProcessDialogue::appendToDetails);
+		auto * tempProcess = process.get();
+		connect(tempProcess, &Process::started, this, &ProcessDialogue::onProcessStarted);
+		connect(tempProcess, static_cast<void (Process::*)(QString)>(&Process::finished), this, &ProcessDialogue::onProcessFinished);
+		connect(tempProcess, &Process::interrupted, this, &ProcessDialogue::onProcessInterrupted);
+		connect(tempProcess, &Process::failed, this, &ProcessDialogue::onProcessFailed);
+		connect(tempProcess, &Process::newItemStarted, this, &ProcessDialogue::appendToDetails);
 		connect(m_ui->detailsButton, &QPushButton::clicked, this, &ProcessDialogue::toggleDetailedText);
 	}
 

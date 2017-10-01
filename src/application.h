@@ -76,10 +76,8 @@ namespace Qync {
 
 		void clearPresets(void);
 
-		Process * simulate(int i) const;
-		Process * simulate(const Preset & preset) const;
-		Process * synchronise(int i) const;
-		Process * synchronise(const Preset & preset) const;
+		std::shared_ptr<Process> simulate(const Preset & preset) const;
+		std::shared_ptr<Process> synchronise(const Preset & preset) const;
 
 		QString lastError(void) const;
 
@@ -91,7 +89,6 @@ namespace Qync {
 		void presetRemoved(void);
 		void presetsChanged(void);
 		void preferencesChanged(void);
-		void processStarted(Process * process) const;
 
 	protected:
 		void setLastError(const QString & err) const;

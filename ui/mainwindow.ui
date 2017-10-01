@@ -40,7 +40,7 @@
     <item>
      <widget class="QStackedWidget" name="mainStack">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="simpleUi">
        <layout class="QHBoxLayout" name="basicLayout" stretch="0,1">
@@ -344,16 +344,6 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="compressInTransit">
-                <property name="toolTip">
-                 <string>In transit, file data will be compressed to save bandwidth.</string>
-                </property>
-                <property name="text">
-                 <string>Compress files in transit</string>
-                </property>
-               </widget>
-              </item>
               <item row="3" column="0">
                <widget class="QCheckBox" name="symlinksAsSymlinks">
                 <property name="toolTip">
@@ -361,16 +351,6 @@
                 </property>
                 <property name="text">
                  <string>Copy symlinks as synlinks</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QCheckBox" name="makeBackups">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make backups of destination files that are overwritten.&lt;/p&gt;&lt;p&gt;Any file at the destination that is overwritten by a file from the source (or is removed as a result of the absence of the equivalent file at the source) is first backed up. The backup will have the same name as the original file with &lt;span style=&quot; font-weight:600;&quot;&gt;~&lt;/span&gt; appended.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <property name="text">
-                 <string>Make backups</string>
                 </property>
                </widget>
               </item>
@@ -394,13 +374,43 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
+              <item row="4" column="1">
                <widget class="QCheckBox" name="itemisedChanges">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show details about the specific changes being made to each file or directory.&lt;/p&gt;&lt;p&gt;You will only see this content if you expand the &lt;span style=&quot; font-style:italic;&quot;&gt;Details&lt;/span&gt; section in the progress dialogue for the synchronisation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="text">
                  <string>Show itemised changes</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QCheckBox" name="makeBackups">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make backups of destination files that are overwritten.&lt;/p&gt;&lt;p&gt;Any file at the destination that is overwritten by a file from the source (or is removed as a result of the absence of the equivalent file at the source) is first backed up. The backup will have the same name as the original file with &lt;span style=&quot; font-weight:600;&quot;&gt;~&lt;/span&gt; appended.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Make backups</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QCheckBox" name="compressInTransit">
+                <property name="toolTip">
+                 <string>In transit, file data will be compressed to save bandwidth.</string>
+                </property>
+                <property name="text">
+                 <string>Compress files in transit</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="ignoreTimes">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sizes and timestamps of files will not be compared.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Setting this option means that rsync will not compare source and destination files for size and timestamp, which usually results in the source file being copied in full to the destination regardless of whether it has changed or not.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Ignore sizes and timestamps</string>
                 </property>
                </widget>
               </item>
@@ -1027,70 +1037,6 @@
     <hint type="destinationlabel">
      <x>353</x>
      <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>simpleSourceAndDestination</sender>
-   <signal>sourceChanged(QString)</signal>
-   <receiver>sourceAndDestination</receiver>
-   <slot>setSource(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>410</x>
-     <y>114</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>51</x>
-     <y>92</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>simpleSourceAndDestination</sender>
-   <signal>destinationChanged(QString)</signal>
-   <receiver>sourceAndDestination</receiver>
-   <slot>setDestination(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>410</x>
-     <y>114</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>51</x>
-     <y>92</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sourceAndDestination</sender>
-   <signal>sourceChanged(QString)</signal>
-   <receiver>simpleSourceAndDestination</receiver>
-   <slot>setSource(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>51</x>
-     <y>92</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>410</x>
-     <y>114</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sourceAndDestination</sender>
-   <signal>destinationChanged(QString)</signal>
-   <receiver>simpleSourceAndDestination</receiver>
-   <slot>setDestination(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>51</x>
-     <y>92</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>410</x>
-     <y>114</y>
     </hint>
    </hints>
   </connection>

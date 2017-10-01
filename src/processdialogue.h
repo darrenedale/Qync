@@ -39,7 +39,7 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		explicit ProcessDialogue(Process * process, QWidget * parent = nullptr);
+		explicit ProcessDialogue(const std::shared_ptr<Process> & process, QWidget * parent = nullptr);
 		virtual ~ProcessDialogue(void);
 
 	public Q_SLOTS:

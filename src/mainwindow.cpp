@@ -2,7 +2,7 @@
  * \file mainwindow.cpp
  * \author Darren Edale
  * \date September, 2017
- * \version 1.0.0
+ * \version 1.1.0
  *
  * \brief Implementation of the MainWindow class.
  *
@@ -20,10 +20,13 @@
  * - application.h
  * - guipreferences.h
  * - preset.h
+ * - process.h
  * - processdialogue.h
  * - preferencesdialogue.h
  * - aboutdialogue.h
  * - functions.h
+ *
+ * \todo use system notifications or inline notifications
  */
 
 #include "mainwindow.h"
@@ -48,11 +51,6 @@
 #include "functions.h"
 
 
-/* this identifies the <new preset> item in the presets list
- * it is set as the item data for the item. */
-#define QYNC_MAINWINDOW_NEW_PRESET_TAG -99
-
-
 namespace Qync {
 
 
@@ -64,11 +62,19 @@ namespace Qync {
 	 *
 	 * \brief The main window of the Qync GUI.
 	 *
-	 * The main window is the hub of user interaction with the Qync application. It
-	 * provides the user with the ability to manipulate the list of presets stored
-	 * in the application, customise presets either for one-off rsync processes or to
-	 * alter the saved preset, and to launch simulations or synchronisations. It
-	 * also provides access to the preferences window.
+	 * The main window is the centre of user interaction with the Qync application.
+	 * It consists of two user interface styles:
+	 * - a simple backup-style UI
+	 * - a full UI for greater control.
+	 *
+	 * The simple UI provides the user with the ability to specify what to back up,
+	 * where to back it up to, and whether to do an incremental or full backup.
+	 *
+	 * The full UI provides the user with many more options controlling how the rsync
+	 * process operates, as well as the ability to store and manipulate presets
+	 * representing synchronisations that are often run. It also provides a facility
+	 * to simulate a synchronisation to dry run some settings before attempting a
+	 * synchronisation.
 	 *
 	 * The largest part of the main window is dedicated to customising preset
 	 * settings. Two tabs - basic and advanced settings - group the preset settings
@@ -83,38 +89,23 @@ namespace Qync {
 	 * either as a dry-run (simulate) or as a full rsync session (synchronise).
 	 * These options are replicated in the File menu.
 	 *
-	 * The core functionality exposed to the user derives from a QyncManager
-	 * object that is stored in the main window object. The main window does not
-	 * take ownership of the application and the creator of the application is responsible
-	 * for its timely destruction. The application that the window is using can
-	 * be retrieved using the application() method. It can be set using the protected
-	 * setManager() method, which will cause the old application to be deleted.
-	 * Subclasses can also connect and disconnect the application's signals and slots
-	 * from the window's using the connectManager() and disconnectManager()
-	 * methods if signal processing needs to be suspended for an internal operation.
+	 * The core functionality exposed to the user derives from the main Application
+	 * singleton object. The MainWindow listens for the Application::preferencesChanged
+	 * signal to know when it needs to refresh itself based on changes to the user's
+	 * preferences. Subclasses can connect and disconnect this using the
+	 * connectApplication() and disconnectApplication() methods if signal processing
+	 * needs to be suspended temporarily for an internal operations.
 	 *
 	 * Most of the class's methods are public slots that correspond to the options
-	 * available in the GUI. chooseDestinationFile(), chooseDestinationDirectory(),
-	 * chooseSourceFile() and chooseSourceDirectory() are invoked when the user
-	 * clicks one of the source or destination chooser buttons to enable to user
-	 * to choose the appropriate file or directory. Similarly, the
-	 * saveSettingsToCurrentPreset(), removeCurrentPreset() and
-	 * newPresetFromSettings() slots are invoked when the user clicks the respective
-	 * toolbar button  or chooses the respective menu item. The import and export
-	 * preset menu items are connected to the importPreset() and exportPreset()
-	 * slots, the simulate and synchronise toolbar buttons and menu items are
-	 * connected to the simulate() and execute() slots, and the about and about
-	 * rsync menu items are connected to the about() and aboutRsync() slots.
-	 * Finally, the preferences item in the file menu calls the showPreferences()
+	 * available in the GUI. The saveSettingsToCurrentPreset(), removeCurrentPreset()
+	 * and newPresetFromSettings() slots are invoked when the user clicks the respective
+	 * toolbar button or chooses the respective menu item. The import and export preset
+	 * menu items are connected to the importPreset() and exportPreset() slots; the
+	 * _simulate_ and _synchronise_ toolbar buttons and menu items are connected to the
+	 * simulate() and synchronise() slots, and the _about_ and _about rsync_ menu items
+	 * are connected to the about() and aboutRsync() slots. Finally, the preferences item
+	 * in the file menu, and the preferences button, both call the showPreferences()
 	 * slot.
-	 *
-	 * The application provides some useful signals that the window makes use of. It
-	 * emits the presetsChanged() signal which is connected to the refreshPresets()
-	 * slot so that the combo box showing the list of presets is always
-	 * synchronised with the set of presets stored in the application. It also emits
-	 * the preferencesChanged() signal, which is connected to the readPreferences()
-	 * slot to ensure that the GUI is always styled according to the user's
-	 * preferences.
 	 */
 
 
@@ -125,7 +116,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new QyncMainWindow.
+	 * \brief Create a new MainWindow.
 	 */
 	MainWindow::MainWindow(void)
 	: QMainWindow(nullptr),
@@ -134,8 +125,8 @@ namespace Qync {
 	  m_aboutDialogue(nullptr) {
 		m_ui->setupUi(this);
 		m_ui->presetsToolbar->insertWidget(m_ui->actionNew, m_ui->presets);
-
-		m_ui->simpleLogo->setPixmap(QIcon(":/icons/application").pixmap(64));
+		QIcon appIcon(":/icons/application");
+		m_ui->simpleLogo->setPixmap(appIcon.pixmap(64));
 		m_ui->simpleSourceAndDestination->setSourceLabel(tr("Backup"));
 		m_ui->simpleSourceAndDestination->setDestinationLabel(tr("To"));
 
@@ -144,11 +135,16 @@ namespace Qync {
 		titleFont.setBold(true);
 		m_ui->simpleUiTitle->setFont(titleFont);
 
-		/* group is owned by MainWindow and will be deleted when QWidget
-		 * base class destructor is called */
+		// group is owned by MainWindow and will be deleted when QWidget
+		// base class destructor is called
 		QActionGroup * uiSwitchGroup = new QActionGroup(this);
 		uiSwitchGroup->addAction(m_ui->actionSimpleUi);
 		uiSwitchGroup->addAction(m_ui->actionFullUi);
+
+		QString appDisplayName = qyncApp->applicationDisplayName();
+		setWindowIcon(appIcon);
+		setWindowTitle(appDisplayName);
+		setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
 		connect(m_ui->actionSimpleUi, &QAction::toggled, [this](bool useSimple) {
 			useSimpleUi(useSimple);
@@ -157,22 +153,18 @@ namespace Qync {
 		connect(m_ui->presets, &PresetCombo::currentPresetChanged, this, &MainWindow::showPreset);
 		connect(m_ui->menuMyPresets, &PresetMenu::presetIndexTriggered, m_ui->presets, &QComboBox::setCurrentIndex);
 
-		setWindowIcon(QIcon(":/icons/application"));
-		setWindowTitle(qyncApp->applicationDisplayName());
-		setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-
 		connectApplication();
 
-		/* force the UI to follow the preferences on startup */
-		onPreferencesChanged();
-
 		m_prefsWindow.reset(new PreferencesDialogue);
-		m_prefsWindow->setWindowTitle(tr("%1 Preferences").arg(qyncApp->applicationDisplayName()));
+		m_prefsWindow->setWindowTitle(tr("%1 Preferences").arg(appDisplayName));
 
 		m_aboutDialogue.reset(new AboutDialogue);
-		m_aboutDialogue->setWindowTitle(tr("About %1").arg(qyncApp->applicationDisplayName()));
+		m_aboutDialogue->setWindowTitle(tr("About %1").arg(appDisplayName));
 
-		/* ensure UI is in correct state for selected preset */
+		// force the UI to follow the preferences on startup
+		onPreferencesChanged();
+
+		// ensure UI is in correct state for selected preset
 		if(!m_ui->presets->currentItemIsNewPreset()) {
 			showPreset(m_ui->presets->currentPreset());
 		}
@@ -188,10 +180,9 @@ namespace Qync {
 	/**
 	 * \brief Show the details of a preset from the application.
 	 *
-	 * \param index is the index of the preset to show.
+	 * \param preset is a reference to the preset to show.
 	 *
-	 * The preset is fetched from the application and the widgets in the window
-	 * are updated to reflect the settings in the preset.
+	 * The widgets in the window are updated to reflect the settings in the preset.
 	 */
 	void MainWindow::showPreset(const Preset & preset) {
 		m_ui->preserveTime->setChecked(preset.preserveTime());
@@ -225,8 +216,8 @@ namespace Qync {
 		m_ui->hardlinksAsHardlinks->setChecked(preset.copyHardlinksAsHardlinks());
 		m_ui->itemisedChanges->setChecked(preset.showItemisedChanges());
 
-		/* it's easy, and quicker, to ensure these are manually synchronised rather
-		 * than wait for propagation of the signal */
+		// it's easy, and quicker, to ensure these are manually synchronised rather
+		// than wait for propagation of the signal
 		QSignalBlocker mainSrcDestBlocker(m_ui->sourceAndDestination);
 		QSignalBlocker basicSrcDestBlocker(m_ui->simpleSourceAndDestination);
 
@@ -264,7 +255,6 @@ namespace Qync {
 	 * \brief Connect the application's signals to the window's slots.
 	 */
 	void MainWindow::connectApplication(void) {
-		//		connect(qyncApp, &Application::presetsChanged, this, &MainWindow::refreshPresets);
 		connect(qyncApp, &Application::preferencesChanged, this, &MainWindow::onPreferencesChanged);
 	}
 
@@ -305,23 +295,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Refresh the presets combo box.
-	 *
-	 * The list of presets in the combo box is discarded and it is
-	 * repopulated with the set of presets queried from the application.
-	 */
-	//	void MainWindow::refreshPresets(void) {
-	//		m_ui->presets->refresh();
-	//		m_ui->menuMyPresets->refresh();
-	//	}
-
-
-	/**
 	 * \brief Choose a local file for the rsycn output log.
 	 *
-	 * A local file browser is presented for the user to to choose a log
-	 * file. If the user does not cancel the dialogue, the chosen file is
-	 * set as the text in the log file line edit.
+	 * A file browser is presented for the user to to choose a log file.
+	 * If the user does not cancel the dialogue, the chosen file is set
+	 * as the text in the log file line edit.
 	 */
 	void MainWindow::chooseLogFile(void) {
 		QString newLog = QFileDialog::getSaveFileName(this, tr("Choose log file"), m_ui->logFile->text());
@@ -349,7 +327,7 @@ namespace Qync {
 	 */
 	void MainWindow::saveSettingsToCurrentPreset(void) {
 		if(m_ui->presets->currentItemIsNewPreset()) {
-			/* saving to <new preset> items so creaet a new one instead */
+			// saving to <new preset> item so create a new one instead
 			newPresetFromSettings();
 			return;
 		}
@@ -363,11 +341,10 @@ namespace Qync {
 	/**
 	 * \brief Remove the currently selected preset.
 	 *
-	 * The current preset is removed from the application. This triggers a
-	 * refresh of the presets list.
+	 * The current preset is removed from the application.
 	 */
 	void MainWindow::removeCurrentPreset(void) {
-		if(qyncApp->presetCount() < 1) {
+		if(m_ui->presets->currentItemIsNewPreset()) {
 			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("There are no presets to remove."));
 			return;
 		}
@@ -420,11 +397,7 @@ namespace Qync {
 		disconnectApplication(); /* don't refresh on presetesChanged() signal from app - we'll do it ourselves */
 
 		if(qyncApp->addPreset(p)) {
-			//			refreshPresets();
-			/* it was added successfully, therefore we know the list contains at least one
-			 * item, and we know also that as it is not empty the <New Preset> item won't
-			 * be present, so we know that the index of the item we just added should be
-			 * the last one in the combo */
+			// added successfully, so select it
 			m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
 		}
 		else {
@@ -456,15 +429,8 @@ namespace Qync {
 				return;
 			}
 
-			/* don't refresh on presetesChanged() signal from application - we'll do it ourselves */
-			disconnectApplication();
-
 			if(qyncApp->addPreset(p)) {
-				//				refreshPresets();
-				/* it was added successfully, therefore we know the list contains at least one
-				 * item, and we know also that as it is not empty the <New Preset> item won't
-				 * be present, so we know that the index of the item we just added should be
-				 * the last one in the combo */
+				// added successfully, so select it
 				m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
 			}
 			else {
@@ -494,35 +460,33 @@ namespace Qync {
 	void MainWindow::exportPreset(void) {
 		QString fileName = QFileDialog::getSaveFileName(this, tr("Export %1 preset").arg(qyncApp->applicationDisplayName()));
 
-		if(!fileName.isEmpty()) {
-			QFileInfo f(fileName);
+		if(fileName.isEmpty()) {
+			return;
+		}
 
-			if(f.exists()) {
-				if(f.isDir()) {
-					QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The path you selected is a directory. You cannot save a %1 preset over a director.").arg(qyncApp->applicationDisplayName()));
-					return;
-				}
-			}
+		QFileInfo f(fileName);
 
-			QString name;
+		if(f.exists() && f.isDir()) {
+			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The path you selected is a directory. You cannot save a %1 preset over a director.").arg(qyncApp->applicationDisplayName()));
+			return;
+		}
 
-			/* if we're editing an existing preset, copy its name */
-			if(-1 != m_ui->presets->currentIndex() && QYNC_MAINWINDOW_NEW_PRESET_TAG != m_ui->presets->currentData()) {
-				name = qyncApp->preset(m_ui->presets->currentIndex()).name();
-			}
+		QString name;
 
-			/* if no name use the basename of the save path chosen by user */
-			if(name.isEmpty()) {
-				name = QFileInfo(fileName).baseName();
-			}
+		if(!m_ui->presets->currentItemIsNewPreset()) {
+			name = qyncApp->preset(m_ui->presets->currentIndex()).name();
+		}
 
-			Preset temp;
-			fillPreset(temp);
-			temp.setName(name);
+		if(name.isEmpty()) {
+			name = QFileInfo(fileName).baseName();
+		}
 
-			if(!temp.saveCopyAs(fileName)) {
-				QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The %1 preset could not be exported to the file \"%2\".").arg(qyncApp->applicationDisplayName()).arg(fileName));
-			}
+		Preset temp;
+		fillPreset(temp);
+		temp.setName(name);
+
+		if(!temp.saveCopyAs(fileName)) {
+			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The %1 preset could not be exported to the file \"%2\".").arg(qyncApp->applicationDisplayName()).arg(fileName));
 		}
 	}
 
@@ -531,7 +495,7 @@ namespace Qync {
 	 * \brief Fill a preset with the current settings.
 	 */
 	void MainWindow::fillPreset(Preset & p) const {
-		/* check which UI is in use and act accordingly */
+		// check which UI is in use and act accordingly
 		if(m_ui->mainStack->currentWidget() == m_ui->simpleUi) {
 			p.setDefaults();
 			p.setSource(m_ui->simpleSourceAndDestination->source());
@@ -564,9 +528,6 @@ namespace Qync {
 			}
 		}
 		else {
-			/* this setting is not (yet?) in the UI */
-			p.setIgnoreTimes(false);
-
 			p.setPreserveGroup(m_ui->preserveGroup->isChecked());
 			p.setPreserveOwner(m_ui->preserveOwner->isChecked());
 			p.setPreservePermissions(m_ui->preservePermissions->isChecked());
@@ -576,6 +537,7 @@ namespace Qync {
 			p.setHonourDeletions(m_ui->honourDeletions->isChecked());
 
 			p.setAlwaysCompareChecksums(m_ui->alwaysCompareChecksums->isChecked());
+			p.setIgnoreTimes(m_ui->ignoreTimes->isChecked());
 			p.setPreserveDevices(m_ui->preserveDevices->isChecked());
 			p.setKeepPartialTransfers(m_ui->keepPartialFiles->isChecked());
 			p.setCopySymlinksAsSymlinks(m_ui->symlinksAsSymlinks->isChecked());
@@ -613,64 +575,75 @@ namespace Qync {
 
 
 	/**
+	 * \brief Helper for synchronise() and simulate().
+	 *
+	 * \param factory The Application member function that generates the Process object.
+	 *
+	 * This helper is called by MainWindow::simulate() and MainWindow::synchronise() to
+	 * run the process to carry out the requested operation. These functions share code
+	 * that is identical except for the Application method call that generates the
+	 * Process. This helper saves repeating this common code.
+	 *
+	 * ProcessFactory is a pointer-to-member-function with the following signature:
+	 * bool Application::&lt;function&gt;(const Preset &) const
+	 *
+	 * \return \b true if the Process was created and started, \b false otherwise.
+	 */
+	bool MainWindow::runProcess(ProcessFactory factory) {
+		Preset temp;
+		fillPreset(temp);
+		auto process = (qyncApp->*factory)(temp);
+
+		if(!process) {
+			return false;
+		}
+
+		if(m_ui->simpleUi == m_ui->mainStack->currentWidget()) {
+			// while simple backup in process, prevent any other being started
+			m_ui->simpleDoFullBackup->setEnabled(false);
+			m_ui->simpleDoIncrementalBackup->setEnabled(false);
+			m_ui->simpleSourceAndDestination->setEnabled(false);
+			m_ui->synchroniseButton->setEnabled(false);
+
+			// re-enable the UI when the process has finished
+			connect(process.get(), static_cast<void (Process::*)(Process::ExitCode)>(&Process::finished), [this](void) {
+				m_ui->simpleDoFullBackup->setEnabled(true);
+				m_ui->simpleDoIncrementalBackup->setEnabled(true);
+				m_ui->simpleSourceAndDestination->setEnabled(true);
+				m_ui->synchroniseButton->setEnabled(true);
+			});
+
+			// widget consumes the process
+			m_ui->simpleProcessWidget->setProcess(process);
+		}
+		else {
+			// dialogue consumes the process
+			// dialogue deletes itself on closure
+			ProcessDialogue * w = new ProcessDialogue(process, this);
+			w->setWindowTitle(tr("%1: %2").arg(qyncApp->applicationDisplayName(), m_ui->presets->currentText()));
+			w->show();
+		}
+
+		process->start();
+		return true;
+	}
+
+
+	/**
 	 * \brief Start a simulation based on the current settings.
 	 */
 	void MainWindow::simulate(void) {
-		Preset temp;
-		fillPreset(temp);
-		Process * process = qyncApp->simulate(temp);
-
-		if(process) {
-			/* dialogue consumes the process */
-			ProcessDialogue * w = new ProcessDialogue(process, this);
-			w->setWindowTitle(tr("%1 Simulation: %2").arg(qyncApp->applicationDisplayName()).arg(m_ui->presets->currentText()));
-			w->show();
-			process->start();
-		}
-		else {
+		if(!runProcess(&Application::simulate)) {
 			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The simulation failed:\n\n" + qyncApp->lastError());
 		}
 	}
 
 
 	/**
-	 * \brief Start rsync based on the current settings.
+	 * \brief Start a synchronisation based on the current settings.
 	 */
 	void MainWindow::synchronise(void) {
-		Preset temp;
-		fillPreset(temp);
-		Process * process = qyncApp->synchronise(temp);
-
-		if(process) {
-			if(m_ui->simpleUi == m_ui->mainStack->currentWidget()) {
-				/* while simple backup in process, prevent any other being started */
-				m_ui->simpleDoFullBackup->setEnabled(false);
-				m_ui->simpleDoIncrementalBackup->setEnabled(false);
-				m_ui->simpleSourceAndDestination->setEnabled(false);
-				m_ui->synchroniseButton->setEnabled(false);
-
-				/* re-enable the UI when the process has finished */
-				connect(process, static_cast<void (Process::*)(Process::ExitCode)>(&Process::finished), [this](void) {
-					m_ui->simpleDoFullBackup->setEnabled(true);
-					m_ui->simpleDoIncrementalBackup->setEnabled(true);
-					m_ui->simpleSourceAndDestination->setEnabled(true);
-					m_ui->synchroniseButton->setEnabled(true);
-				});
-
-				/* widget consumes the process */
-				m_ui->simpleProcessWidget->setProcess(process);
-			}
-			else {
-				/* dialogue consumes the process */
-				/* dialogue deletes itself on closure */
-				ProcessDialogue * w = new ProcessDialogue(process, this);
-				w->setWindowTitle(tr("%1 Synchronisation: %2").arg(qyncApp->applicationDisplayName()).arg(m_ui->presets->currentText()));
-				w->show();
-			}
-
-			process->start();
-		}
-		else {
+		if(!runProcess(&Application::synchronise)) {
 			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The synchronisation failed:\n\n" + qyncApp->lastError());
 		}
 	}
@@ -699,8 +672,7 @@ namespace Qync {
 	/**
 	 * \brief Show the about rsync dialogue.
 	 *
-	 * The dialogue content is retrieved from
-	 * \ref QyncManager::rsyncVersionText()
+	 * The content is retrieved from \ref Application::rsyncVersionText()
 	 */
 	void MainWindow::aboutRsync(void) {
 		QMessageBox::information(this, tr("Qync - About rsync"), qyncApp->rsyncVersionText());

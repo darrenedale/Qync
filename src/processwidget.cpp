@@ -11,7 +11,7 @@
 namespace Qync {
 
 
-	ProcessWidget::ProcessWidget(QWidget * parent, Process * process)
+	ProcessWidget::ProcessWidget(QWidget * parent, const std::shared_ptr<Process> & process)
 	: QWidget(parent),
 	  m_ui(new Ui::ProcessWidget),
 	  m_process(nullptr) {
@@ -23,22 +23,23 @@ namespace Qync {
 	}
 
 
-	void ProcessWidget::setProcess(Process * process) {
+	void ProcessWidget::setProcess(const std::shared_ptr<Process> & process) {
 		if(m_process) {
 			m_process->disconnect(this);
 		}
 
-		m_process.reset(process);
+		m_process = process;
+		Process * tempProcess = process.get();
 
-		connect(process, &Process::started, this, &ProcessWidget::onProcessStarted);
-		connect(process, static_cast<void (Process::*)(QString)>(&Process::finished), this, &ProcessWidget::onProcessFinished);
-		connect(process, &Process::interrupted, this, &ProcessWidget::onProcessInterrupted);
-		connect(process, &Process::failed, this, &ProcessWidget::onProcessFailed);
-		connect(process, &Process::itemProgress, this, &ProcessWidget::updateItemProgress);
-		connect(process, &Process::transferSpeed, this, &ProcessWidget::updateTransferSpeed);
-		connect(process, &Process::overallProgress, this, &ProcessWidget::updateOverallProgress);
-		connect(process, &Process::newItemStarted, this, &ProcessWidget::onNewItemStarted);
-		connect(process, &Process::error, this, &ProcessWidget::showError);
+		connect(tempProcess, &Process::started, this, &ProcessWidget::onProcessStarted);
+		connect(tempProcess, static_cast<void (Process::*)(QString)>(&Process::finished), this, &ProcessWidget::onProcessFinished);
+		connect(tempProcess, &Process::interrupted, this, &ProcessWidget::onProcessInterrupted);
+		connect(tempProcess, &Process::failed, this, &ProcessWidget::onProcessFailed);
+		connect(tempProcess, &Process::itemProgress, this, &ProcessWidget::updateItemProgress);
+		connect(tempProcess, &Process::transferSpeed, this, &ProcessWidget::updateTransferSpeed);
+		connect(tempProcess, &Process::overallProgress, this, &ProcessWidget::updateOverallProgress);
+		connect(tempProcess, &Process::newItemStarted, this, &ProcessWidget::onNewItemStarted);
+		connect(tempProcess, &Process::error, this, &ProcessWidget::showError);
 	}
 
 
@@ -146,7 +147,7 @@ namespace Qync {
 			QMessageBox::information(this, tr("%1 Message").arg(qyncApp->applicationDisplayName()), msg, QMessageBox::Ok);
 		}
 
-		m_process.reset(nullptr);
+		m_process = nullptr;
 	}
 
 
@@ -162,7 +163,7 @@ namespace Qync {
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});
 		QMessageBox::critical(this, tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process was interrupted.") : msg), QMessageBox::Ok);
-		m_process.reset(nullptr);
+		m_process = nullptr;
 	}
 
 
@@ -181,7 +182,7 @@ namespace Qync {
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});
 		QMessageBox::critical(this, tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process failed.") : msg), QMessageBox::Ok);
-		m_process.reset(nullptr);
+		m_process = nullptr;
 	}
 
 
