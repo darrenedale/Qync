@@ -1,3 +1,17 @@
+/**
+ * \file notificationwidget.h
+ * \author Darren Edale
+ * \date October, 2017
+ * \version 1.1.0
+ *
+ * \brief Definition of the NotificationWidget class.
+ *
+ * \dep
+ * - QWidget
+ * - memory
+ * - types.h
+ */
+
 #ifndef QYNC_NOTIFICATIONWIDGET_H
 #define QYNC_NOTIFICATIONWIDGET_H
 

@@ -1,8 +1,28 @@
+/**
+ * \file notificationwidget.cpp
+ * \author Darren Edale
+ * \date October, 2017
+ * \version 1.1.0
+ *
+ * \brief Implementation of the NotificationWidget class.
+ *
+ * \dep
+ * - notificationwidget.h
+ * - notificationwidget.ui
+ * - QDebug
+ * - QPropertyAnimation
+ *
+ * \todo Test that the warning/error colours are appropriate.
+ * \todo Make warning/error colours configurable?
+ * \todo use show/hide event methods rather than redefining show()/hide()
+ */
+
 #include "notificationwidget.h"
 #include "ui_notificationwidget.h"
 
 #include <QDebug>
 #include <QPropertyAnimation>
+
 
 namespace Qync {
 
@@ -20,6 +40,8 @@ namespace Qync {
 		m_hideAnim->setEndValue(0);
 		m_showAnim->setDuration(300);
 		m_hideAnim->setDuration(300);
+		m_showAnim->setEasingCurve(QEasingCurve::InOutQuad);
+		m_hideAnim->setEasingCurve(QEasingCurve::InOutQuad);
 
 		connect(m_hideAnim.get(), &QPropertyAnimation::finished, [this]() {
 			QWidget::hide();
@@ -51,11 +73,11 @@ namespace Qync {
 					break;
 
 				case NotificationType::Warning:
-					m_ui->notificationFrame->setStyleSheet("background: rgb(255, 255, 128);");
+					m_ui->notificationFrame->setStyleSheet("background: rgb(192, 192, 128);");
 					break;
 
 				case NotificationType::Error:
-					m_ui->notificationFrame->setStyleSheet("background: rgb(255, 128, 128);");
+					m_ui->notificationFrame->setStyleSheet("background: rgb(192, 128, 128);");
 					break;
 			}
 		}
@@ -68,6 +90,10 @@ namespace Qync {
 			return;
 		}
 
+		QWidget::hide();
+		setMaximumHeight(INT_MAX);
+		adjustSize();
+		m_showAnim->setEndValue(height());
 		setMaximumHeight(0);
 		QWidget::show();
 		m_showAnim->start();

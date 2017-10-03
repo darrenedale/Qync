@@ -43,6 +43,9 @@
         <property name="text">
          <string/>
         </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -51,7 +54,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="dialog-close"/>
+         <iconset theme="dialog-close">
+          <normaloff>.</normaloff>.</iconset>
         </property>
         <property name="flat">
          <bool>true</bool>
