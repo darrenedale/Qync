@@ -18,6 +18,8 @@
 
 #include <QMainWindow>
 
+#include "types.h"
+
 namespace Qync {
 
 	namespace Ui {
@@ -37,6 +39,8 @@ namespace Qync {
 	public:
 		MainWindow(void);
 		virtual ~MainWindow(void);
+
+		void showNotification(const QString & title, const QString & msg, NotificationType type = NotificationType::Information);
 
 	public Q_SLOTS:
 		//		void refreshPresets(void);

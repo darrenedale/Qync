@@ -23,6 +23,7 @@
 #include <QString>
 
 #include "guipreferences.h"
+#include "mainwindow.h"
 
 namespace Qync {
 
@@ -36,6 +37,12 @@ namespace Qync {
 
 	public:
 		using PresetList = std::vector<std::unique_ptr<Preset>>;
+
+		enum class NotificationType {
+			Information = 0,
+			Warning,
+			Error
+		};
 
 		Application(int & argc, char ** argv);
 		~Application(void);
@@ -80,7 +87,10 @@ namespace Qync {
 		QString lastError(void) const;
 
 		bool loadPresets(void);
-		bool loadPresets(const QString & path);
+
+		MainWindow * mainWindow(void) const {
+			return m_mainWindow.get();
+		}
 
 	Q_SIGNALS:
 		void presetsChanged(void);
@@ -96,6 +106,8 @@ namespace Qync {
 
 		PresetList m_presets;
 		GuiPreferences m_prefs;
+
+		std::unique_ptr<MainWindow> m_mainWindow;
 
 		mutable QString m_lastError;
 	};

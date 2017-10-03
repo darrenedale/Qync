@@ -10,7 +10,6 @@
  * - preferencesdialogue.h
  * - preferencesdialogue.ui
  * - QString
- * - QMessageBox
  * - QFileDialog
  * - application.h
  * - guipreferences.h
@@ -25,7 +24,6 @@
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QString>
-#include <QMessageBox>
 #include <QFileDialog>
 
 #include "application.h"
@@ -176,7 +174,7 @@ namespace Qync {
 		apply();
 
 		if(!qyncApp->preferences().save()) {
-			QMessageBox::warning(this, tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
+			qyncApp->mainWindow()->showNotification(tr("%1 Warnng").arg(qyncApp->applicationDisplayName()), tr("Your preferences were set but could not be stored. This means that next time you start %1 your preferences will revert to their previous settings.").arg(qyncApp->applicationDisplayName()), NotificationType::Warning);
 		}
 	}
 
@@ -198,7 +196,7 @@ namespace Qync {
 				m_ui->rsyncPath->setText(fileName);
 			}
 			else {
-				QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("%1 is not a valid path to an rsync executable.").arg(fileName), QMessageBox::Ok);
+				qyncApp->mainWindow()->showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("%1 is not a valid path to an rsync executable.").arg(fileName), NotificationType::Warning);
 			}
 		}
 	}

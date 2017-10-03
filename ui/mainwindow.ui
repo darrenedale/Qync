@@ -31,6 +31,9 @@
      <number>0</number>
     </property>
     <item>
+     <widget class="Qync::NotificationWidget" name="notification" native="true"/>
+    </item>
+    <item>
      <widget class="Qync::PresetCombo" name="presets">
       <property name="toolTip">
        <string>Choose a preset from your saved set.</string>
@@ -842,6 +845,12 @@
    <class>Qync::PresetMenu</class>
    <extends>QMenu</extends>
    <header>src/presetmenu.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Qync::NotificationWidget</class>
+   <extends>QWidget</extends>
+   <header>src/notificationwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

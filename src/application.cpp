@@ -83,6 +83,7 @@ namespace Qync {
 	  m_presetsPath(),
 	  m_presets(),
 	  m_prefs(),
+	  m_mainWindow(nullptr),
 	  m_lastError() {
 		setApplicationName(QYNC_APP_NAME);
 		setApplicationDisplayName(QYNC_APP_DISPLAY_NAME);
@@ -106,6 +107,10 @@ namespace Qync {
 
 		m_prefs.loadFrom(m_configPath + "/guipreferences");
 		loadPresets();
+
+		// MainWindow constructor uses Application instance, specifically app display name, so
+		// this must be instantiated after the Application instance is set up sufficiently
+		m_mainWindow.reset(new MainWindow);
 	}
 
 
@@ -184,8 +189,10 @@ namespace Qync {
 	 * \return 0 on successful execution, non-0 on error.
 	 */
 	int Application::exec(void) {
-		MainWindow win;
-		win.show();
+		Q_ASSERT_X(qyncApp, __PRETTY_FUNCTION__, "no Application instance");
+		Q_ASSERT_X(qyncApp->m_mainWindow, __PRETTY_FUNCTION__, "no main window (perhaps Application::~Application has been called?)");
+
+		qyncApp->m_mainWindow->show();
 		return QApplication::exec();
 	}
 
@@ -201,7 +208,7 @@ namespace Qync {
 	 * \return the preset at the index provided.
 	 */
 	Preset & Application::preset(int index) {
-		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 is out of bounds (have presets 0 .. %2)").arg(index).arg(m_presets.size() - 1).toUtf8().data());
+		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 is out of bounds (have presets 0 .. %2)").arg(index, static_cast<int>(m_presets.size() - 1)).toUtf8());
 		return *m_presets[static_cast<PresetList::size_type>(index)];
 	}
 
@@ -226,7 +233,7 @@ namespace Qync {
 	 * \b false otherwise.
 	 */
 	bool Application::removePreset(int index) {
-		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 out of bounds (must be in range 0..%2)").arg(index, m_presets.size() - 1).toUtf8());
+		Q_ASSERT_X(0 <= index && m_presets.size() > static_cast<PresetList::size_type>(index), __PRETTY_FUNCTION__, QString("index %1 out of bounds (must be in range 0..%2)").arg(index, static_cast<int>(m_presets.size() - 1)).toUtf8());
 
 		auto presetToRemove = m_presets.begin() + index;
 		bool ret = true;
@@ -295,22 +302,7 @@ namespace Qync {
 	 * return \b true if the presets were loaded, \b false otherwise.
 	 */
 	bool Application::loadPresets(void) {
-		return loadPresets(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/");
-	}
-
-
-	/**
-	 * \brief Load the presets from a specified location.
-	 *
-	 * \param path is the path to the directory from which to load the
-	 * presets.
-	 *
-	 * The existing presets are discarded and the set stored in the
-	 * specified location are loaded.
-	 *
-	 * return \b true if the presets were loaded, \b false otherwise.
-	 */
-	bool Application::loadPresets(const QString & path) {
+		QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/";
 		QSignalBlocker blocker(this);
 		QDir d(path);
 

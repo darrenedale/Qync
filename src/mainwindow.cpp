@@ -25,8 +25,6 @@
  * - preferencesdialogue.h
  * - aboutdialogue.h
  * - functions.h
- *
- * \todo use system notifications or inline notifications
  */
 
 #include "mainwindow.h"
@@ -40,6 +38,8 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QStandardPaths>
+#include <QStringBuilder>
+#include <QPropertyAnimation>
 
 #include "application.h"
 #include "guipreferences.h"
@@ -49,6 +49,7 @@
 #include "preferencesdialogue.h"
 #include "aboutdialogue.h"
 #include "functions.h"
+#include "types.h"
 
 
 namespace Qync {
@@ -135,6 +136,8 @@ namespace Qync {
 		titleFont.setBold(true);
 		m_ui->simpleUiTitle->setFont(titleFont);
 
+		m_ui->notification->setVisible(false);
+
 		// group is owned by MainWindow and will be deleted when QWidget
 		// base class destructor is called
 		QActionGroup * uiSwitchGroup = new QActionGroup(this);
@@ -168,6 +171,21 @@ namespace Qync {
 		if(!m_ui->presets->currentItemIsNewPreset()) {
 			showPreset(m_ui->presets->currentPreset());
 		}
+	}
+
+
+	void MainWindow::showNotification(const QString & title, const QString & msg, NotificationType type) {
+		QString content;
+
+		if(!title.isEmpty()) {
+			content = "<strong>" % title % "</strong> ";
+		}
+
+		content = content % msg;
+		m_ui->notification->setMaximumHeight(0);
+		m_ui->notification->setMessage(content);
+		m_ui->notification->setType(type);
+		m_ui->notification->show();
 	}
 
 
@@ -345,12 +363,12 @@ namespace Qync {
 	 */
 	void MainWindow::removeCurrentPreset(void) {
 		if(m_ui->presets->currentItemIsNewPreset()) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("There are no presets to remove."));
+			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("There are no presets to remove."), NotificationType::Warning);
 			return;
 		}
 
 		if(!qyncApp->removePreset(m_ui->presets->currentIndex())) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The selected preset could not be removed:\n\n%1").arg(qyncApp->lastError()));
+			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The selected preset could not be removed:\n\n%1").arg(qyncApp->lastError()), NotificationType::Warning);
 			return;
 		}
 	}
@@ -414,7 +432,7 @@ namespace Qync {
 		}
 
 		if(!qyncApp->loadPreset(fileName)) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The file \"%1\" was not a valid %2 preset file.").arg(fileName).arg(qyncApp->applicationDisplayName()), QMessageBox::Ok);
+			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The file \"%1\" was not a valid %2 preset file.").arg(fileName).arg(qyncApp->applicationDisplayName()), NotificationType::Warning);
 			return;
 		}
 
@@ -446,7 +464,7 @@ namespace Qync {
 		QFileInfo f(fileName);
 
 		if(f.exists() && f.isDir()) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The path you selected is a directory. You cannot save a %1 preset over a director.").arg(qyncApp->applicationDisplayName()));
+			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The path you selected is a directory. You cannot save a %1 preset over a director.").arg(qyncApp->applicationDisplayName()), NotificationType::Warning);
 			return;
 		}
 
@@ -465,7 +483,7 @@ namespace Qync {
 		temp.setName(name);
 
 		if(!temp.saveCopyAs(fileName)) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The %1 preset could not be exported to the file \"%2\".").arg(qyncApp->applicationDisplayName()).arg(fileName));
+			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The %1 preset could not be exported to the file \"%2\".").arg(qyncApp->applicationDisplayName()).arg(fileName), NotificationType::Warning);
 		}
 	}
 
@@ -614,7 +632,7 @@ namespace Qync {
 		auto process = std::make_shared<Process>(preset, Process::RunType::DryRun);
 
 		if(!runProcess(process)) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The simulation failed:\n\n" + qyncApp->lastError());
+			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The simulation failed:\n\n" + qyncApp->lastError());
 		}
 	}
 
@@ -631,7 +649,7 @@ namespace Qync {
 		auto process = std::make_shared<Process>(preset);
 
 		if(!runProcess(process)) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The simulation failed:\n\n" + qyncApp->lastError());
+			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), "The synchronisation failed:\n\n" + qyncApp->lastError());
 		}
 	}
 

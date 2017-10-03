@@ -1,8 +1,6 @@
 #include "processwidget.h"
 #include "ui_processwidget.h"
 
-#include <QMessageBox>
-
 #include "application.h"
 #include "process.h"
 #include "units.h"
@@ -39,7 +37,10 @@ namespace Qync {
 		connect(tempProcess, &Process::transferSpeed, this, &ProcessWidget::updateTransferSpeed);
 		connect(tempProcess, &Process::overallProgress, this, &ProcessWidget::updateOverallProgress);
 		connect(tempProcess, &Process::newItemStarted, this, &ProcessWidget::onNewItemStarted);
-		connect(tempProcess, &Process::error, this, &ProcessWidget::showError);
+
+		connect(tempProcess, &Process::error, [](const QString & err) {
+			qyncApp->mainWindow()->showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The following error occurred in rsync:\n\n%1").arg(err), NotificationType::Error);
+		});
 	}
 
 
@@ -144,7 +145,7 @@ namespace Qync {
 		 * process in its stdout, so we don't clear it */
 
 		if(!msg.isEmpty()) {
-			QMessageBox::information(this, tr("%1 Message").arg(qyncApp->applicationDisplayName()), msg, QMessageBox::Ok);
+			qyncApp->mainWindow()->showNotification(tr("%1 Message").arg(qyncApp->applicationDisplayName()), msg, NotificationType::Warning);
 		}
 
 		m_process = nullptr;
@@ -162,7 +163,7 @@ namespace Qync {
 		m_ui->overallProgress->setValue(0);
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});
-		QMessageBox::critical(this, tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process was interrupted.") : msg), QMessageBox::Ok);
+		qyncApp->mainWindow()->showNotification(tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process was interrupted.") : msg), NotificationType::Error);
 		m_process = nullptr;
 	}
 
@@ -181,7 +182,7 @@ namespace Qync {
 		m_ui->overallProgress->setValue(0);
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});
-		QMessageBox::critical(this, tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process failed.") : msg), QMessageBox::Ok);
+		qyncApp->mainWindow()->showNotification(tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process failed.") : msg), NotificationType::Error);
 		m_process = nullptr;
 	}
 
@@ -194,7 +195,7 @@ namespace Qync {
 	 * The error message is shown in a warning dialogue.
 	 */
 	void ProcessWidget::showError(const QString & err) {
-		QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The following error occurred in rsync:\n\n%1").arg(err), QMessageBox::Ok);
+		qyncApp->mainWindow()->showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The following error occurred in rsync:\n\n%1").arg(err), NotificationType::Error);
 	}
 
 

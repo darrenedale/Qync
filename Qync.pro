@@ -2,6 +2,7 @@ QT += widgets
 CONFIG += c++14
 
 QMAKE_CXXFLAGS += -std=c++1z
+DEFINES += QT_NO_KEYWORDS QT_DEPRECATED_WARNINGS QT_DISABLE_DEPRECATED_BEFORE=0x050701
 
 HEADERS += \
     src/functions.h \
@@ -19,7 +20,9 @@ HEADERS += \
     src/synchronisewhatcombo.h \
     src/processwidget.h \
     src/presetcombo.h \
-    src/presetmenu.h
+    src/presetmenu.h \
+    src/notificationwidget.h \
+    src/types.h
 
 SOURCES += \
 	src/qync.cpp \
@@ -37,7 +40,8 @@ SOURCES += \
     src/synchronisewhatcombo.cpp \
     src/processwidget.cpp \
     src/presetcombo.cpp \
-    src/presetmenu.cpp
+    src/presetmenu.cpp \
+    src/notificationwidget.cpp
 
 RESOURCES += resources/icons.qrc
 
@@ -67,4 +71,5 @@ FORMS += \
     ui/preferencesdialogue.ui \
     ui/aboutdialogue.ui \
     ui/sourcedestinationwidget.ui \
-    ui/processwidget.ui
+    ui/processwidget.ui \
+    ui/notificationwidget.ui

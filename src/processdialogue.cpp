@@ -14,7 +14,6 @@
  * - QStringList
  * - QCloseEvent
  * - QFileDialog
- * - QMessageBox
  * - application.h
  * - process.h
  * - functions.h
@@ -28,7 +27,6 @@
 #include <QStringList>
 #include <QCloseEvent>
 #include <QFileDialog>
-#include <QMessageBox>
 
 #include "application.h"
 #include "process.h"
@@ -182,7 +180,7 @@ namespace Qync {
 		QFile f(fileName);
 
 		if(!f.open(QIODevice::WriteOnly)) {
-			QMessageBox::warning(this, tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The output could not be saved to %1.").arg(fileName));
+			qyncApp->mainWindow()->showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The output could not be saved to %1.").arg(fileName), NotificationType::Warning);
 			return;
 		}
 
