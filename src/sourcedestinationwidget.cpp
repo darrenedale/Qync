@@ -10,6 +10,8 @@
  * - sourcedestinationwidget.h
  * - sourcedestinationwidget.ui
  * - QFileDialog
+ *
+ * \todo autocomplete for source/destination line edits
  */
 
 #include "sourcedestinationwidget.h"

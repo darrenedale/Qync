@@ -59,4 +59,5 @@ namespace Qync {
 
 
 }  // namespace Qync
+
 #endif  // QYNC_NOTIFICATIONWIDGET_H

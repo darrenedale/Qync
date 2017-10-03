@@ -12,9 +12,7 @@
  * - QDebug
  * - QPropertyAnimation
  *
- * \todo Test that the warning/error colours are appropriate.
  * \todo Make warning/error colours configurable?
- * \todo use show/hide event methods rather than redefining show()/hide()
  */
 
 #include "notificationwidget.h"
@@ -90,8 +88,11 @@ namespace Qync {
 			return;
 		}
 
-		QWidget::hide();
-		setMaximumHeight(INT_MAX);
+		if(isVisible()) {
+			return;
+		}
+
+		setMaximumHeight(QWIDGETSIZE_MAX);
 		adjustSize();
 		m_showAnim->setEndValue(height());
 		setMaximumHeight(0);
@@ -103,6 +104,10 @@ namespace Qync {
 	void NotificationWidget::hide(void) {
 		if(m_hideAnim->state() != QPropertyAnimation::Stopped) {
 			qWarning() << "hide animation is already running";
+			return;
+		}
+
+		if(isHidden()) {
 			return;
 		}
 
