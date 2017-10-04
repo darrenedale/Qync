@@ -1,3 +1,16 @@
+/**
+ * \file processwidget.h
+ * \author Darren Edale
+ * \date October 2017
+ * \version 1.1.0
+ *
+ * \brief Declaration of the ProcessWidget class.
+ *
+ * \dep
+ * - memory
+ * - QWidget
+ */
+
 #ifndef QYNC_PROCESSWIDGET_H
 #define QYNC_PROCESSWIDGET_H
 

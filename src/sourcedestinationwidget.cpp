@@ -96,9 +96,22 @@ namespace Qync {
 
 
 	/**
+	 * \brief Set the current destination.
+	 *
+	 * \param dest The destination.
+	 */
+	void SourceDestinationWidget::setDestination(const QString & dest) {
+		if(dest != m_ui->destination->text()) {
+			m_ui->destination->setText(dest);
+			Q_EMIT destinationChanged(dest);
+		}
+	}
+
+
+	/**
 	 * \brief Set the label for the source widget.
 	 *
-	 * \param src The source widget label.
+	 * \param label The source widget label.
 	 */
 	void SourceDestinationWidget::setSourceLabel(const QString & label) {
 		m_ui->sourceLabel->setText(label);
@@ -108,23 +121,10 @@ namespace Qync {
 	/**
 	 * \brief Set the label for the destination widget.
 	 *
-	 * \param src The destination widget label.
+	 * \param label The destination widget label.
 	 */
 	void SourceDestinationWidget::setDestinationLabel(const QString & label) {
 		m_ui->destinationLabel->setText(label);
-	}
-
-
-	/**
-	 * \brief Set the current destination.
-	 *
-	 * \param src The destination.
-	 */
-	void SourceDestinationWidget::setDestination(const QString & dest) {
-		if(dest != m_ui->destination->text()) {
-			m_ui->destination->setText(dest);
-			Q_EMIT destinationChanged(dest);
-		}
 	}
 
 

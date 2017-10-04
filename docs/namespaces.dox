@@ -1,0 +1,26 @@
+// This file documents the generic namespaces for Qync. Namespaces within
+// the Detail namespace that pertain to specific classes are documented
+// in the appropriate implementation file.
+
+/// \namespace Qync
+///
+/// \brief The main application namespace.
+///
+/// Everything to do with Qync is withing this namespace or a namespace
+/// nested within it.
+
+/// \namespace Qync::Detail
+///
+/// \brief A private namespace for Qync application implementation details.
+///
+/// Everything within this namespace is a private implementation detail.
+/// Generally, classes and functions will create their own nested namespace
+/// within Qync::Detail to contain their implementation details.
+
+/// \namespace Qync::Ui
+///
+/// \brief A private namespace for Qync Qt UI classes.
+///
+/// Everything within this namespace is a private implementation detail.
+/// Qt UI classes that are created using .ui files keep their implementation
+/// details within this namespace.

@@ -72,6 +72,10 @@ namespace Qync {
 	 * XML file.
 	 */
 
+	/**
+	 * \typedef Qync::Application::PresetList
+	 * \brief An alias for the container type for the list of presets.
+	 */
 
 	/**
 	 * \brief Create a new application.
@@ -253,12 +257,13 @@ namespace Qync {
 	/**
 	 * \brief Add a preset to the collection stored in the application.
 	 *
-	 * \param preset is the preset to add.
+	 * \param name The name of the preset to add.
 	 *
-	 * The Application object moves the Preset into the list. The provided
-	 * Preset is therefore invalid after the call.
+	 * The Application creates a preset with the given name and returns a
+	 * reference to it. The created preset is saved to disk with the other,
+	 * existing presets in the presets directory (see presetsPath()).
 	 *
-	 * \return \b \c true if the preset was added, \b \c false otherwise.
+	 * \return A reference to the preset added.
 	 */
 	Preset & Application::addPreset(const QString & name) {
 		m_presets.emplace_back(std::make_unique<Preset>(name));
@@ -284,8 +289,8 @@ namespace Qync {
 	 *
 	 * All presets will be removed and the application will end up containing
 	 * no presets. All presets that were contained in the application before
-	 * the call will be deleted, so any pointers to presets retrieved using
-	 * preset() or presets() will be invalid.
+	 * the call will cease to exist, so any references to presets retrieved
+	 * using preset() or presets() will be invalid.
 	 */
 	void Application::clearPresets(void) {
 		m_presets.clear();

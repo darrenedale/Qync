@@ -3,15 +3,15 @@
  *
  * \brief Definition of user-defined literals for digital sizes.
  *
- * The following user-defined literals are provided, for both unsigned long long
- * (i.e. integer) and long double (i.e. floating point) literals:
- * - _gib (IEC Gibibytes, 1024 Mibibytes)
- * - _mib (IEC Mibibytes, 1024 Kibibytes)
- * - _kib (IEC Kibibytes, 1024 bytes)
- * - _gb (SI Gigabytes, 1000 Megabytes)
- * - _mb (SI Megabytes, 1000 Kilobytes)
- * - _kb (SI Kilobytes, 1000 bytes)
- * - _b (bytes, same for both IEC and SI)
+ * The following user-defined literal types are provided, for both unsigned long
+ * long (i.e. integer) and long double (i.e. floating point) literals:
+ * - \b _gib (IEC Gibibytes, 1024 Mibibytes)
+ * - \b _mib (IEC Mibibytes, 1024 Kibibytes)
+ * - \b _kib (IEC Kibibytes, 1024 bytes)
+ * - \b _gb (SI Gigabytes, 1000 Megabytes)
+ * - \b _mb (SI Megabytes, 1000 Kilobytes)
+ * - \b _kb (SI Kilobytes, 1000 bytes)
+ * - \b _b (bytes, same for both IEC and SI)
  *
  * The user-defined literals are available only in the Qync namespace.
  */

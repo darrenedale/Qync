@@ -1,3 +1,19 @@
+/**
+ * \file processwidget.cpp
+ * \author Darren Edale
+ * \date October 2017
+ * \version 1.1.0
+ *
+ * \brief Implementation of the ProcessWidget class.
+ *
+ * \dep
+ * - processwidget.h
+ * - processwidget.ui
+ * - application.h
+ * - process.h
+ * - units.h
+ */
+
 #include "processwidget.h"
 #include "ui_processwidget.h"
 

@@ -127,9 +127,7 @@ namespace Qync {
 	 * \brief Convert the text representation of a boolean value to an
 	 * actual \b bool.
 	 *
-	 * \param b is the boolean text to convert.
-	 * \param ok is a pointer to a boolean value that will be set to \b true
-	 * if the conversion is successful, \b false if not.
+	 * \param boolString is the boolean text to convert.
 	 *
 	 * This is a helper method to parse the content of a boolean text from
 	 * the preferences file. A valid \b bool is always returned - callers
@@ -138,7 +136,9 @@ namespace Qync {
 	 * the text provided or is just a default value because the text was not
 	 * valid.
 	 *
-	 * \return The \b bool value.
+	 * \return An optional boolean. If set, it is set to the boolean value
+	 * parsed from the string; if not set the provided string could not be
+	 * parsed.
 	 */
 	optional<bool> Preferences::parseBooleanText(const QString & boolString) {
 		if(0 == QString::compare("true", boolString.trimmed(), Qt::CaseInsensitive)) {

@@ -581,17 +581,14 @@ namespace Qync {
 	/**
 	 * \brief Helper for synchronise() and simulate().
 	 *
-	 * \param factory The Application member function that generates the Process object.
+	 * \param process The process to run.
 	 *
 	 * This helper is called by MainWindow::simulate() and MainWindow::synchronise() to
 	 * run the process to carry out the requested operation. These functions share code
-	 * that is identical except for the Application method call that generates the
-	 * Process. This helper saves repeating this common code.
+	 * that is identical save for the details of the process to run. This helper saves
+	 * repeating this common code.
 	 *
-	 * ProcessFactory is a pointer-to-member-function with the following signature:
-	 * bool Application::&lt;function&gt;(const Preset &) const
-	 *
-	 * \return \b true if the Process was created and started, \b false otherwise.
+	 * \return \b true if the Process was started, \b false otherwise.
 	 */
 	bool MainWindow::runProcess(std::shared_ptr<Process> & process) {
 		if(m_ui->simpleUi == m_ui->mainStack->currentWidget()) {

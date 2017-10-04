@@ -22,14 +22,14 @@ namespace Qync {
 
 
 	/**
-	 * \namespace Qync::PresetComboDetail
+	 * \namespace Qync::Detail::PresetCombo
 	 * \brief Private namespace for implementation details for the PresetCombo
 	 * class.
 	 */
-	namespace PresetComboDetail {
+	namespace Detail::PresetCombo {
 		static constexpr int NewPresetRole = Qt::UserRole + 1;
 		static constexpr int NewPresetTag = 99;
-	}  // namespace PresetComboDetail
+	}  // namespace Detail::PresetCombo
 
 
 	/**
@@ -70,7 +70,7 @@ namespace Qync {
 				return;
 			}
 
-			if(itemData(idx, PresetComboDetail::NewPresetRole).toInt() == PresetComboDetail::NewPresetTag) {
+			if(itemData(idx, Detail::PresetCombo::NewPresetRole).toInt() == Detail::PresetCombo::NewPresetTag) {
 				/* new selection is the <new preset> item */
 				Q_EMIT newPresetSelected();
 				return;
@@ -92,7 +92,7 @@ namespace Qync {
 	 * otherwise.
 	 */
 	bool PresetCombo::currentItemIsNewPreset(void) const {
-		return currentData(PresetComboDetail::NewPresetRole).toInt() == PresetComboDetail::NewPresetTag;
+		return currentData(Detail::PresetCombo::NewPresetRole).toInt() == Detail::PresetCombo::NewPresetTag;
 	}
 
 
@@ -129,7 +129,7 @@ namespace Qync {
 
 		if(0 == i) {
 			QComboBox::insertItem(0, tr("<New Preset>"));
-			setItemData(0, PresetComboDetail::NewPresetTag, PresetComboDetail::NewPresetRole);
+			setItemData(0, Detail::PresetCombo::NewPresetTag, Detail::PresetCombo::NewPresetRole);
 		}
 
 		if(-1 == idx) {

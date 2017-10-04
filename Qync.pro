@@ -63,7 +63,8 @@ DISTFILES += tools/* \
     docs/license_openssh.dox \
     docs/license_putty.dox \
     .gitignore \
-    .clang-format
+    .clang-format \
+    docs/namespaces.dox
 
 FORMS += \
     ui/processdialogue.ui \

@@ -77,7 +77,7 @@ namespace Qync {
 	 *
 	 * By default, both toolbars are shown and the toolbar button style is
 	 * set to the default for the current Qt theme. See the documentation
-	 * for \ref QyncPreferences::setDefaults() for the defaults for
+	 * for \ref GuiPreferences::setDefaults() for the defaults for
 	 * settings governed by that class.
 	 */
 	void GuiPreferences::setDefaults(void) {

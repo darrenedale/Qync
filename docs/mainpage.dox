@@ -14,6 +14,19 @@
  * a network.
  *
  * <h2>Architecture</h2>
+ * To build and run Qync or the example GUI, a C++14 compiler is required. The
+ * code currently also uses a couple of C++17 features, namely:
+ * - if initialisation statements
+ * - short-form declarations for nested namespaces
+ * - std::optional
+ *
+ * (std::optional is used if it is available; if not, a replacement from the
+ * equit library is used which is a sufficiently complete replica for the
+ * purposes of Qync.)
+ *
+ * Clang 5 will compile the Qync source in C++14 mode, only with warnings
+ * regarding the use of C++1z features.
+ *
  * The Qync application is built on a modular architecture. At its core is an
  * application class (\ref Qync::Application) that provides access to program features
  * such as presets, and enables the rsync process to be launched. The Application

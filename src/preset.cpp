@@ -37,7 +37,10 @@
 namespace Qync {
 
 
-	namespace PresetDetail {
+	/**
+	 * \brief Implementation details for the Qync::Preset class.
+	 */
+	namespace Detail::Preset {
 		// These aid with loading from and saving to XML. It is not necessary to
 		// implement any added features as properties, but doing so means that the
 		// XML reading/writing code will automatically handle them without having
@@ -48,8 +51,8 @@ namespace Qync {
 		template<typename T>
 		struct PresetProperty {
 			using Type = T;
-			using Getter = const T & (Preset::*) (void) const;
-			using Setter = bool (Preset::*)(const T &);
+			using Getter = const T & (Qync::Preset::*) (void) const;
+			using Setter = bool (Qync::Preset::*)(const T &);
 
 			const Getter getter;
 			const Setter setter;
@@ -68,35 +71,35 @@ namespace Qync {
 
 		// the boolean properties for Preset objects
 		static PresetProperties<bool> booleanPresetProperties = {
-		  {"preserveTime", {&Preset::preserveTime, &Preset::setPreserveTime}},
-		  {"preservePermissions", {&Preset::preservePermissions, &Preset::setPreservePermissions}},
-		  {"preserveOwner", {&Preset::preserveOwner, &Preset::setPreserveOwner}},
-		  {"preserveGroup", {&Preset::preserveGroup, &Preset::setPreserveGroup}},
+		  {"preserveTime", {&Qync::Preset::preserveTime, &Qync::Preset::setPreserveTime}},
+		  {"preservePermissions", {&Qync::Preset::preservePermissions, &Qync::Preset::setPreservePermissions}},
+		  {"preserveOwner", {&Qync::Preset::preserveOwner, &Qync::Preset::setPreserveOwner}},
+		  {"preserveGroup", {&Qync::Preset::preserveGroup, &Qync::Preset::setPreserveGroup}},
 
-		  {"windowsCompatability", {&Preset::windowsCompatability, &Preset::setWindowsCompatability}},
-		  {"honourDeletions", {&Preset::honourDeletions, &Preset::setHonourDeletions}},
+		  {"windowsCompatability", {&Qync::Preset::windowsCompatability, &Qync::Preset::setWindowsCompatability}},
+		  {"honourDeletions", {&Qync::Preset::honourDeletions, &Qync::Preset::setHonourDeletions}},
 
-		  {"alwaysCompareChecksums", {&Preset::alwaysCompareChecksums, &Preset::setAlwaysCompareChecksums}},
-		  {"ignoreTimes", {&Preset::ignoreTimes, &Preset::setIgnoreTimes}},
-		  {"preserveDevices", {&Preset::preserveDevices, &Preset::setPreserveDevices}},
-		  {"keepPartialTransfers", {&Preset::keepPartialTransfers, &Preset::setKeepPartialTransfers}},
-		  {"copySymlinksAsSymlinks", {&Preset::copySymlinksAsSymlinks, &Preset::setCopySymlinksAsSymlinks}},
-		  {"makeBackups", {&Preset::makeBackups, &Preset::setMakeBackups}},
+		  {"alwaysCompareChecksums", {&Qync::Preset::alwaysCompareChecksums, &Qync::Preset::setAlwaysCompareChecksums}},
+		  {"ignoreTimes", {&Qync::Preset::ignoreTimes, &Qync::Preset::setIgnoreTimes}},
+		  {"preserveDevices", {&Qync::Preset::preserveDevices, &Qync::Preset::setPreserveDevices}},
+		  {"keepPartialTransfers", {&Qync::Preset::keepPartialTransfers, &Qync::Preset::setKeepPartialTransfers}},
+		  {"copySymlinksAsSymlinks", {&Qync::Preset::copySymlinksAsSymlinks, &Qync::Preset::setCopySymlinksAsSymlinks}},
+		  {"makeBackups", {&Qync::Preset::makeBackups, &Qync::Preset::setMakeBackups}},
 
-		  {"useTransferCompression", {&Preset::useTransferCompression, &Preset::setUseTransferCompression}},
-		  {"onlyUpdateExistingEntries", {&Preset::onlyUpdateExistingEntries, &Preset::setOnlyUpdateExistingEntries}},
-		  {"dontUpdateExistingEntries", {&Preset::dontUpdateExistingEntries, &Preset::setDontUpdateExistingEntries}},
-		  {"dontMapUsersAndGroups", {&Preset::dontMapUsersAndGroups, &Preset::setDontMapUsersAndGroups}},
-		  {"copyHardlinksAsHardlinks", {&Preset::copyHardlinksAsHardlinks, &Preset::setCopyHardlinksAsHardlinks}},
-		  {"showItemisedChanges", {&Preset::showItemisedChanges, &Preset::setShowItemisedChanges}},
+		  {"useTransferCompression", {&Qync::Preset::useTransferCompression, &Qync::Preset::setUseTransferCompression}},
+		  {"onlyUpdateExistingEntries", {&Qync::Preset::onlyUpdateExistingEntries, &Qync::Preset::setOnlyUpdateExistingEntries}},
+		  {"dontUpdateExistingEntries", {&Qync::Preset::dontUpdateExistingEntries, &Qync::Preset::setDontUpdateExistingEntries}},
+		  {"dontMapUsersAndGroups", {&Qync::Preset::dontMapUsersAndGroups, &Qync::Preset::setDontMapUsersAndGroups}},
+		  {"copyHardlinksAsHardlinks", {&Qync::Preset::copyHardlinksAsHardlinks, &Qync::Preset::setCopyHardlinksAsHardlinks}},
+		  {"showItemisedChanges", {&Qync::Preset::showItemisedChanges, &Qync::Preset::setShowItemisedChanges}},
 		};
 
 		// the string properties for Preset objects
 		static PresetProperties<QString> stringPresetProperties = {
-		  {"logFile", {&Preset::logFile, &Preset::setLogFile}},
+		  {"logFile", {&Qync::Preset::logFile, &Qync::Preset::setLogFile}},
 		};
 
-	}  // namespace PresetDetail
+	}  // namespace Detail::Preset
 
 
 	/**
@@ -108,9 +111,7 @@ namespace Qync {
 	 * \brief A class to represent a preset for the rsync process.
 	 *
 	 * This class basically stores all the settings that the user is able to modify
-	 * for the rsync process. Most are implemented as Qt properties for flexibility
-	 * and to enable the easy extensibility of the XML read and write code. At
-	 * present, the following settings can be manipulated:
+	 * for the rsync process. At present, the following settings can be manipulated:
 	 * - whether or not timestamps are preserved (preserveTime(), rsync -t)
 	 * - whether or not permissions are preserved (preservePermissions(), rsync -p)
 	 * - whether or not ownership is preserved (preserveOwner(), rsync -o)
@@ -145,11 +146,12 @@ namespace Qync {
 	 * and from an XML stream (parseXml(), emitXml()), and to write and read that
 	 * stream to and from a file (load(), save(), saveAs(), saveCopyAs()).
 	 *
-	 * A Preset object is just a container for settings. It does not \i do anything
+	 * A Preset object is just a container for settings. It does not _do_ anything
 	 * itself. An object of this class is provided to a Process object in order for
 	 * the Process to set up the rsync command. A set of Preset objects is kept by
 	 * the Application instance as the master set of presets available during a
-	 * session.
+	 * session. These can be retrieved individually using Application::preset() or
+	 * as a complete set using Application::presets().
 	 */
 
 
@@ -342,7 +344,7 @@ namespace Qync {
 	bool Preset::emitPropertiesXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("properties");
 
-		for(const auto & propertyDef : PresetDetail::booleanPresetProperties) {
+		for(const auto & propertyDef : Detail::Preset::booleanPresetProperties) {
 			xml.writeStartElement("property");
 			xml.writeAttribute("name", QString::fromStdString(propertyDef.first));
 			xml.writeAttribute("type", "boolean");
@@ -350,7 +352,7 @@ namespace Qync {
 			xml.writeEndElement();  // property
 		}
 
-		for(const auto & propertyDef : PresetDetail::stringPresetProperties) {
+		for(const auto & propertyDef : Qync::Detail::Preset::stringPresetProperties) {
 			xml.writeStartElement("property");
 			xml.writeAttribute("name", QString::fromStdString(propertyDef.first));
 			xml.writeAttribute("type", "string");
@@ -467,9 +469,9 @@ namespace Qync {
 		auto propValueString = xml.readElementText();
 
 		if(0 == QString::compare("boolean", propType, Qt::CaseInsensitive)) {
-			auto propertyDef = PresetDetail::booleanPresetProperties.find(propName.toString().toStdString());
+			auto propertyDef = Qync::Detail::Preset::booleanPresetProperties.find(propName.toString().toStdString());
 
-			if(propertyDef == PresetDetail::booleanPresetProperties.end()) {
+			if(propertyDef == Qync::Detail::Preset::booleanPresetProperties.end()) {
 				qWarning() << __PRETTY_FUNCTION__ << "unrecognised boolean property" << propName << "found at line" << xml.lineNumber();
 				return false;
 			}
@@ -490,9 +492,9 @@ namespace Qync {
 			(this->*(propertyDef->second.setter))(propValue);
 		}
 		else if(0 == QString::compare("string", propType, Qt::CaseInsensitive)) {
-			auto propertyDef = PresetDetail::stringPresetProperties.find(propName.toString().toStdString());
+			auto propertyDef = Qync::Detail::Preset::stringPresetProperties.find(propName.toString().toStdString());
 
-			if(propertyDef == PresetDetail::stringPresetProperties.end()) {
+			if(propertyDef == Qync::Detail::Preset::stringPresetProperties.end()) {
 				qWarning() << __PRETTY_FUNCTION__ << "unrecognised string property" << propName << "found at line" << xml.lineNumber();
 				return false;
 			}
@@ -686,7 +688,7 @@ namespace Qync {
 	 * \brief Set whether or not to use checksums to compare source and
 	 * destination items.
 	 *
-	 * \param checksums indicates whether checksums should be used.
+	 * \param compare indicates whether checksums should be used.
 	 *
 	 * Using checksums means that the size and modification timestamp of
 	 * files is not used as the sole indicator of whether a file needs to be
@@ -734,7 +736,7 @@ namespace Qync {
 	/**
 	 * \brief Set whether or not partially-transferred items should be kept.
 	 *
-	 * \param keep indicates whether partially-transferred items should be
+	 * \param partial indicates whether partially-transferred items should be
 	 * kept.
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.
@@ -748,7 +750,7 @@ namespace Qync {
 	/**
 	 * \brief Set whether or not symbolic links should be kept as such.
 	 *
-	 * \param links indicates whether symbolic links should be kept as such.
+	 * \param copyAsLinks indicates whether symbolic links should be kept as such.
 	 *
 	 * If this setting is set, symbolic links in the source tree will be
 	 * copied as symbolic links; if not, symbolic links in the source tree
@@ -766,7 +768,7 @@ namespace Qync {
 	 * \brief Set whether or not backups of the destination tree should be
 	 * made.
 	 *
-	 * \param backup indicates whether backups should be made.
+	 * \param backups indicates whether backups should be made.
 	 *
 	 * If this setting is set, backups of the pre-synchronisation entries in
 	 * the destination tree will be made; if not, destination entries will
@@ -801,7 +803,7 @@ namespace Qync {
 	 * \brief Set whether or not only existing destination entries should
 	 * be updated.
 	 *
-	 * \param onlyExisting indicates whether only existing entries are
+	 * \param existingOnly indicates whether only existing entries are
 	 * updated.
 	 *
 	 * If this is set, any entries in the source tree that do not already
@@ -873,7 +875,7 @@ namespace Qync {
 	/**
 	 * \brief Set whether or not hard links should be kept as such.
 	 *
-	 * \param links indicates whether hard links should be kept as such.
+	 * \param copyAsLinks indicates whether hard links should be kept as such.
 	 *
 	 * If this setting is set, hard links in the source tree will be copied
 	 * as hard links; if not, hard links in the source tree will be followed
@@ -891,7 +893,7 @@ namespace Qync {
 	 * \brief Set whether or not an itemised list of changes should be
 	 * generated.
 	 *
-	 * \param itemise indicates whether an itemised list should be
+	 * \param show indicates whether an itemised list should be
 	 * generated.
 	 *
 	 * \return \b true if the setting was set, \b false otherwise.

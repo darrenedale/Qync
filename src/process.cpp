@@ -93,6 +93,12 @@ namespace Qync {
 	 * \brief Create a new Process.
 	 *
 	 * \param preset is the preset from which to create the process.
+	 * \param type The type of rsync process to create.
+	 *
+	 * The type argument should be RunType::Normal (the default) for normal execution
+	 * of rsync or RunType::DryRun to perform a dry run. A dry run of rsync does
+	 * everything a normal run of rsync would do, except make any actual changes to
+	 * the destination. This run type is generally used for simulations.
 	 *
 	 * The rsync command to run is gathered directly from the application
 	 * preferences.
@@ -107,6 +113,12 @@ namespace Qync {
 	 *
 	 * \param cmd is the path to the rsync command to run.
 	 * \param preset is the preset from which to create the process.
+	 * \param type The type of rsync process to create.
+	 *
+	 * The type argument should be RunType::Normal (the default) for normal execution
+	 * of rsync or RunType::DryRun to perform a dry run. A dry run of rsync does
+	 * everything a normal run of rsync would do, except make any actual changes to
+	 * the destination. This run type is generally used for simulations.
 	 */
 	Process::Process(const QString & cmd, const Preset & preset, RunType type)
 	: QObject(),

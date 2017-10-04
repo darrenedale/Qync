@@ -59,11 +59,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new preferences dialogue.
+	 * \brief Create a preferences dialogue.
 	 *
-	 * \param manager is the manager from which the preferences should
-	 * be read.
-	 * \param parent is the parent widget.
+	 * \param parent The owning parent widget.
 	 */
 	PreferencesDialogue::PreferencesDialogue(QWidget * parent)
 	: QDialog(parent),
