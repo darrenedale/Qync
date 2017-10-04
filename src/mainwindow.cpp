@@ -110,12 +110,6 @@ namespace Qync {
 	 */
 
 
-	/* indices of items in includeInSynchronisation combo */
-	const int MainWindow::UpdateEverything = 0;
-	const int MainWindow::OnlyUpdateExisting = 1;
-	const int MainWindow::DontUpdateExisting = 2;
-
-
 	/**
 	 * \brief Create a new MainWindow.
 	 */
@@ -174,6 +168,19 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Show an unobtrusive notification in the main window.
+	 *
+	 * \param title The title of the notification.
+	 * \param msg The message to show.
+	 * \param type The type of the notification.
+	 *
+	 * The title can be empty to indicate there is no title. The message may
+	 * contain rich text in the format that Qt's rich text document engine
+	 * understands. The type determines the background colour of the
+	 * notification: yellow for warnings, red for errors, and the standard
+	 * UI background colour for all others.
+	 */
 	void MainWindow::showNotification(const QString & title, const QString & msg, NotificationType type) {
 		QString content;
 
@@ -221,13 +228,13 @@ namespace Qync {
 		m_ui->compressInTransit->setChecked(preset.useTransferCompression());
 
 		if(preset.onlyUpdateExistingEntries()) {
-			m_ui->includeInSynchronisation->setCurrentIndex(OnlyUpdateExisting);
+			m_ui->includeInSynchronisation->setWhat(SynchroniseWhatCombo::What::OnlyPreExisting);
 		}
 		else if(preset.dontUpdateExistingEntries()) {
-			m_ui->includeInSynchronisation->setCurrentIndex(DontUpdateExisting);
+			m_ui->includeInSynchronisation->setWhat(SynchroniseWhatCombo::What::OnlyNonExistant);
 		}
 		else {
-			m_ui->includeInSynchronisation->setCurrentIndex(UpdateEverything);
+			m_ui->includeInSynchronisation->setWhat(SynchroniseWhatCombo::What::Everything);
 		}
 
 		m_ui->dontMapUidGid->setChecked(preset.dontMapUsersAndGroups());

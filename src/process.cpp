@@ -343,7 +343,7 @@ namespace Qync {
 		}
 
 		m_stdoutConnection = connect(m_process.get(), &QProcess::readyReadStandardOutput, this, &Process::parseStdout);
-		connect(m_process.get(), &QProcess::readyReadStandardError, this, &Process::parseStderr);
+		//		connect(m_process.get(), &QProcess::readyReadStandardError, this, &Process::parseStderr);
 		connect(m_process.get(), static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &Process::onProcessFinished);
 		Q_EMIT started();
 	}
@@ -366,6 +366,13 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Read the process's error output stream.
+	 *
+	 * This method is not currently used, but its intention is to read
+	 * the standard error stream of the rsync process and emit an
+	 * appropriate error message.
+	 */
 	void Process::parseStderr(void) {
 		Q_ASSERT(m_process);
 
@@ -374,6 +381,17 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Parse the standard output stream of the rsync process.
+	 *
+	 * The process's output stream is captured and parsed. The following
+	 * information is gathered from the output stream:
+	 * - the progress of the current transfer
+	 * - when a new item is starting to be transferred
+	 * - overall stats about the transfer when rsync has finished
+	 *
+	 * The data gathered is emitted as signals from this class.
+	 */
 	void Process::parseStdout(void) {
 		// captures:
 		// 1: current item bytes transferred

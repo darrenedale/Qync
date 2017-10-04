@@ -73,10 +73,6 @@ namespace Qync {
 		void connectApplication(void);
 
 	private:
-		static const int UpdateEverything;
-		static const int OnlyUpdateExisting;
-		static const int DontUpdateExisting;
-
 		void fillPreset(Preset &) const;
 		bool runProcess(std::shared_ptr<Process> &);
 

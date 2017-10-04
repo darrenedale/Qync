@@ -83,6 +83,7 @@ namespace Qync {
 	}
 
 
+	/** \brief Destroy the preferences dialogue. */
 	PreferencesDialogue::~PreferencesDialogue(void) = default;
 
 
@@ -164,6 +165,7 @@ namespace Qync {
 
 		Q_EMIT qyncApp->preferencesChanged();
 	}
+
 
 	/**
 	 * \brief Apply the current preferences.

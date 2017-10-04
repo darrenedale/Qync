@@ -43,6 +43,11 @@ namespace Qync {
 	 */
 
 
+	/**
+	 * \brief Create a SourceDestinationWidget.
+	 *
+	 * \param parent The owning parent widget.
+	 */
 	SourceDestinationWidget::SourceDestinationWidget(QWidget * parent)
 	: QWidget(parent),
 	  m_ui(new Ui::SourceDestinationWidget) {
@@ -57,11 +62,21 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Fetch the current source.
+	 *
+	 * \return The source.
+	 */
 	QString SourceDestinationWidget::source() const {
 		return m_ui->source->text();
 	}
 
 
+	/**
+	 * \brief Set the current source.
+	 *
+	 * \param src The source.
+	 */
 	void SourceDestinationWidget::setSource(const QString & src) {
 		if(src != m_ui->source->text()) {
 			m_ui->source->setText(src);
@@ -70,21 +85,41 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Fetch the current destination.
+	 *
+	 * \return The destination.
+	 */
 	QString SourceDestinationWidget::destination() const {
 		return m_ui->destination->text();
 	}
 
 
+	/**
+	 * \brief Set the label for the source widget.
+	 *
+	 * \param src The source widget label.
+	 */
 	void SourceDestinationWidget::setSourceLabel(const QString & label) {
 		m_ui->sourceLabel->setText(label);
 	}
 
 
+	/**
+	 * \brief Set the label for the destination widget.
+	 *
+	 * \param src The destination widget label.
+	 */
 	void SourceDestinationWidget::setDestinationLabel(const QString & label) {
 		m_ui->destinationLabel->setText(label);
 	}
 
 
+	/**
+	 * \brief Set the current destination.
+	 *
+	 * \param src The destination.
+	 */
 	void SourceDestinationWidget::setDestination(const QString & dest) {
 		if(dest != m_ui->destination->text()) {
 			m_ui->destination->setText(dest);
@@ -93,6 +128,8 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Swap the source and destination. */
 	void SourceDestinationWidget::swapSourceAndDestination(void) {
 		QString t = m_ui->source->text();
 		m_ui->source->setText(m_ui->destination->text());
@@ -100,6 +137,7 @@ namespace Qync {
 	}
 
 
+	/** \brief Destroy the SourceDestinationWidget. */
 	SourceDestinationWidget::~SourceDestinationWidget(void) = default;
 
 

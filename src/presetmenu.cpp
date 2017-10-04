@@ -51,6 +51,11 @@ namespace Qync {
 	 */
 
 
+	/**
+	 * \brief Create a PresetMenu.
+	 *
+	 * \param parent The owning parent widget.
+	 */
 	PresetMenu::PresetMenu(QWidget * parent)
 	: QMenu(parent) {
 		refresh();
@@ -64,6 +69,13 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Refresh the list of presets available in the menu.
+	 *
+	 * On a call to this method the Application object is queried for the
+	 * presets, and the menu items are replaced with those representing
+	 * the list of available presets.
+	 */
 	void PresetMenu::refresh(void) {
 		QMenu::clear();
 		int i = 0;
