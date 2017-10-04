@@ -27,8 +27,10 @@ namespace Qync {
 		explicit PresetCombo(QWidget * parent = nullptr);
 
 		void addItem(void) = delete;
-		void removeItem(void) = delete;
+		void addItems(void) = delete;
 		void insertItem(void) = delete;
+		void insertItems(void) = delete;
+		void removeItem(void) = delete;
 		void clear(void) = delete;
 
 		bool currentItemIsNewPreset(void) const;

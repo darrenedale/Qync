@@ -26,8 +26,17 @@ namespace Qync {
 	public:
 		explicit PresetMenu(QWidget * parent = nullptr);
 
-		void clear(void) = delete;
 		void addAction(void) = delete;
+		void addActions(void) = delete;
+		void addMenu(void) = delete;
+		void addSection(void) = delete;
+		void insertAction(void) = delete;
+		void insertActions(void) = delete;
+		void insertMenu(void) = delete;
+		void insertSection(void) = delete;
+		void insertSeparator(void) = delete;
+		void removeAction(void) = delete;
+		void clear(void) = delete;
 
 	public Q_SLOTS:
 		void refresh(void);

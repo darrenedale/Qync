@@ -10,9 +10,6 @@
  * - presetmenu.h
  * - application.h
  * - preset.h
- *
- * \todo ensure that all methods to change the contents of the menu have
- * been marked as deleted.
  */
 
 #include "presetmenu.h"
@@ -46,8 +43,8 @@ namespace Qync {
 	 * are able to use both - the Preset is passed by const reference
 	 * and is therefore just as efficient as using an int.
 	 *
-	 * It is not possible to add or clear items to/from the menu - the
-	 * methods to do so have been explicitly deleted.
+	 * It is not possible to add, insert, remove or clear items to/from
+	 * the menu - the methods to do so have been explicitly deleted.
 	 */
 
 
