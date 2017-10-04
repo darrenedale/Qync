@@ -29,6 +29,13 @@ namespace Qync {
 	 * \version 1.0.0
 	 *
 	 * \brief A custom combo box for choosing what to synchronise.
+	 *
+	 * This widget offers the user a mutually-exclusive choice between
+	 * synchronising everything, only those files from the source that are
+	 * already present in the destination or only those files from the
+	 * source that are not already present in the destination. These
+	 * correspond to a full update, a changes-only update and a new-files-
+	 * only update.
 	 */
 
 

@@ -9,6 +9,26 @@
 namespace Qync {
 
 
+	/**
+	 * \class ProcessWidget
+	 * \author Darren Edale
+	 * \date October 2017
+	 * \version 1.1.0
+	 *
+	 * \brief A custom widget to present the progress of a Qync process.
+	 */
+
+
+	/**
+	 * \brief Create a ProcessWidget object.
+	 * \param parent The parent for the widget.
+	 * \param process The process to represent.
+	 *
+	 * Shared ownership of the process provided is taken. The provided shared_ptr is
+	 * copied and kept for the lifetime of the ProcessWidget, until the process
+	 * finishes, or until a new process is provided using setProcess(), whichever
+	 * occurs soonest.
+	 */
 	ProcessWidget::ProcessWidget(QWidget * parent, const std::shared_ptr<Process> & process)
 	: QWidget(parent),
 	  m_ui(new Ui::ProcessWidget),
@@ -21,6 +41,20 @@ namespace Qync {
 	}
 
 
+	/**
+	 * \brief Set the process the widget is representing.
+	 *
+	 * \param process The process to represent.
+	 *
+	 * Shared ownership of the process provided is taken. The provided shared_ptr is
+	 * copied and kept for the lifetime of the ProcessWidget, until the process
+	 * finishes, or until a new process is provided using setProcess(), whichever
+	 * occurs soonest.
+	 *
+	 * If the widget was already representing a process, shared ownership of that
+	 * process is released immediately before taking shared ownership of the provided
+	 * process.
+	 */
 	void ProcessWidget::setProcess(const std::shared_ptr<Process> & process) {
 		if(m_process) {
 			m_process->disconnect(this);
@@ -44,6 +78,7 @@ namespace Qync {
 	}
 
 
+	/** \brief Destroy the process widget. */
 	ProcessWidget::~ProcessWidget(void) = default;
 
 
@@ -135,6 +170,9 @@ namespace Qync {
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.
+	 *
+	 * After a call to this function, shared ownership of the process is
+	 * released.
 	 */
 	void ProcessWidget::onProcessFinished(const QString & msg) {
 		m_ui->itemProgress->setValue(100);
@@ -148,7 +186,7 @@ namespace Qync {
 			qyncApp->mainWindow()->showNotification(tr("%1 Message").arg(qyncApp->applicationDisplayName()), msg, NotificationType::Warning);
 		}
 
-		m_process = nullptr;
+		m_process.reset();
 	}
 
 
@@ -157,6 +195,9 @@ namespace Qync {
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.
+	 *
+	 * After a call to this function, shared ownership of the process is
+	 * released.
 	 */
 	void ProcessWidget::onProcessInterrupted(const QString & msg) {
 		m_ui->itemProgress->setValue(0);
@@ -164,7 +205,7 @@ namespace Qync {
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});
 		qyncApp->mainWindow()->showNotification(tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process was interrupted.") : msg), NotificationType::Error);
-		m_process = nullptr;
+		m_process.reset();
 	}
 
 
@@ -176,6 +217,9 @@ namespace Qync {
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.
+	 *
+	 * After a call to this function, shared ownership of the process is
+	 * released.
 	 */
 	void ProcessWidget::onProcessFailed(const QString & msg) {
 		m_ui->itemProgress->setValue(0);
@@ -183,7 +227,7 @@ namespace Qync {
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});
 		qyncApp->mainWindow()->showNotification(tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process failed.") : msg), NotificationType::Error);
-		m_process = nullptr;
+		m_process.reset();
 	}
 
 

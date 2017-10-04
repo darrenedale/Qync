@@ -28,7 +28,7 @@ namespace Qync {
 
 		void addItem(void) = delete;
 		void removeItem(void) = delete;
-		void insertIntem(void) = delete;
+		void insertItem(void) = delete;
 		void clear(void) = delete;
 
 		bool currentItemIsNewPreset(void) const;

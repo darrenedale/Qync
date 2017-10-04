@@ -23,6 +23,26 @@
 namespace Qync {
 
 
+	/**
+	 * \class SourceDestinationWidget
+	 * \author Darren Edale
+	 * \date October 2017
+	 * \version 1.1.0
+	 *
+	 * \brief A custom widget to enable the user to set the source and destination
+	 * for a sync.
+	 *
+	 * The user can manually type the source and destination, or use the file-select
+	 * buttons to choose a file using a standard system file dialogue. The text entry
+	 * components do not yet support inline completion (for local files/dirs), but
+	 * this is a planned feature.
+	 *
+	 * The source and destination can be set using setSource()/setDestination() and
+	 * read using source()/destination(). You can also customise the labels for these
+	 * components using setSourceLabel()/setDestinationLabel().
+	 */
+
+
 	SourceDestinationWidget::SourceDestinationWidget(QWidget * parent)
 	: QWidget(parent),
 	  m_ui(new Ui::SourceDestinationWidget) {

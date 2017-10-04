@@ -27,6 +27,29 @@ namespace Qync {
 	}  // namespace PresetComboDetail
 
 
+	/**
+	 * \class PresetCombo
+	 * \author Darren Edale
+	 * \date October 2017
+	 * \version 1.1.0
+	 *
+	 * \brief A combo box specialised for selecting a sync preset.
+	 *
+	 * The combo box listens for changes in the list of presets stored in the
+	 * Application and updates as required. If the list of presets is empty, it
+	 * presents a single "&lt;New Preset&gt;" item. The choice of this special
+	 * item can be determined by calling currentItemIsNewPreset(). If this
+	 * returns \b false, the currently-selected preset can be retrieved by
+	 * calling currentPreset().
+	 *
+	 * You can manually trigger the combo box to re-read the list of presets
+	 * in the Application by calling reset().
+	 *
+	 * It is not possible to add, insert, remove or clear items to/from the
+	 * combo box - the methods to do so have been explicitly deleted.
+	 */
+
+
 	PresetCombo::PresetCombo(QWidget * parent)
 	: QComboBox(parent) {
 		refresh();
