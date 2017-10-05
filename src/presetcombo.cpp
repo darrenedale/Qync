@@ -2,7 +2,7 @@
  * \file presetcombo.cpp
  * \author Darren Edale
  * \date September, 2017
- * \version 1.0.0
+ * \version 1.1.0
  *
  * \brief Implementation of the PresetCombo class.
  *
@@ -26,10 +26,12 @@ namespace Qync {
 	 * \brief Private namespace for implementation details for the PresetCombo
 	 * class.
 	 */
-	namespace Detail::PresetCombo {
-		static constexpr int NewPresetRole = Qt::UserRole + 1;
-		static constexpr int NewPresetTag = 99;
-	}  // namespace Detail::PresetCombo
+	namespace Detail {
+		namespace PresetCombo {
+			static constexpr int NewPresetRole = Qt::UserRole + 1;
+			static constexpr int NewPresetTag = 99;
+		}  // namespace PresetCombo
+	}		// namespace Detail
 
 
 	/**

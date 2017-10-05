@@ -1,8 +1,8 @@
 /**
  * \file guipreferences.cpp
  * \author Darren Edale
- * \date September 2017
- * \version 1.0.0
+ * \date October 2017
+ * \version 1.1.0
  *
  * \brief Implementation of the GuiPreferences class.
  *
@@ -26,8 +26,8 @@ namespace Qync {
 	/**
 	 * \class GuiPreferences
 	 * \author Darren Edale
-	 * \date September 2017
-	 * \version 1.0.0
+	 * \date October 2017
+	 * \version 1.1.0
 	 *
 	 * \brief A class representing application preferences including GUI
 	 * preferences.
@@ -344,7 +344,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn GuiPreferences::simpleUi(void)
+	 * \fn GuiPreferences::useSimpleUi(void)
 	 * \brief Check whether the simple user interface should be used.
 	 *
 	 * \return \b true if the simple user interface should be used, \b false
@@ -353,7 +353,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn GuiPreferences::setSimpleUi( bool use )
+	 * \fn GuiPreferences::setUseSimpleUi( bool use )
 	 * \brief Set whether the simple user interface should be used.
 	 *
 	 * \param use \b true if the simple user interface should be used, \b false

@@ -1,8 +1,8 @@
 /**
  * \file synchronisewhatcombo.h
  * \author Darren Edale
- * \date September 2017
- * \version 1.0.0
+ * \date October 2017
+ * \version 1.1.0
  *
  * \brief Declaration of the SynchroniseWhatCombo widget class.
  *

@@ -1,8 +1,8 @@
 /**
  * \file preset.cpp
  * \author Darren Edale
- * \date September 2017
- * \version 1.0.0
+ * \date October 2017
+ * \version 1.1.0
  *
  * \brief Implementation of the Preset class.
  *
@@ -40,73 +40,74 @@ namespace Qync {
 	/**
 	 * \brief Implementation details for the Qync::Preset class.
 	 */
-	namespace Detail::Preset {
-		// These aid with loading from and saving to XML. It is not necessary to
-		// implement any added features as properties, but doing so means that the
-		// XML reading/writing code will automatically handle them without having
-		// to write any XML parsing code (which can be a bit verbose).
+	namespace Detail {
+		namespace Preset {
+			// These aid with loading from and saving to XML. It is not necessary to
+			// implement any added features as properties, but doing so means that the
+			// XML reading/writing code will automatically handle them without having
+			// to write any XML parsing code (which can be a bit verbose).
 
-		// data structure containing the getter and setter for a property
-		// getters and setters are member functions of Preset.
-		template<typename T>
-		struct PresetProperty {
-			using Type = T;
-			using Getter = const T & (Qync::Preset::*) (void) const;
-			using Setter = bool (Qync::Preset::*)(const T &);
+			// data structure containing the getter and setter for a property
+			// getters and setters are member functions of Preset.
+			template<typename T>
+			struct PresetProperty {
+				using Type = T;
+				using Getter = const T & (Qync::Preset::*) (void) const;
+				using Setter = bool (Qync::Preset::*)(const T &);
 
-			const Getter getter;
-			const Setter setter;
-		};
+				const Getter getter;
+				const Setter setter;
+			};
 
-		// Alias for a set of properties of a given type. it's a map of
-		// property-name => PresetProperty, with property-name a std::string
-		//
-		// so for any given property "myproperty" the value contains the getter
-		// and setter for "myproperty". So properties["myproperty"].setter(value)
-		// sets the value of "myproperty" and properties["myproperties"].getter()
-		// retrieves the value. The actual call syntax is more complicated because
-		// it needs an object to operate on.
-		template<typename T>
-		using PresetProperties = std::unordered_map<std::string, PresetProperty<T>>;
+			// Alias for a set of properties of a given type. it's a map of
+			// property-name => PresetProperty, with property-name a std::string
+			//
+			// so for any given property "myproperty" the value contains the getter
+			// and setter for "myproperty". So properties["myproperty"].setter(value)
+			// sets the value of "myproperty" and properties["myproperties"].getter()
+			// retrieves the value. The actual call syntax is more complicated because
+			// it needs an object to operate on.
+			template<typename T>
+			using PresetProperties = std::unordered_map<std::string, PresetProperty<T>>;
 
-		// the boolean properties for Preset objects
-		static PresetProperties<bool> booleanPresetProperties = {
-		  {"preserveTime", {&Qync::Preset::preserveTime, &Qync::Preset::setPreserveTime}},
-		  {"preservePermissions", {&Qync::Preset::preservePermissions, &Qync::Preset::setPreservePermissions}},
-		  {"preserveOwner", {&Qync::Preset::preserveOwner, &Qync::Preset::setPreserveOwner}},
-		  {"preserveGroup", {&Qync::Preset::preserveGroup, &Qync::Preset::setPreserveGroup}},
+			// the boolean properties for Preset objects
+			static PresetProperties<bool> booleanPresetProperties = {
+			  {"preserveTime", {&Qync::Preset::preserveTime, &Qync::Preset::setPreserveTime}},
+			  {"preservePermissions", {&Qync::Preset::preservePermissions, &Qync::Preset::setPreservePermissions}},
+			  {"preserveOwner", {&Qync::Preset::preserveOwner, &Qync::Preset::setPreserveOwner}},
+			  {"preserveGroup", {&Qync::Preset::preserveGroup, &Qync::Preset::setPreserveGroup}},
 
-		  {"windowsCompatability", {&Qync::Preset::windowsCompatability, &Qync::Preset::setWindowsCompatability}},
-		  {"honourDeletions", {&Qync::Preset::honourDeletions, &Qync::Preset::setHonourDeletions}},
+			  {"windowsCompatability", {&Qync::Preset::windowsCompatability, &Qync::Preset::setWindowsCompatability}},
+			  {"honourDeletions", {&Qync::Preset::honourDeletions, &Qync::Preset::setHonourDeletions}},
 
-		  {"alwaysCompareChecksums", {&Qync::Preset::alwaysCompareChecksums, &Qync::Preset::setAlwaysCompareChecksums}},
-		  {"ignoreTimes", {&Qync::Preset::ignoreTimes, &Qync::Preset::setIgnoreTimes}},
-		  {"preserveDevices", {&Qync::Preset::preserveDevices, &Qync::Preset::setPreserveDevices}},
-		  {"keepPartialTransfers", {&Qync::Preset::keepPartialTransfers, &Qync::Preset::setKeepPartialTransfers}},
-		  {"copySymlinksAsSymlinks", {&Qync::Preset::copySymlinksAsSymlinks, &Qync::Preset::setCopySymlinksAsSymlinks}},
-		  {"makeBackups", {&Qync::Preset::makeBackups, &Qync::Preset::setMakeBackups}},
+			  {"alwaysCompareChecksums", {&Qync::Preset::alwaysCompareChecksums, &Qync::Preset::setAlwaysCompareChecksums}},
+			  {"ignoreTimes", {&Qync::Preset::ignoreTimes, &Qync::Preset::setIgnoreTimes}},
+			  {"preserveDevices", {&Qync::Preset::preserveDevices, &Qync::Preset::setPreserveDevices}},
+			  {"keepPartialTransfers", {&Qync::Preset::keepPartialTransfers, &Qync::Preset::setKeepPartialTransfers}},
+			  {"copySymlinksAsSymlinks", {&Qync::Preset::copySymlinksAsSymlinks, &Qync::Preset::setCopySymlinksAsSymlinks}},
+			  {"makeBackups", {&Qync::Preset::makeBackups, &Qync::Preset::setMakeBackups}},
 
-		  {"useTransferCompression", {&Qync::Preset::useTransferCompression, &Qync::Preset::setUseTransferCompression}},
-		  {"onlyUpdateExistingEntries", {&Qync::Preset::onlyUpdateExistingEntries, &Qync::Preset::setOnlyUpdateExistingEntries}},
-		  {"dontUpdateExistingEntries", {&Qync::Preset::dontUpdateExistingEntries, &Qync::Preset::setDontUpdateExistingEntries}},
-		  {"dontMapUsersAndGroups", {&Qync::Preset::dontMapUsersAndGroups, &Qync::Preset::setDontMapUsersAndGroups}},
-		  {"copyHardlinksAsHardlinks", {&Qync::Preset::copyHardlinksAsHardlinks, &Qync::Preset::setCopyHardlinksAsHardlinks}},
-		  {"showItemisedChanges", {&Qync::Preset::showItemisedChanges, &Qync::Preset::setShowItemisedChanges}},
-		};
+			  {"useTransferCompression", {&Qync::Preset::useTransferCompression, &Qync::Preset::setUseTransferCompression}},
+			  {"onlyUpdateExistingEntries", {&Qync::Preset::onlyUpdateExistingEntries, &Qync::Preset::setOnlyUpdateExistingEntries}},
+			  {"dontUpdateExistingEntries", {&Qync::Preset::dontUpdateExistingEntries, &Qync::Preset::setDontUpdateExistingEntries}},
+			  {"dontMapUsersAndGroups", {&Qync::Preset::dontMapUsersAndGroups, &Qync::Preset::setDontMapUsersAndGroups}},
+			  {"copyHardlinksAsHardlinks", {&Qync::Preset::copyHardlinksAsHardlinks, &Qync::Preset::setCopyHardlinksAsHardlinks}},
+			  {"showItemisedChanges", {&Qync::Preset::showItemisedChanges, &Qync::Preset::setShowItemisedChanges}},
+			};
 
-		// the string properties for Preset objects
-		static PresetProperties<QString> stringPresetProperties = {
-		  {"logFile", {&Qync::Preset::logFile, &Qync::Preset::setLogFile}},
-		};
-
-	}  // namespace Detail::Preset
+			// the string properties for Preset objects
+			static PresetProperties<QString> stringPresetProperties = {
+			  {"logFile", {&Qync::Preset::logFile, &Qync::Preset::setLogFile}},
+			};
+		}  // namespace Preset
+	}		// namespace Detail
 
 
 	/**
 	 * \class Preset
 	 * \author Darren Edale
-	 * \date September 2017
-	 * \version 1.0.0
+	 * \date October 2017
+	 * \version 1.1.0
 	 *
 	 * \brief A class to represent a preset for the rsync process.
 	 *

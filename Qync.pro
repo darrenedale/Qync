@@ -52,7 +52,6 @@ DISTFILES += tools/* \
     dist/linux/doc/qync/copyright \
     dist/linux/doc/qync/changelog.Debian \
     dist/linux/doc/qync/changelog \
-	Qync.Doxyfile \
     todo.txt \
     docs/license.txt \
     docs/cwrsync-license.txt \
@@ -64,7 +63,8 @@ DISTFILES += tools/* \
     docs/license_putty.dox \
     .gitignore \
     .clang-format \
-    docs/namespaces.dox
+    docs/namespaces.dox \
+    qync.Doxyfile
 
 FORMS += \
     ui/processdialogue.ui \

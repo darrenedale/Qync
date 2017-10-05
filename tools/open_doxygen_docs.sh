@@ -1,16 +1,17 @@
 #! /usr/bin/env bash
+THISTOOL=$(basename "$0")
 PROJECTNAME="$1"
 cd "$(dirname "$0")/.."
 
 if [ "" == "${PROJECTNAME}" ]; then
     PROJECTNAME="$(basename "$(pwd)")"
-	echo >&2 "WRN No project name specified - using ${PROJECTNAME}"
+	echo >&2 "${THISTOOL}: WRN No project name specified - using \"${PROJECTNAME}\""
 fi
 
 DOCPATH=$(./tools/get_doxygen_output_path.sh "${PROJECTNAME}")
 
 if [ "" == "${DOCPATH}" ]; then
-	echo >&2 The path to the documentation for ${PROJECTNAME} is not known.
+    echo >&2 "${THISTOOL}: ERR The path to the documentation for ${PROJECTNAME} is not known."
 	exit 1
 fi
 

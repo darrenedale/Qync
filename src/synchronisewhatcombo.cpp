@@ -1,8 +1,8 @@
 /**
  * \file synchronisewhatcombo.cpp
  * \author Darren Edale
- * \date September 2017
- * \version 1.0.0
+ * \date October 2017
+ * \version 1.1.0
  *
  * \brief Implementation of the SynchroniseWhatCombo widget class.
  *
@@ -25,8 +25,8 @@ namespace Qync {
 	/**
 	 * \class SynchroniseWhatCombo
 	 * \author Darren Edale
-	 * \date September 2017
-	 * \version 1.0.0
+	 * \date October 2017
+	 * \version 1.1.0
 	 *
 	 * \brief A custom combo box for choosing what to synchronise.
 	 *

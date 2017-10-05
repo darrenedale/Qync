@@ -1,8 +1,8 @@
 /**
  * \file application.cpp
  * \author Darren Edale
- * \date September 2017
- * \version 1.0.0
+ * \date October 2017
+ * \version 1.1.0
  *
  * \brief Implementation of the Application class.
  *
@@ -37,9 +37,9 @@
 
 #define QYNC_APP_NAME "Qync"
 #define QYNC_APP_DISPLAY_NAME "Qync"
-#define QYNC_APP_VERSION_STRING "1.0.1"
-#define QYNC_APP_VERSION_DATE "September 2017"
-#define QYNC_APP_BUILD_ID "493061f"
+#define QYNC_APP_VERSION_STRING "1.1.0"
+#define QYNC_APP_VERSION_DATE "October 2017"
+#define QYNC_APP_BUILD_ID "f7c2869"
 #define QYNC_APP_WEBSITE "http://www.equituk.net/"
 #define QYNC_ORG_NAME "BitCraft"
 #define QYNC_ORG_DOMAIN "bitcraft.eu"
@@ -51,8 +51,8 @@ namespace Qync {
 	/**
 	 * \class Application
 	 * \author Darren Edale
-	 * \date September 2017
-	 * \version 1.0.0
+	 * \date October 2017
+	 * \version 1.1.0
 	 *
 	 * \brief Manages core application functionality for Qync.
 	 *

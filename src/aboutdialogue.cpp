@@ -1,8 +1,8 @@
 /**
  * \file aboutdialogue.cpp
  * \author Darren Edale
- * \date September 2017
- * \version 1.0.0
+ * \date October 2017
+ * \version 1.1.0
  *
  * \brief Implementation of the AboutDialogue class.
  *
@@ -29,8 +29,8 @@ namespace Qync {
 	/**
 	 * \class AboutDialogue
 	 * \author Darren Edale
-	 * \date September 2017
-	 * \version 1.0.0
+	 * \date October 2017
+	 * \version 1.1.0
 	 *
 	 * \brief Dialogue showing information about the Qync application.
 	 */

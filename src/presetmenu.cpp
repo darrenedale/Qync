@@ -2,7 +2,7 @@
  * \file presetmenu.cpp
  * \author Darren Edale
  * \date September, 2017
- * \version 1.0.0
+ * \version 1.1.0
  *
  * \brief Declaration of the PresetMenu class.
  *

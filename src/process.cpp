@@ -1,8 +1,8 @@
 /**
  * \file process.cpp
  * \author Darren Edale
- * \date September 2017
- * \version 1.0.0
+ * \date October 2017
+ * \version 1.1.0
  *
  * \brief Implementation of the Process class.
  *
@@ -42,8 +42,8 @@ namespace Qync {
 	/**
 	 * \class Process
 	 * \author Darren Edale
-	 * \date September 2017
-	 * \version 1.0.0
+	 * \date October 2017
+	 * \version 1.1.0
 	 *
 	 * \brief Wraps the rsync process.
 	 *
@@ -304,42 +304,6 @@ namespace Qync {
 
 
 	/**
-	 * \fn Process::process(void)
-	 * \brief Retrieve the actual process object.
-	 *
-	 * The process object can be \b null if the process has yet to be
-	 * started. It usually remains non-null after the process has finished
-	 * but this is not guaranteed.
-	 *
-	 * \return The process.
-	 */
-
-
-	/**
-	 * \fn Process::command(void) const
-	 * \brief Retrieve the \b rsync program path.
-	 *
-	 * \return The \b rsync path.
-	 */
-
-
-	/**
-	 * \fn Process::arguments(void) const
-	 * \brief Retrieve the \b rsync arguments.
-	 *
-	 * \return The arguments.
-	 */
-
-
-	/**
-	 * \fn Process::logFile(void) const
-	 * \brief Retrieve the output log file path.
-	 *
-	 * \return The output log file path.
-	 */
-
-
-	/**
 	 * \brief Start the process.
 	 *
 	 * Once the process has started, the started() signal will be emitted
@@ -452,7 +416,7 @@ namespace Qync {
 					continue;
 				}
 
-				/* WARNING c++17 feature: if initialisation statements */
+				/* WARNING C++17 feature: if initialisation statements */
 				if(QRegularExpressionMatch progressLineMatch = progressLine.match(data); progressLineMatch.hasMatch()) {
 					QStringList caps = progressLineMatch.capturedTexts();
 
@@ -673,17 +637,6 @@ namespace Qync {
 	 * fairly cryptic unless the end user is familiar with \b rsync. It
 	 * is recommended that errors emitted by this signal are introduced
 	 * to the user gently!
-	 */
-
-
-	/**
-	 * \fn Process::standardOutputUpdated(QString);
-	 * \brief Emitted when more data has been written to \b rsync's
-	 * standard output stream.
-	 *
-	 * \param data is the data written to standard output since this signal
-	 * was last emitted, or since the process started if this is the first
-	 * time the signal has been emitted.
 	 */
 
 
