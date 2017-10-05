@@ -10,14 +10,16 @@
  * - sourcedestinationwidget.h
  * - sourcedestinationwidget.ui
  * - QFileDialog
- *
- * \todo autocomplete for source/destination line edits
+ * - QCompleter
+ * - QFileSystemModel
  */
 
 #include "sourcedestinationwidget.h"
 #include "ui_sourcedestinationwidget.h"
 
 #include <QFileDialog>
+#include <QCompleter>
+#include <QFileSystemModel>
 
 
 namespace Qync {
@@ -56,6 +58,25 @@ namespace Qync {
 		setMinimumHeight(height());
 		setMaximumHeight(height());
 
+		// completer is destroyed in when SourceDestinationWidget
+		// is destroyed; fsMOdel destroyed when completer destroyed
+		auto * completer = new QCompleter(this);
+		auto * fsModel = new QFileSystemModel(completer);
+		fsModel->setRootPath("");
+		completer->setModel(fsModel);
+		m_ui->source->setCompleter(completer);
+		completer->setCaseSensitivity(Qt::CaseInsensitive);
+		completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+
+		// ...ditto...
+		completer = new QCompleter(this);
+		fsModel = new QFileSystemModel(completer);
+		fsModel->setRootPath("");
+		completer->setModel(fsModel);
+		m_ui->destination->setCompleter(completer);
+		completer->setCaseSensitivity(Qt::CaseInsensitive);
+		completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+
 		/* designer/.ui file can't yet connect signals to signals */
 		connect(m_ui->source, &QLineEdit::textEdited, this, &SourceDestinationWidget::sourceChanged);
 		connect(m_ui->destination, &QLineEdit::textEdited, this, &SourceDestinationWidget::destinationChanged);
@@ -80,6 +101,7 @@ namespace Qync {
 	void SourceDestinationWidget::setSource(const QString & src) {
 		if(src != m_ui->source->text()) {
 			m_ui->source->setText(src);
+			qobject_cast<QFileSystemModel *>(m_ui->source->completer()->model())->setRootPath(QFileInfo(src).absolutePath());
 			Q_EMIT sourceChanged(src);
 		}
 	}
@@ -103,6 +125,7 @@ namespace Qync {
 	void SourceDestinationWidget::setDestination(const QString & dest) {
 		if(dest != m_ui->destination->text()) {
 			m_ui->destination->setText(dest);
+			qobject_cast<QFileSystemModel *>(m_ui->destination->completer()->model())->setRootPath(QFileInfo(dest).absolutePath());
 			Q_EMIT destinationChanged(dest);
 		}
 	}
