@@ -191,7 +191,9 @@ namespace Qync {
 	 * released.
 	 */
 	void ProcessWidget::onProcessFinished(const QString & msg) {
+		m_ui->itemProgress->setMaximum(100);
 		m_ui->itemProgress->setValue(100);
+		m_ui->overallProgress->setMaximum(100);
 		m_ui->overallProgress->setValue(100);
 		m_ui->itemName->setText(QString("<strong>%1</strong>").arg(tr("Finished")));
 
@@ -216,7 +218,9 @@ namespace Qync {
 	 * released.
 	 */
 	void ProcessWidget::onProcessInterrupted(const QString & msg) {
+		m_ui->itemProgress->setMaximum(100);
 		m_ui->itemProgress->setValue(0);
+		m_ui->overallProgress->setMaximum(100);
 		m_ui->overallProgress->setValue(0);
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});
@@ -238,7 +242,9 @@ namespace Qync {
 	 * released.
 	 */
 	void ProcessWidget::onProcessFailed(const QString & msg) {
+		m_ui->itemProgress->setMaximum(100);
 		m_ui->itemProgress->setValue(0);
+		m_ui->overallProgress->setMaximum(100);
 		m_ui->overallProgress->setValue(0);
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});

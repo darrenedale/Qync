@@ -47,8 +47,6 @@ namespace Qync {
 		void onProcessInterrupted(const QString & msg = {});
 		void onProcessFailed(const QString & msg = {});
 
-		void showError(const QString & err);
-
 	private:
 		std::unique_ptr<Ui::ProcessWidget> m_ui;
 		std::shared_ptr<Process> m_process;
