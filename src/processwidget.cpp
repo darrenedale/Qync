@@ -181,8 +181,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate to the dialogue that the process has successfully
-	 * completed.
+	 * \brief Indicate that the process has successfully completed.
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.
@@ -201,7 +200,7 @@ namespace Qync {
 		 * process in its stdout, so we don't clear it */
 
 		if(!msg.isEmpty()) {
-			qyncApp->mainWindow()->showNotification(tr("%1 Message").arg(qyncApp->applicationDisplayName()), msg, NotificationType::Warning);
+			qyncApp->mainWindow()->showNotification(tr("%1 Message").arg(qyncApp->applicationDisplayName()), msg);
 		}
 
 		m_process.reset();
@@ -209,7 +208,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate to the dialogue that the process was interrupted.
+	 * \brief Indicate that the process was interrupted.
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.
@@ -230,8 +229,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate to the dialogue that the process has unsuccessfully
-	 * completed.
+	 * \brief Indicate that the process has unsuccessfully completed.
 	 *
 	 * \param msg is the error message to display.
 	 *
@@ -250,18 +248,6 @@ namespace Qync {
 		m_ui->transferSpeed->setText({});
 		qyncApp->mainWindow()->showNotification(tr("%1 Error").arg(qyncApp->applicationDisplayName()), (msg.isEmpty() ? tr("The process failed.") : msg), NotificationType::Error);
 		m_process.reset();
-	}
-
-
-	/**
-	 * \brief Show an error message.
-	 *
-	 * \param err is the error message to display.
-	 *
-	 * The error message is shown in a warning dialogue.
-	 */
-	void ProcessWidget::showError(const QString & err) {
-		qyncApp->mainWindow()->showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The following error occurred in rsync:\n\n%1").arg(err), NotificationType::Error);
 	}
 
 
