@@ -32,7 +32,7 @@ namespace Qync {
 
 	public:
 		explicit ProcessWidget(QWidget * parent = nullptr, const std::shared_ptr<Process> & process = nullptr);
-		~ProcessWidget(void);
+		~ProcessWidget();
 
 		void setProcess(const std::shared_ptr<Process> & process);
 
@@ -42,7 +42,7 @@ namespace Qync {
 		void updateOverallProgress(int pc);
 		void updateTransferSpeed(float bytesPerSecond);
 
-		void onProcessStarted(void);
+		void onProcessStarted();
 		void onProcessFinished(const QString & msg = {});
 		void onProcessInterrupted(const QString & msg = {});
 		void onProcessFailed(const QString & msg = {});

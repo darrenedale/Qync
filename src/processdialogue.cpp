@@ -90,7 +90,7 @@ namespace Qync {
 	/**
 	 * \brief Destroy the ProcessDialogue
 	 */
-	ProcessDialogue::~ProcessDialogue(void) {
+	ProcessDialogue::~ProcessDialogue() {
 		m_ui->detailsButton->disconnect(this);
 		m_saveButton = nullptr;
 		m_abortButton = nullptr;
@@ -117,7 +117,7 @@ namespace Qync {
 	 * If it is currently visible the detailed info text will be hidden; if
 	 * it is currently hiddent it will be made visible.
 	 */
-	void ProcessDialogue::toggleDetailedText(void) {
+	void ProcessDialogue::toggleDetailedText() {
 		if(m_ui->details->isVisible()) {
 			hideDetailedText();
 		}
@@ -132,7 +132,7 @@ namespace Qync {
 	 *
 	 * The detailed info text widget will be made visible.
 	 */
-	void ProcessDialogue::showDetailedText(void) {
+	void ProcessDialogue::showDetailedText() {
 		m_ui->details->show();
 		m_ui->detailsButton->setText(tr("Hide details"));
 		m_ui->detailsButton->setIcon(QIcon::fromTheme("arrow-up", QIcon(":icons/buttons/toggle_up")));
@@ -145,7 +145,7 @@ namespace Qync {
 	 *
 	 * The detailed info text widget will be hidden.
 	 */
-	void ProcessDialogue::hideDetailedText(void) {
+	void ProcessDialogue::hideDetailedText() {
 		m_ui->details->hide();
 		m_ui->detailsButton->setText(tr("Show details"));
 		m_ui->detailsButton->setIcon(QIcon::fromTheme("arrow-down", QIcon(":icons/buttons/toggle_down")));
@@ -170,7 +170,7 @@ namespace Qync {
 	 * the dialogue, the file chosen in overwritten with the content of
 	 * the output text edit.
 	 */
-	void ProcessDialogue::saveOutput(void) {
+	void ProcessDialogue::saveOutput() {
 		QString fileName = QFileDialog::getSaveFileName(this, tr("Save %1 output").arg(qyncApp->applicationDisplayName()));
 
 		if(fileName.isEmpty()) {
@@ -194,7 +194,7 @@ namespace Qync {
 	 *
 	 * The progress widgets are reset and the stop button is enabled.
 	 */
-	void ProcessDialogue::onProcessStarted(void) {
+	void ProcessDialogue::onProcessStarted() {
 		m_abortButton->setEnabled(true);
 		m_saveButton->setEnabled(false);
 	}

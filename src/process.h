@@ -39,7 +39,7 @@ namespace Qync {
 
 	public:
 		/* based on v3.0.7 of rsync. see the rsync man page */
-		enum ExitCode {
+		enum class ExitCode {
 			Success = 0,
 			SyntaxError = 1,
 			ProtocolIncompatibility = 2,
@@ -69,13 +69,13 @@ namespace Qync {
 
 		Process(const Preset & preset, RunType type = RunType::Normal);
 		Process(const QString & cmd, const Preset & preset, RunType type = RunType::Normal);
-		virtual ~Process(void);
+		virtual ~Process();
 
-		inline RunType runType(void) const {
+		inline RunType runType() const {
 			return m_runType;
 		}
 
-		inline bool isDryRun(void) const {
+		inline bool isDryRun() const {
 			return RunType::DryRun == m_runType;
 		}
 
@@ -94,13 +94,13 @@ namespace Qync {
 		void error(QString err);
 
 	public Q_SLOTS:
-		void start(void);
-		void stop(void);
+		void start();
+		void stop();
 
 	private Q_SLOTS:
-		void parseStdout(void);
-		void parseStderr(void);
-		void onProcessFinished(void);
+		void parseStdout();
+		void parseStderr();
+		void onProcessFinished();
 
 	protected:
 		static QStringList rsyncArguments(const Preset & preset, const QStringList & forceOptions = {});

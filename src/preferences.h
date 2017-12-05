@@ -40,18 +40,18 @@ namespace Qync {
 
 	class Preferences {
 	public:
-		Preferences(void);
+		Preferences();
 		explicit Preferences(const QString & fileName);
-		virtual ~Preferences(void) = default;
+		virtual ~Preferences() = default;
 
-		bool save(void) const;
+		bool save() const;
 		bool saveAs(const QString & fileName);
 		bool saveCopyAs(const QString & fileName) const;
 
-		bool load(void);
+		bool load();
 		bool loadFrom(const QString & fileName);
 
-		inline QString rsyncPath(void) const {
+		inline QString rsyncPath() const {
 			return m_rsyncBinary;
 		}
 
@@ -60,11 +60,11 @@ namespace Qync {
 			return true;
 		}
 
-		bool rsyncPathIsValid(void) const;
+		bool rsyncPathIsValid() const;
 
 	protected:
 		static optional<bool> parseBooleanText(const QString & boolString);
-		virtual void setDefaults(void);
+		virtual void setDefaults();
 		virtual bool parseXmlStream(QXmlStreamReader & xml);
 		virtual bool parseXmlElement(QXmlStreamReader & xml);
 		bool parseCorePreferencesXml(QXmlStreamReader & xml);

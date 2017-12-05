@@ -30,15 +30,15 @@ namespace Qync {
 
 	public:
 		explicit PreferencesDialogue(QWidget * parent = nullptr);
-		~PreferencesDialogue(void);
+		~PreferencesDialogue();
 
 	private Q_SLOTS:
-		void apply(void);
-		void save(void);
-		void chooseRsyncPath(void);
+		void apply();
+		void save();
+		void chooseRsyncPath();
 
 	protected:
-		virtual void updateWidgets(void);
+		virtual void updateWidgets();
 
 	private:
 		std::unique_ptr<Ui::PreferencesDialogue> m_ui;

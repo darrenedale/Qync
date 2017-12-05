@@ -113,7 +113,7 @@ namespace Qync {
 	/**
 	 * \brief Create a new MainWindow.
 	 */
-	MainWindow::MainWindow(void)
+	MainWindow::MainWindow()
 	: QMainWindow(nullptr),
 	  m_ui(new Ui::MainWindow),
 	  m_prefsWindow(nullptr),
@@ -199,7 +199,7 @@ namespace Qync {
 	/**
 	 * \brief Destroy the MainWindow.
 	 */
-	MainWindow::~MainWindow(void) = default;
+	MainWindow::~MainWindow() = default;
 
 
 	/**
@@ -263,7 +263,7 @@ namespace Qync {
 	 * This slot essentially makes the visual appearance of the GUI match
 	 * the settings stored in the application's preferences object.
 	 */
-	void MainWindow::onPreferencesChanged(void) {
+	void MainWindow::onPreferencesChanged() {
 		useSimpleUi(qyncApp->preferences().useSimpleUi());
 	}
 
@@ -271,7 +271,7 @@ namespace Qync {
 	/**
 	 * \brief Disconnect the application's signals from the window's slots.
 	 */
-	void MainWindow::disconnectApplication(void) {
+	void MainWindow::disconnectApplication() {
 		qyncApp->disconnect(this);
 	}
 
@@ -279,7 +279,7 @@ namespace Qync {
 	/**
 	 * \brief Connect the application's signals to the window's slots.
 	 */
-	void MainWindow::connectApplication(void) {
+	void MainWindow::connectApplication() {
 		connect(qyncApp, &Application::preferencesChanged, this, &MainWindow::onPreferencesChanged);
 	}
 
@@ -326,7 +326,7 @@ namespace Qync {
 	 * If the user does not cancel the dialogue, the chosen file is set
 	 * as the text in the log file line edit.
 	 */
-	void MainWindow::chooseLogFile(void) {
+	void MainWindow::chooseLogFile() {
 		QString newLog = QFileDialog::getSaveFileName(this, tr("Choose log file"), m_ui->logFile->text());
 
 		if(!newLog.isNull()) {
@@ -338,7 +338,7 @@ namespace Qync {
 	/**
 	 * \brief Switch the content of the source and destination line edits.
 	 */
-	void MainWindow::switchSourceAndDestination(void) {
+	void MainWindow::switchSourceAndDestination() {
 		m_ui->sourceAndDestination->swapSourceAndDestination();
 		m_ui->simpleSourceAndDestination->swapSourceAndDestination();
 	}
@@ -350,7 +350,7 @@ namespace Qync {
 	 * The current preset is retrieved from the application and updated with
 	 * the settings set in all the widgets in the window.
 	 */
-	void MainWindow::saveSettingsToCurrentPreset(void) {
+	void MainWindow::saveSettingsToCurrentPreset() {
 		if(m_ui->presets->currentItemIsNewPreset()) {
 			// saving to <new preset> item so create a new one instead
 			newPresetFromSettings();
@@ -368,7 +368,7 @@ namespace Qync {
 	 *
 	 * The current preset is removed from the application.
 	 */
-	void MainWindow::removeCurrentPreset(void) {
+	void MainWindow::removeCurrentPreset() {
 		if(m_ui->presets->currentItemIsNewPreset()) {
 			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("There are no presets to remove."), NotificationType::Warning);
 			return;
@@ -388,7 +388,7 @@ namespace Qync {
 	 * new preset. If the dialogue is not cancelled, a new preset is
 	 * created using the current settings and added to the application.
 	 */
-	void MainWindow::newPresetFromSettings(void) {
+	void MainWindow::newPresetFromSettings() {
 		newPreset(true);
 	}
 
@@ -431,7 +431,7 @@ namespace Qync {
 	 * the application. Any failures to do so, other than the user cancelling
 	 * the dialogue, are reported to the user.
 	 */
-	void MainWindow::importPreset(void) {
+	void MainWindow::importPreset() {
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Import %1 preset").arg(qyncApp->applicationDisplayName()));
 
 		if(fileName.isEmpty()) {
@@ -461,7 +461,7 @@ namespace Qync {
 	 * preset and altered the settings without saving the settings back to
 	 * selected preset.
 	 */
-	void MainWindow::exportPreset(void) {
+	void MainWindow::exportPreset() {
 		QString fileName = QFileDialog::getSaveFileName(this, tr("Export %1 preset").arg(qyncApp->applicationDisplayName()));
 
 		if(fileName.isEmpty()) {
@@ -599,7 +599,7 @@ namespace Qync {
 			m_ui->synchroniseButton->setEnabled(false);
 
 			// re-enable the UI when the process has finished
-			connect(process.get(), static_cast<void (Process::*)(Process::ExitCode)>(&Process::finished), [this](void) {
+			connect(process.get(), static_cast<void (Process::*)(Process::ExitCode)>(&Process::finished), [this]() {
 				m_ui->simpleDoFullBackup->setEnabled(true);
 				m_ui->simpleDoIncrementalBackup->setEnabled(true);
 				m_ui->simpleSourceAndDestination->setEnabled(true);
@@ -630,7 +630,7 @@ namespace Qync {
 	 * that performs all operations defined by the settings without actually
 	 * modifying anything on disk or on a remote server.
 	 */
-	void MainWindow::simulate(void) {
+	void MainWindow::simulate() {
 		Preset preset;
 		fillPreset(preset);
 		auto process = std::make_shared<Process>(preset, Process::RunType::DryRun);
@@ -647,7 +647,7 @@ namespace Qync {
 	 * The current settings are used to create a Process object that will
 	 * execute the synchronisation.
 	 */
-	void MainWindow::synchronise(void) {
+	void MainWindow::synchronise() {
 		Preset preset;
 		fillPreset(preset);
 		auto process = std::make_shared<Process>(preset);
@@ -661,7 +661,7 @@ namespace Qync {
 	/**
 	 * \brief Show the preferences dialogue.
 	 */
-	void MainWindow::showPreferences(void) {
+	void MainWindow::showPreferences() {
 		m_prefsWindow->show();
 		m_prefsWindow->raise();
 		m_prefsWindow->activateWindow();
@@ -671,7 +671,7 @@ namespace Qync {
 	/**
 	 * \brief Show the about Qync dialogue.
 	 */
-	void MainWindow::about(void) {
+	void MainWindow::about() {
 		m_aboutDialogue->show();
 		m_aboutDialogue->raise();
 		m_aboutDialogue->activateWindow();
@@ -683,7 +683,7 @@ namespace Qync {
 	 *
 	 * The content is retrieved from \ref Application::rsyncVersionText()
 	 */
-	void MainWindow::aboutRsync(void) {
+	void MainWindow::aboutRsync() {
 		QMessageBox::information(this, tr("Qync - About rsync"), qyncApp->rsyncVersionText());
 	}
 

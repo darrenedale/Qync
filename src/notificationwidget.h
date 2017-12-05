@@ -37,18 +37,18 @@ namespace Qync {
 		explicit NotificationWidget(QWidget * parent = nullptr);
 		~NotificationWidget();
 
-		QString message(void) const;
+		QString message() const;
 		void setMessage(const QString & message);
 
-		inline NotificationType type(void) const {
+		inline NotificationType type() const {
 			return m_type;
 		}
 
 		void setType(NotificationType type);
 
 	public Q_SLOTS:
-		void show(void);
-		void hide(void);
+		void show();
+		void hide();
 
 	private:
 		std::unique_ptr<Ui::NotificationWidget> m_ui;

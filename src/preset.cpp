@@ -52,7 +52,7 @@ namespace Qync {
 			template<typename T>
 			struct PresetProperty {
 				using Type = T;
-				using Getter = const T & (Qync::Preset::*) (void) const;
+				using Getter = const T & (Qync::Preset::*) () const;
 				using Setter = bool (Qync::Preset::*)(const T &);
 
 				const Getter getter;
@@ -514,7 +514,7 @@ namespace Qync {
 	/**
 	 * \brief Set all settings to default values.
 	 */
-	void Preset::setDefaults(void) {
+	void Preset::setDefaults() {
 		m_name = QString();
 
 		m_source = QString();
@@ -922,7 +922,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::name(void)
+	 * \fn Preset::name()
 	 * \brief Get the name of the preset.
 	 *
 	 * \return The name of the preset.
@@ -930,7 +930,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::fileName(void)
+	 * \fn Preset::fileName()
 	 * \brief Get the file name of the preset.
 	 *
 	 * \return The current path to the file for the preset.
@@ -938,7 +938,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::save(void)
+	 * \fn Preset::save()
 	 * \brief Save the preset to its internally stored file name.
 	 *
 	 * \return \b true if the preset file was saved, \b false otherwise.
@@ -946,7 +946,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::source(void)
+	 * \fn Preset::source()
 	 * \brief Get the source location.
 	 *
 	 * \return The source.
@@ -954,7 +954,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::destination(void)
+	 * \fn Preset::destination()
 	 * \brief Get the destination location.
 	 *
 	 * \return The destination.
@@ -962,7 +962,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::preserveTime(void)
+	 * \fn Preset::preserveTime()
 	 * \brief Get whether file timestamps should be preserved.
 	 *
 	 * \return \b true if timestamps should be preserved, \b false
@@ -971,7 +971,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::preservePermissions(void)
+	 * \fn Preset::preservePermissions()
 	 * \brief Get whether file permissions should be preserved.
 	 *
 	 * \return \b true if permissions should be preserved, \b false
@@ -980,7 +980,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::preserveOwner(void)
+	 * \fn Preset::preserveOwner()
 	 * \brief Get whether file ownership should be preserved.
 	 *
 	 * \return \b true if ownership should be preserved, \b false
@@ -989,7 +989,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::preserveGroup(void)
+	 * \fn Preset::preserveGroup()
 	 * \brief Get whether file group ownership should be preserved.
 	 *
 	 * \return \b true if group ownership should be preserved, \b false
@@ -998,7 +998,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::windowsCompatability(void)
+	 * \fn Preset::windowsCompatability()
 	 * \brief Get whether Windows compatability should be used.
 	 *
 	 * \return \b true if Windows compatability should be used, \b false
@@ -1007,7 +1007,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::honourDeletions(void)
+	 * \fn Preset::honourDeletions()
 	 * \brief Get whether source tree deletions should be honoured.
 	 *
 	 * \return \b true if source tree deletions should be honoured, \b false
@@ -1016,7 +1016,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::alwaysCompareChecksums(void)
+	 * \fn Preset::alwaysCompareChecksums()
 	 * \brief Get whether entry checksums should always be used.
 	 *
 	 * \return \b true if entry checksums should always be used, \b false
@@ -1025,7 +1025,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::preserveDevices(void)
+	 * \fn Preset::preserveDevices()
 	 * \brief Get whether or device files should be preserved.
 	 *
 	 * \return \b true if device files should be preserved, \b false
@@ -1034,7 +1034,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::keepPartialTransfers(void)
+	 * \fn Preset::keepPartialTransfers()
 	 * \brief Get whether partial transfers should be kept.
 	 *
 	 * \return \b true if partial transfers should be kept, \b false
@@ -1043,7 +1043,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::copySymlinksAsSymlinks(void)
+	 * \fn Preset::copySymlinksAsSymlinks()
 	 * \brief Get whether symbolic links should be copied as symbolic
 	 * links.
 	 *
@@ -1053,7 +1053,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::makeBackups(void)
+	 * \fn Preset::makeBackups()
 	 * \brief Get whether destination tree backups should be made.
 	 *
 	 * \return \b true if destination tree backups should be made, \b false
@@ -1062,7 +1062,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::useTransferCompression(void)
+	 * \fn Preset::useTransferCompression()
 	 * \brief Get whether transfer compression should be used.
 	 *
 	 * \return \b true if transfer compression should be used, \b false
@@ -1071,7 +1071,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::onlyUpdateExistingEntries(void)
+	 * \fn Preset::onlyUpdateExistingEntries()
 	 * \brief Get whether only existing destination entries should be
 	 * updated.
 	 *
@@ -1081,7 +1081,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::dontUpdateExistingEntries(void)
+	 * \fn Preset::dontUpdateExistingEntries()
 	 * \brief Get whether entries that already exist on the destination
 	 * should be ignored.
 	 *
@@ -1091,7 +1091,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::dontMapUsersAndGroups(void)
+	 * \fn Preset::dontMapUsersAndGroups()
 	 * \brief Get whether UID and GID mapping should be suppressed.
 	 *
 	 * \return \b true if UID and GID mapping should be suppressed, \b false
@@ -1100,7 +1100,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::copyHardlinksAsHardlinks(void)
+	 * \fn Preset::copyHardlinksAsHardlinks()
 	 * \brief Get whether hard links should be copied as hard links.
 	 *
 	 * \return \b true if hard links should be copied as hard links,
@@ -1109,7 +1109,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::showItemisedChanges(void)
+	 * \fn Preset::showItemisedChanges()
 	 * \brief Get whether a list of itemised changes should be generated.
 	 *
 	 * \return \b true if a list of itemised changes should be generated,
@@ -1119,7 +1119,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::logFile(void)
+	 * \fn Preset::logFile()
 	 * \brief Get the log file.
 	 *
 	 * \return The path to the log file.

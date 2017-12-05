@@ -74,7 +74,7 @@ namespace Qync {
 
 		connect(m_ui->controls->button(QDialogButtonBox::Close), &QPushButton::clicked, this, &PreferencesDialogue::close);
 		connect(m_ui->controls->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, &PreferencesDialogue::apply);
-		connect(m_ui->controls->button(QDialogButtonBox::Save), &QPushButton::clicked, [this](void) {
+		connect(m_ui->controls->button(QDialogButtonBox::Save), &QPushButton::clicked, [this]() {
 			save();
 			close();
 		});
@@ -82,7 +82,7 @@ namespace Qync {
 
 
 	/** \brief Destroy the preferences dialogue. */
-	PreferencesDialogue::~PreferencesDialogue(void) = default;
+	PreferencesDialogue::~PreferencesDialogue() = default;
 
 
 	/**
@@ -91,7 +91,7 @@ namespace Qync {
 	 * All the widgets in the preferences window are updated to reflect the
 	 * state of the preferences in the manager.
 	 */
-	void PreferencesDialogue::updateWidgets(void) {
+	void PreferencesDialogue::updateWidgets() {
 		const auto & prefs = qyncApp->preferences();
 
 		m_ui->rsyncPath->setText(prefs.rsyncPath());
@@ -129,7 +129,7 @@ namespace Qync {
 	 *
 	 * The applications's preferences object is updated.
 	 */
-	void PreferencesDialogue::apply(void) {
+	void PreferencesDialogue::apply() {
 		qDebug() << __PRETTY_FUNCTION__ << "applying preferences";
 		auto & prefs = qyncApp->preferences();
 
@@ -170,7 +170,7 @@ namespace Qync {
 	 *
 	 * The applications's preferences object is updated.
 	 */
-	void PreferencesDialogue::save(void) {
+	void PreferencesDialogue::save() {
 		apply();
 
 		if(!qyncApp->preferences().save()) {
@@ -186,7 +186,7 @@ namespace Qync {
 	 * executable. If the user does not cancel the dialogue, the chosen file
 	 * is set as the text in the rsync path line edit.
 	 */
-	void PreferencesDialogue::chooseRsyncPath(void) {
+	void PreferencesDialogue::chooseRsyncPath() {
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Choose rsync executable"), m_ui->rsyncPath->text());
 
 		if(!fileName.isEmpty()) {

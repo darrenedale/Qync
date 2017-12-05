@@ -26,22 +26,22 @@ namespace Qync {
 	public:
 		explicit PresetCombo(QWidget * parent = nullptr);
 
-		void addItem(void) = delete;
-		void addItems(void) = delete;
-		void insertItem(void) = delete;
-		void insertItems(void) = delete;
-		void removeItem(void) = delete;
-		void clear(void) = delete;
+		void addItem() = delete;
+		void addItems() = delete;
+		void insertItem() = delete;
+		void insertItems() = delete;
+		void removeItem() = delete;
+		void clear() = delete;
 
-		bool currentItemIsNewPreset(void) const;
-		Preset & currentPreset(void) const;
+		bool currentItemIsNewPreset() const;
+		Preset & currentPreset() const;
 
 	Q_SIGNALS:
 		void currentPresetChanged(Preset &);
-		void newPresetSelected(void);
+		void newPresetSelected();
 
 	public Q_SLOTS:
-		void refresh(void);
+		void refresh();
 	};
 
 }  // namespace Qync

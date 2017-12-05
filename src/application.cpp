@@ -121,7 +121,7 @@ namespace Qync {
 	/**
 	 * \brief Destroy the application.
 	 */
-	Application::~Application(void) {
+	Application::~Application() {
 		clearPresets();
 	}
 
@@ -134,7 +134,7 @@ namespace Qync {
 	 *
 	 * \return The configuration directory path.
 	 */
-	QString Application::configurationPath(void) {
+	QString Application::configurationPath() {
 		return m_configPath;
 	}
 
@@ -147,7 +147,7 @@ namespace Qync {
 	 *
 	 * \return The presets directory path.
 	 */
-	QString Application::presetsPath(void) {
+	QString Application::presetsPath() {
 		return m_presetsPath;
 	}
 
@@ -180,7 +180,7 @@ namespace Qync {
 	 *
 	 * \return An explanation of the cause for the last error.
 	 */
-	QString Application::lastError(void) const {
+	QString Application::lastError() const {
 		return m_lastError;
 	}
 
@@ -192,7 +192,7 @@ namespace Qync {
 	 *
 	 * \return 0 on successful execution, non-0 on error.
 	 */
-	int Application::exec(void) {
+	int Application::exec() {
 		Q_ASSERT_X(qyncApp, __PRETTY_FUNCTION__, "no Application instance");
 		Q_ASSERT_X(qyncApp->m_mainWindow, __PRETTY_FUNCTION__, "no main window (perhaps Application::~Application has been called?)");
 
@@ -292,7 +292,7 @@ namespace Qync {
 	 * the call will cease to exist, so any references to presets retrieved
 	 * using preset() or presets() will be invalid.
 	 */
-	void Application::clearPresets(void) {
+	void Application::clearPresets() {
 		m_presets.clear();
 	}
 
@@ -306,7 +306,7 @@ namespace Qync {
 	 *
 	 * return \b true if the presets were loaded, \b false otherwise.
 	 */
-	bool Application::loadPresets(void) {
+	bool Application::loadPresets() {
 		QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/presets/";
 		QSignalBlocker blocker(this);
 		QDir d(path);
@@ -385,7 +385,7 @@ namespace Qync {
 	 * \return The version text, or a null string if the rsync binary is
 	 * not valid.
 	 */
-	QString Application::rsyncVersionText(void) {
+	QString Application::rsyncVersionText() {
 		if(m_rsyncVersionText.isEmpty()) {
 			QProcess p(this);
 			p.start(m_prefs.rsyncPath(), QStringList() << "--version", QIODevice::ReadOnly | QIODevice::Text);
@@ -398,7 +398,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Application::presetCount(void)
+	 * \fn Application::presetCount()
 	 * \brief Get the number of presets stored in the application.
 	 *
 	 * \return The number of presets.
@@ -406,7 +406,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preferences & Application::preferences(void)
+	 * \fn Preferences & Application::preferences()
 	 * \brief Get the application preferences.
 	 *
 	 * \return the application preferences.
@@ -414,7 +414,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Application::presets(void)
+	 * \fn Application::presets()
 	 * \brief Retrieve the presets stored in the application.
 	 *
 	 * \return the presets (or an empty set if the application does not have
@@ -423,7 +423,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Application::presetsChanged(void)
+	 * \fn Application::presetsChanged()
 	 * \brief Emitted when a preset has been removed.
 	 *
 	 * When emitted with either presetAdded() or presetRemoved(), this
@@ -432,7 +432,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn Application::preferencesChanged(void)
+	 * \fn Application::preferencesChanged()
 	 * \brief Emitted when the application preferences have changed.
 	 */
 

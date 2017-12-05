@@ -153,7 +153,7 @@ namespace Qync {
 
 	/**
 	 * \brief Swap the source and destination. */
-	void SourceDestinationWidget::swapSourceAndDestination(void) {
+	void SourceDestinationWidget::swapSourceAndDestination() {
 		QString t = m_ui->source->text();
 		m_ui->source->setText(m_ui->destination->text());
 		m_ui->destination->setText(t);
@@ -161,7 +161,7 @@ namespace Qync {
 
 
 	/** \brief Destroy the SourceDestinationWidget. */
-	SourceDestinationWidget::~SourceDestinationWidget(void) = default;
+	SourceDestinationWidget::~SourceDestinationWidget() = default;
 
 
 	//	/**
@@ -171,7 +171,7 @@ namespace Qync {
 	//	 * for rsync. If the user does not cancel the dialogue, the chosen file
 	//	 * is set as the text in the source line edit.
 	//	 */
-	//	void SourceDestinationWidget::chooseSourceFile(void) {
+	//	void SourceDestinationWidget::chooseSourceFile() {
 	//		QString newSource = QFileDialog::getOpenFileName(this, tr("Choose source"), m_ui->source->text());
 
 	//		if(!newSource.isNull()) {
@@ -187,7 +187,7 @@ namespace Qync {
 	//	 * destination for rsync. If the user does not cancel the dialogue, the
 	//	 * chosen file is set as the text in the destination line edit.
 	//	 */
-	//	void SourceDestinationWidget::chooseDestinationFile(void) {
+	//	void SourceDestinationWidget::chooseDestinationFile() {
 	//		QString newDest = QFileDialog::getOpenFileName(this, tr("Choose destination"), m_ui->destination->text());
 
 	//		if(!newDest.isNull()) {
@@ -203,7 +203,7 @@ namespace Qync {
 	 * source for rsync. If the user does not cancel the dialogue, the
 	 * chosen directory is set as the text in the source line edit.
 	 */
-	void SourceDestinationWidget::chooseSourceDirectory(void) {
+	void SourceDestinationWidget::chooseSourceDirectory() {
 		QString newSource = QFileDialog::getExistingDirectory(this, tr("Choose source"), m_ui->source->text());
 
 		if(!newSource.isNull()) {
@@ -223,7 +223,7 @@ namespace Qync {
 	 * destination for rsync. If the user does not cancel the dialogue, the
 	 * chosen directory is set as the text in the destination line edit.
 	 */
-	void SourceDestinationWidget::chooseDestinationDirectory(void) {
+	void SourceDestinationWidget::chooseDestinationDirectory() {
 		QString newDest = QFileDialog::getExistingDirectory(this, tr("Choose destination"), m_ui->destination->text());
 
 		if(!newDest.isNull()) {

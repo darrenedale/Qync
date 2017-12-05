@@ -40,18 +40,18 @@ namespace Qync {
 
 	public:
 		explicit ProcessDialogue(const std::shared_ptr<Process> & process, QWidget * parent = nullptr);
-		virtual ~ProcessDialogue(void);
+		virtual ~ProcessDialogue();
 
 	public Q_SLOTS:
-		void toggleDetailedText(void);
-		void showDetailedText(void);
-		void hideDetailedText(void);
+		void toggleDetailedText();
+		void showDetailedText();
+		void hideDetailedText();
 
 	private Q_SLOTS:
 		void appendToDetails(const QString &);
-		void saveOutput(void);
+		void saveOutput();
 
-		void onProcessStarted(void);
+		void onProcessStarted();
 		void onProcessFinished(const QString & msg = {});
 		void onProcessInterrupted(const QString & msg = {});
 		void onProcessFailed(const QString & msg = {});

@@ -139,7 +139,7 @@ namespace Qync {
 	/**
 	 * \brief Destroy the Process.
 	 */
-	Process::~Process(void) = default;
+	Process::~Process() = default;
 
 
 	/**
@@ -273,26 +273,26 @@ namespace Qync {
 		static const QString emptyString;
 
 		static std::map<ExitCode, QString> s_messages = {
-		  {Success, tr("The rsync process completed successfully.")},
-		  {SyntaxError, tr("The rsync process could not be started because one or more arguments were not valid.")},
-		  {ProtocolIncompatibility, tr("The rysnc process could not be started because the source and destination rsync versions are incompatible.")},
-		  {FileSelectionError, tr("The rsync process failed because one or more source files or directories could not be found.")},
-		  {UnsupportedAction, tr("The rsync process failed because the action requested is not supported.\n\nThis usually means you attempted to transfer data from a 32-bit computer to a 64-bit computer, or vice versa.")},
-		  {TransmissionProtocolStartupError, tr("The rsync process failed because it was unable to initialise its data transmission protocol.")},
-		  {UnableToWriteLogFile, tr("The rsync process completed but was unable to write to its log file.")},
-		  {SocketIoError, tr("The rsync process failed because it encountered a network input/output error.")},
-		  {FileIoError, tr("The rsync process failed because it encountered a file input/output error.")},
-		  {DataStreamError, tr("The rsync process failed because of a failure in the transmission protocol's data stream.")},
-		  {ProgramDiagnosticsError, tr("The rsync process failed because it was unable successfully to complete some internal diagnostics.")},
-		  {IpcCodeError, tr("The rsync process failed because of an inter-process communication problem.")},
-		  {InterruptReceived, tr("The rsync process was interrupted by the operating system.")},
-		  {WaitpidError, tr("The rsync process failed while waiting for a process state to change.")},
-		  {MemoryAllocationError, tr("The rsync process failed because it was unable to allocate some memory.")},
-		  {PartialTransferError, tr("The rsync process completed but some files or directories were only partially transferred.\n\nThis could mean that the destination filesystem does not support some features (such as access permissions or ownership).")},
-		  {VanishedSourceFile, tr("The rsync process failed because a source file or directory vanished while rsync was transferring its contents.")},
-		  {MaximumDeletionsExceeded, tr("The rsync process aborted because the maximum number of deletions was exceeded.")},
-		  {DataTransmissionTimeout, tr("The rsync process failed because it had to wait too long for data to be transmitted.")},
-		  {ConnectionTimeout, tr("The rsync process failed because its network connection timed out.")},
+		  {ExitCode::Success, tr("The rsync process completed successfully.")},
+		  {ExitCode::SyntaxError, tr("The rsync process could not be started because one or more arguments were not valid.")},
+		  {ExitCode::ProtocolIncompatibility, tr("The rysnc process could not be started because the source and destination rsync versions are incompatible.")},
+		  {ExitCode::FileSelectionError, tr("The rsync process failed because one or more source files or directories could not be found.")},
+		  {ExitCode::UnsupportedAction, tr("The rsync process failed because the action requested is not supported.\n\nThis usually means you attempted to transfer data from a 32-bit computer to a 64-bit computer, or vice versa.")},
+		  {ExitCode::TransmissionProtocolStartupError, tr("The rsync process failed because it was unable to initialise its data transmission protocol.")},
+		  {ExitCode::UnableToWriteLogFile, tr("The rsync process completed but was unable to write to its log file.")},
+		  {ExitCode::SocketIoError, tr("The rsync process failed because it encountered a network input/output error.")},
+		  {ExitCode::FileIoError, tr("The rsync process failed because it encountered a file input/output error.")},
+		  {ExitCode::DataStreamError, tr("The rsync process failed because of a failure in the transmission protocol's data stream.")},
+		  {ExitCode::ProgramDiagnosticsError, tr("The rsync process failed because it was unable successfully to complete some internal diagnostics.")},
+		  {ExitCode::IpcCodeError, tr("The rsync process failed because of an inter-process communication problem.")},
+		  {ExitCode::InterruptReceived, tr("The rsync process was interrupted by the operating system.")},
+		  {ExitCode::WaitpidError, tr("The rsync process failed while waiting for a process state to change.")},
+		  {ExitCode::MemoryAllocationError, tr("The rsync process failed because it was unable to allocate some memory.")},
+		  {ExitCode::PartialTransferError, tr("The rsync process completed but some files or directories were only partially transferred.\n\nThis could mean that the destination filesystem does not support some features (such as access permissions or ownership).")},
+		  {ExitCode::VanishedSourceFile, tr("The rsync process failed because a source file or directory vanished while rsync was transferring its contents.")},
+		  {ExitCode::MaximumDeletionsExceeded, tr("The rsync process aborted because the maximum number of deletions was exceeded.")},
+		  {ExitCode::DataTransmissionTimeout, tr("The rsync process failed because it had to wait too long for data to be transmitted.")},
+		  {ExitCode::ConnectionTimeout, tr("The rsync process failed because its network connection timed out.")},
 		};
 
 		if(s_messages.end() == s_messages.find(code)) {
@@ -309,7 +309,7 @@ namespace Qync {
 	 * Once the process has started, the started() signal will be emitted
 	 * and other progress and information signals will start to be emitted.
 	 */
-	void Process::start(void) {
+	void Process::start() {
 		Q_ASSERT(m_process);
 		m_process->start(m_command, m_args);
 
@@ -332,7 +332,7 @@ namespace Qync {
 	 * If the attempt is successful, the interrupted() signal will be
 	 * emitted. No error messages will be generated by a call to this slot.
 	 */
-	void Process::stop(void) {
+	void Process::stop() {
 		Q_ASSERT(m_process);
 		if(m_process->state() != QProcess::NotRunning) {
 			m_process->close();
@@ -349,7 +349,7 @@ namespace Qync {
 	 * the standard error stream of the rsync process and emit an
 	 * appropriate error message.
 	 */
-	void Process::parseStderr(void) {
+	void Process::parseStderr() {
 		Q_ASSERT(m_process);
 
 		//	QString data = m_process->readAllStandardError();
@@ -368,7 +368,7 @@ namespace Qync {
 	 *
 	 * The data gathered is emitted as signals from this class.
 	 */
-	void Process::parseStdout(void) {
+	void Process::parseStdout() {
 		// captures:
 		// 1: current item bytes transferred
 		// 2: current item transferred %
@@ -475,7 +475,7 @@ namespace Qync {
 	 *
 	 * This method is connected to the QProcess::finished() signal.
 	 */
-	void Process::onProcessFinished(void) {
+	void Process::onProcessFinished() {
 		Q_ASSERT_X(m_process, __PRETTY_FUNCTION__, "called without a QProcess object");
 		m_logFile.close();
 		m_outputCache.clear();
@@ -484,32 +484,32 @@ namespace Qync {
 		Q_EMIT finished(code);
 
 		switch(code) {
-			case Success:
-			case PartialTransferError:
-			case UnableToWriteLogFile:
+			case ExitCode::Success:
+			case ExitCode::PartialTransferError:
+			case ExitCode::UnableToWriteLogFile:
 				Q_EMIT finished(msg);
 				break;
 
-			case InterruptReceived:
+			case ExitCode::InterruptReceived:
 				Q_EMIT interrupted(msg);
 				break;
 
-			case SyntaxError:
-			case ProtocolIncompatibility:
-			case FileSelectionError:
-			case UnsupportedAction:
-			case TransmissionProtocolStartupError:
-			case SocketIoError:
-			case FileIoError:
-			case DataStreamError:
-			case ProgramDiagnosticsError:
-			case IpcCodeError:
-			case WaitpidError:
-			case MemoryAllocationError:
-			case VanishedSourceFile:
-			case MaximumDeletionsExceeded:
-			case DataTransmissionTimeout:
-			case ConnectionTimeout:
+			case ExitCode::SyntaxError:
+			case ExitCode::ProtocolIncompatibility:
+			case ExitCode::FileSelectionError:
+			case ExitCode::UnsupportedAction:
+			case ExitCode::TransmissionProtocolStartupError:
+			case ExitCode::SocketIoError:
+			case ExitCode::FileIoError:
+			case ExitCode::DataStreamError:
+			case ExitCode::ProgramDiagnosticsError:
+			case ExitCode::IpcCodeError:
+			case ExitCode::WaitpidError:
+			case ExitCode::MemoryAllocationError:
+			case ExitCode::VanishedSourceFile:
+			case ExitCode::MaximumDeletionsExceeded:
+			case ExitCode::DataTransmissionTimeout:
+			case ExitCode::ConnectionTimeout:
 				Q_EMIT failed(msg);
 				break;
 		}

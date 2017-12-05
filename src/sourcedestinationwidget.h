@@ -29,10 +29,10 @@ namespace Qync {
 
 	public:
 		explicit SourceDestinationWidget(QWidget * parent = nullptr);
-		~SourceDestinationWidget(void);
+		~SourceDestinationWidget();
 
-		QString source(void) const;
-		QString destination(void) const;
+		QString source() const;
+		QString destination() const;
 
 		void setSourceLabel(const QString & label);
 		void setDestinationLabel(const QString & label);
@@ -45,11 +45,11 @@ namespace Qync {
 		void setSource(const QString & src);
 		void setDestination(const QString & dest);
 
-		void swapSourceAndDestination(void);
+		void swapSourceAndDestination();
 
 	private Q_SLOTS:
-		void chooseSourceDirectory(void);
-		void chooseDestinationDirectory(void);
+		void chooseSourceDirectory();
+		void chooseDestinationDirectory();
 
 	private:
 		std::unique_ptr<Ui::SourceDestinationWidget> m_ui;

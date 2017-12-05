@@ -35,17 +35,21 @@ class QXmlStreamWriter;
 
 namespace Qync {
 
-	class Preset {
+	class Preset final {
 	public:
 		explicit Preset(const QString & name = {});
 		Preset(const Preset & other) = delete;
 		Preset(Preset && other) = default;
-		~Preset(void);
 
-		void setDefaults(void);
+		void operator=(const Preset & other) = delete;
+		Preset & operator=(Preset && other) = default;
+
+		~Preset();
+
+		void setDefaults();
 		bool load(const QString & fileName);
 
-		inline bool save(void) const {
+		inline bool save() const {
 			return saveCopyAs(m_fileName);
 		}
 
@@ -54,13 +58,13 @@ namespace Qync {
 
 		void setName(const QString & name);
 
-		inline QString name(void) const {
+		inline QString name() const {
 			return m_name;
 		}
 
 		void setFileName(const QString & fileName);
 
-		inline QString fileName(void) const {
+		inline QString fileName() const {
 			return m_fileName;
 		}
 
@@ -86,87 +90,87 @@ namespace Qync {
 		bool setShowItemisedChanges(const bool & itemise);
 		bool setLogFile(const QString & fileName);
 
-		inline QString source(void) const {
+		inline QString source() const {
 			return m_source;
 		}
 
-		inline QString destination(void) const {
+		inline QString destination() const {
 			return m_dest;
 		}
 
-		inline const bool & preserveTime(void) const {
+		inline const bool & preserveTime() const {
 			return m_preserveTime;
 		}
 
-		inline const bool & preservePermissions(void) const {
+		inline const bool & preservePermissions() const {
 			return m_preservePerms;
 		}
 
-		inline const bool & preserveOwner(void) const {
+		inline const bool & preserveOwner() const {
 			return m_preserveOwner;
 		}
 
-		inline const bool & preserveGroup(void) const {
+		inline const bool & preserveGroup() const {
 			return m_preserveGroup;
 		}
 
-		inline const bool & windowsCompatability(void) const {
+		inline const bool & windowsCompatability() const {
 			return m_windowsCompatability;
 		}
 
-		inline const bool & honourDeletions(void) const {
+		inline const bool & honourDeletions() const {
 			return m_deleteOnDestination;
 		}
 
-		inline const bool & alwaysCompareChecksums(void) const {
+		inline const bool & alwaysCompareChecksums() const {
 			return m_alwaysChecksum;
 		}
 
-		inline const bool & ignoreTimes(void) const {
+		inline const bool & ignoreTimes() const {
 			return m_ignoreTimes;
 		}
 
-		inline const bool & preserveDevices(void) const {
+		inline const bool & preserveDevices() const {
 			return m_preserveDevices;
 		}
 
-		inline const bool & keepPartialTransfers(void) const {
+		inline const bool & keepPartialTransfers() const {
 			return m_keepParitalTransfers;
 		}
 
-		inline const bool & copySymlinksAsSymlinks(void) const {
+		inline const bool & copySymlinksAsSymlinks() const {
 			return m_symlinksAsSymlinks;
 		}
 
-		inline const bool & makeBackups(void) const {
+		inline const bool & makeBackups() const {
 			return m_makeBackups;
 		}
 
-		inline const bool & useTransferCompression(void) const {
+		inline const bool & useTransferCompression() const {
 			return m_compressInTransit;
 		}
 
-		inline const bool & onlyUpdateExistingEntries(void) const {
+		inline const bool & onlyUpdateExistingEntries() const {
 			return m_onlyUpdateExisting;
 		}
 
-		inline const bool & dontUpdateExistingEntries(void) const {
+		inline const bool & dontUpdateExistingEntries() const {
 			return m_dontUpdateExisting;
 		}
 
-		inline const bool & dontMapUsersAndGroups(void) const {
+		inline const bool & dontMapUsersAndGroups() const {
 			return m_dontMapUidGid;
 		}
 
-		inline const bool & copyHardlinksAsHardlinks(void) const {
+		inline const bool & copyHardlinksAsHardlinks() const {
 			return m_copyHardlinksAsHardlinks;
 		}
 
-		inline const bool & showItemisedChanges(void) const {
+		inline const bool & showItemisedChanges() const {
 			return m_showItemisedChanges;
 		}
 
-		inline const QString & logFile(void) const {
+		inline const QString & logFile() const {
 			return m_logFile;
 		}
 

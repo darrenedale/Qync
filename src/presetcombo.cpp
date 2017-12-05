@@ -93,7 +93,7 @@ namespace Qync {
 	 * \return \b true if the special "new preset" item is selected, \b false
 	 * otherwise.
 	 */
-	bool PresetCombo::currentItemIsNewPreset(void) const {
+	bool PresetCombo::currentItemIsNewPreset() const {
 		return currentData(Detail::PresetCombo::NewPresetRole).toInt() == Detail::PresetCombo::NewPresetTag;
 	}
 
@@ -106,7 +106,7 @@ namespace Qync {
 	 *
 	 * \return The selected preset.
 	 */
-	Preset & PresetCombo::currentPreset(void) const {
+	Preset & PresetCombo::currentPreset() const {
 		return qyncApp->preset(currentIndex());
 	}
 
@@ -118,7 +118,7 @@ namespace Qync {
 	 * presets, and the combo box items are replaced with those
 	 * representing the list of available presets.
 	 */
-	void PresetCombo::refresh(void) {
+	void PresetCombo::refresh() {
 		int idx = currentIndex();
 		QString name = currentText();
 		QComboBox::clear();

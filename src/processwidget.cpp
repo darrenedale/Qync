@@ -95,7 +95,7 @@ namespace Qync {
 
 
 	/** \brief Destroy the process widget. */
-	ProcessWidget::~ProcessWidget(void) = default;
+	ProcessWidget::~ProcessWidget() = default;
 
 
 	/**
@@ -170,7 +170,7 @@ namespace Qync {
 	 *
 	 * The progress widgets are reset and the stop button is enabled.
 	 */
-	void ProcessWidget::onProcessStarted(void) {
+	void ProcessWidget::onProcessStarted() {
 		m_ui->itemName->setText({});
 		m_ui->transferSpeed->setText({});
 		m_ui->itemProgress->setValue(0);

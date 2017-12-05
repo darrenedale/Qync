@@ -37,40 +37,40 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		MainWindow(void);
-		virtual ~MainWindow(void);
+		MainWindow();
+		virtual ~MainWindow();
 
 		void showNotification(const QString & title, const QString & msg, NotificationType type = NotificationType::Information);
 
 	public Q_SLOTS:
-		//		void refreshPresets(void);
-		void switchSourceAndDestination(void);
+		//		void refreshPresets();
+		void switchSourceAndDestination();
 
-		void saveSettingsToCurrentPreset(void);
-		void removeCurrentPreset(void);
-		void newPresetFromSettings(void);
+		void saveSettingsToCurrentPreset();
+		void removeCurrentPreset();
+		void newPresetFromSettings();
 		void newPreset(bool fill = false);
-		void importPreset(void);
-		void exportPreset(void);
+		void importPreset();
+		void exportPreset();
 
-		void chooseLogFile(void);
+		void chooseLogFile();
 
 		void useSimpleUi(bool);
-		void showPreferences(void);
+		void showPreferences();
 
-		void simulate(void);
-		void synchronise(void);
+		void simulate();
+		void synchronise();
 
-		void about(void);
-		void aboutRsync(void);
+		void about();
+		void aboutRsync();
 
 	private Q_SLOTS:
 		void showPreset(const Preset & preset);
-		void onPreferencesChanged(void);
+		void onPreferencesChanged();
 
 	protected:
-		void disconnectApplication(void);
-		void connectApplication(void);
+		void disconnectApplication();
+		void connectApplication();
 
 	private:
 		void fillPreset(Preset &) const;

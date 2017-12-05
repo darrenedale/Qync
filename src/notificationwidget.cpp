@@ -82,7 +82,7 @@ namespace Qync {
 
 
 	/** \brief Destroy the widget. */
-	NotificationWidget::~NotificationWidget(void) = default;
+	NotificationWidget::~NotificationWidget() = default;
 
 
 	/**
@@ -151,7 +151,7 @@ namespace Qync {
 	 * pointer or reference, the show() method as defined in that base class
 	 * will be called, not this reimplementation.
 	 */
-	void NotificationWidget::show(void) {
+	void NotificationWidget::show() {
 		if(m_showAnim->state() != QPropertyAnimation::Stopped) {
 			qWarning() << "show animation is already running";
 			return;
@@ -183,7 +183,7 @@ namespace Qync {
 	 * pointer or reference, the hide() method as defined in that base class
 	 * will be called, not this reimplementation.
 	 */
-	void NotificationWidget::hide(void) {
+	void NotificationWidget::hide() {
 		if(m_hideAnim->state() != QPropertyAnimation::Stopped) {
 			qWarning() << "hide animation is already running";
 			return;

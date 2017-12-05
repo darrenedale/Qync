@@ -30,16 +30,13 @@ namespace Qync {
 
 		explicit SynchroniseWhatCombo(QWidget * parent = nullptr);
 
-		What what(void) const;
+		What what() const;
 
 	public Q_SLOTS:
 		void setWhat(const What & newWhat);
 
 	Q_SIGNALS:
 		void whatChanged(const What & currentWhat);
-
-	private:
-		static constexpr int WhatRole = Qt::UserRole + 1;
 	};
 
 }  // namespace Qync

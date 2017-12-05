@@ -17,7 +17,6 @@
 #include <QDebug>
 
 #include "application.h"
-#include "mainwindow.h"
 
 
 /**

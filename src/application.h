@@ -45,35 +45,35 @@ namespace Qync {
 		};
 
 		Application(int & argc, char ** argv);
-		~Application(void);
+		~Application();
 
-		static int exec(void);
+		static int exec();
 
-		QString configurationPath(void);
-		QString presetsPath(void);
-		QString rsyncVersionText(void);
+		QString configurationPath();
+		QString presetsPath();
+		QString rsyncVersionText();
 
-		inline QString buildId(void) const {
+		inline QString buildId() const {
 			return property("BuildId").toString();
 		}
 
-		inline QString releaseDate(void) const {
+		inline QString releaseDate() const {
 			return property("ReleaseDate").toString();
 		}
 
-		inline QString websiteUrl(void) const {
+		inline QString websiteUrl() const {
 			return property("ApplicationWebsite").toString();
 		}
 
-		inline GuiPreferences & preferences(void) {
+		inline GuiPreferences & preferences() {
 			return m_prefs;
 		}
 
-		inline int presetCount(void) const {
+		inline int presetCount() const {
 			return static_cast<int>(presets().size());
 		}
 
-		const PresetList & presets(void) const {
+		const PresetList & presets() const {
 			return m_presets;
 		}
 
@@ -82,19 +82,19 @@ namespace Qync {
 		Preset & addPreset(const QString & name);
 		bool loadPreset(const QString & fileName);
 
-		void clearPresets(void);
+		void clearPresets();
 
-		QString lastError(void) const;
+		QString lastError() const;
 
-		bool loadPresets(void);
+		bool loadPresets();
 
-		MainWindow * mainWindow(void) const {
+		MainWindow * mainWindow() const {
 			return m_mainWindow.get();
 		}
 
 	Q_SIGNALS:
-		void presetsChanged(void);
-		void preferencesChanged(void);
+		void presetsChanged();
+		void preferencesChanged();
 
 	protected:
 		void setLastError(const QString & err) const;

@@ -31,8 +31,8 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		AboutDialogue(void);
-		~AboutDialogue(void);
+		AboutDialogue();
+		~AboutDialogue();
 
 	private:
 		static QString & processPlaceholders(QString && content);

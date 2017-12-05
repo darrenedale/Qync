@@ -14,10 +14,10 @@
 
 #include "guipreferences.h"
 
+#include <QDebug>
+
 #include "application.h"
 #include "functions.h"
-
-#include <QDebug>
 
 
 namespace Qync {
@@ -69,7 +69,7 @@ namespace Qync {
 	/**
 	 * \brief Destroy the QuncGuiPreferences object.
 	 */
-	GuiPreferences::~GuiPreferences(void) = default;
+	GuiPreferences::~GuiPreferences() = default;
 
 
 	/**
@@ -80,7 +80,7 @@ namespace Qync {
 	 * for \ref GuiPreferences::setDefaults() for the defaults for
 	 * settings governed by that class.
 	 */
-	void GuiPreferences::setDefaults(void) {
+	void GuiPreferences::setDefaults() {
 		Preferences::setDefaults();
 		setShowPresetsToolBar(true);
 		setShowSynchroniseToolBar(true);
@@ -93,8 +93,6 @@ namespace Qync {
 	 * a Qt:: ToolButtonStyle value.
 	 *
 	 * \param style is the style text to convert.
-	 * \param ok is a pointer to a boolean value that will be set to \b true
-	 * if the conversion is successful, \b false if not.
 	 *
 	 * This is a helper method to parse the content of the toolbar button
 	 * style setting from the preferences file. A valid style is always
@@ -105,48 +103,26 @@ namespace Qync {
 	 *
 	 * \return The toolbar button style.
 	 */
-	Qt::ToolButtonStyle GuiPreferences::parseToolButtonStyleText(const QString & style, bool * ok) {
-		if("icononly" == style.trimmed().toLower()) {
-			if(ok) {
-				*ok = true;
-			}
+	optional<Qt::ToolButtonStyle> GuiPreferences::parseToolButtonStyleText(const QString & style) {
+		auto myStyle = style.trimmed();
 
+		if(0 == myStyle.compare("icononly", Qt::CaseInsensitive)) {
 			return Qt::ToolButtonIconOnly;
 		}
-		else if("textonly" == style.trimmed().toLower()) {
-			if(ok) {
-				*ok = true;
-			}
-
+		else if(0 == myStyle.compare("textonly", Qt::CaseInsensitive)) {
 			return Qt::ToolButtonTextOnly;
 		}
-		else if("textbesideicon" == style.trimmed().toLower()) {
-			if(ok) {
-				*ok = true;
-			}
-
+		else if(0 == myStyle.compare("textbesideicon", Qt::CaseInsensitive)) {
 			return Qt::ToolButtonTextBesideIcon;
 		}
-		else if("textundericon" == style.trimmed().toLower()) {
-			if(ok) {
-				*ok = true;
-			}
-
+		else if(0 == myStyle.compare("textundericon", Qt::CaseInsensitive)) {
 			return Qt::ToolButtonTextUnderIcon;
 		}
-		else if("styledefault" == style.trimmed().toLower()) {
-			if(ok) {
-				*ok = true;
-			}
-
+		else if(0 == myStyle.compare("styledefault", Qt::CaseInsensitive)) {
 			return Qt::ToolButtonFollowStyle;
 		}
 
-		if(ok) {
-			*ok = false;
-		}
-
-		return Qt::ToolButtonFollowStyle;
+		return {};
 	}
 
 
@@ -308,29 +284,28 @@ namespace Qync {
 				auto value = parseBooleanText(v);
 
 				if(value.has_value()) {
-					setUseSimpleUi(value);
+					setUseSimpleUi(value.value());
 				}
 			}
 			else if("presetstoolbar" == xml.name()) {
 				auto value = parseBooleanText(xml.readElementText());
 
 				if(value.has_value()) {
-					setShowPresetsToolBar(value);
+					setShowPresetsToolBar(value.value());
 				}
 			}
 			else if("synchronisetoolbar" == xml.name()) {
 				auto value = parseBooleanText(xml.readElementText());
 
 				if(value.has_value()) {
-					setShowSynchroniseToolBar(value);
+					setShowSynchroniseToolBar(value.value());
 				}
 			}
 			else if("toolbarbuttonstyle" == xml.name()) {
-				bool ok;
-				Qt::ToolButtonStyle value = GuiPreferences::parseToolButtonStyleText(xml.readElementText(), &ok);
+				auto value = GuiPreferences::parseToolButtonStyleText(xml.readElementText());
 
-				if(ok) {
-					this->setToolBarButtonStyle(value);
+				if(value) {
+					this->setToolBarButtonStyle(value.value());
 				}
 			}
 			else {
@@ -344,7 +319,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn GuiPreferences::useSimpleUi(void)
+	 * \fn GuiPreferences::useSimpleUi()
 	 * \brief Check whether the simple user interface should be used.
 	 *
 	 * \return \b true if the simple user interface should be used, \b false
@@ -362,7 +337,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn GuiPreferences::showPresetsToolBar(void)
+	 * \fn GuiPreferences::showPresetsToolBar()
 	 * \brief Check whether the presets toolbar should be shown.
 	 *
 	 * \return \b true if the presets toolbar should be shown, \b false
@@ -371,7 +346,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn GuiPreferences::showSynchroniseToolBar(void)
+	 * \fn GuiPreferences::showSynchroniseToolBar()
 	 * \brief Check whether the synchronise toolbar should be shown.
 	 *
 	 * \return \b true if the synchronise toolbar should be shown, \b false
@@ -397,7 +372,7 @@ namespace Qync {
 
 
 	/**
-	 * \fn GuiPreferences::toolBarButtonStyle(void)
+	 * \fn GuiPreferences::toolBarButtonStyle()
 	 * \brief Get the display style for buttons in the toolbar.
 	 *
 	 * The toolbar style is one of Qt's ToolButtonStyles. This can be

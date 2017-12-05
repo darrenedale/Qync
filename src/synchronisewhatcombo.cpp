@@ -22,6 +22,9 @@ Q_DECLARE_METATYPE(Qync::SynchroniseWhatCombo::What)
 namespace Qync {
 
 
+	static constexpr int WhatRole = Qt::UserRole + 1;
+
+
 	/**
 	 * \class SynchroniseWhatCombo
 	 * \author Darren Edale
@@ -63,7 +66,7 @@ namespace Qync {
 	 *
 	 * \return The current "what to synchronise" value.
 	 */
-	SynchroniseWhatCombo::What SynchroniseWhatCombo::what(void) const {
+	SynchroniseWhatCombo::What SynchroniseWhatCombo::what() const {
 		/* if not set, will return 0 which does not cast to a valid What
 		 * enumeration */
 		return currentData(WhatRole).value<What>();

@@ -39,7 +39,7 @@ namespace Qync {
 	/**
 	 * \brief Create a new AboutDialogue instance.
 	 */
-	AboutDialogue::AboutDialogue(void)
+	AboutDialogue::AboutDialogue()
 	: QDialog(nullptr),
 	  m_ui(new Ui::AboutDialogue) {
 		m_ui->setupUi(this);
@@ -66,7 +66,7 @@ namespace Qync {
 	/**
 	 * \brief Destroy the AboutDialogue instance.
 	 */
-	AboutDialogue::~AboutDialogue(void) = default;
+	AboutDialogue::~AboutDialogue() = default;
 
 
 	/**

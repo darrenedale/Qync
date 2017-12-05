@@ -74,7 +74,7 @@ namespace Qync {
 	 * name, so load() and save() will fail (use loadFrom() or saveAs()
 	 * to set the file name).
 	 */
-	Preferences::Preferences(void)
+	Preferences::Preferences()
 	: m_fileName(),
 	  m_rsyncBinary() {
 		setDefaults();
@@ -105,7 +105,7 @@ namespace Qync {
 	 * Reimplementations should call this base class method to ensure that
 	 * defaults for core settings are also set.
 	 */
-	void Preferences::setDefaults(void) {
+	void Preferences::setDefaults() {
 #if defined(Q_OS_LINUX) || defined(Q_OS_UNIX) || defined(Q_OS_DARWIN)
 		/* Q_OS_SOLARIS too? */
 		QProcess p;
@@ -308,7 +308,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the settings were saved, \b false otherwise.
 	 */
-	bool Preferences::save(void) const {
+	bool Preferences::save() const {
 		if(saveCopyAs(m_fileName)) {
 			return true;
 		}
@@ -368,7 +368,7 @@ namespace Qync {
 	 *
 	 * \return \b true if the settings were loaded, \b false otherwise.
 	 */
-	bool Preferences::load(void) {
+	bool Preferences::load() {
 		if(m_fileName.isEmpty()) {
 			qWarning() << __PRETTY_FUNCTION__ << "can't load prefs with no file name";
 			return false;
@@ -428,14 +428,14 @@ namespace Qync {
 	 *
 	 * \return \b true if the path is valid, \b false otherwise.
 	 */
-	bool Preferences::rsyncPathIsValid(void) const {
+	bool Preferences::rsyncPathIsValid() const {
 		QFileInfo f(rsyncPath());
 		return f.exists() && f.isFile() && f.isExecutable();
 	}
 
 
 	/**
-	 * \fn Preferences::~Preferences(void)
+	 * \fn Preferences::~Preferences()
 	 * \brief Destroy the Preferences object.
 	 */
 
