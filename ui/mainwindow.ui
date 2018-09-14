@@ -548,21 +548,21 @@
      <x>0</x>
      <y>0</y>
      <width>708</width>
-     <height>20</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>Synchronisation</string>
+     <string>S&amp;ynchronisation</string>
     </property>
     <widget class="QMenu" name="menuQuit">
      <property name="title">
-      <string>Quit</string>
+      <string>&amp;Quit</string>
      </property>
     </widget>
     <widget class="QMenu" name="menuInterface">
      <property name="title">
-      <string>Interface</string>
+      <string>&amp;Interface</string>
      </property>
      <addaction name="actionSimpleUi"/>
      <addaction name="actionFullUi"/>
@@ -577,11 +577,11 @@
    </widget>
    <widget class="QMenu" name="menuPresets">
     <property name="title">
-     <string>Presets</string>
+     <string>Pr&amp;esets</string>
     </property>
     <widget class="Qync::PresetMenu" name="menuMyPresets">
      <property name="title">
-      <string>My presets</string>
+      <string>&amp;My presets</string>
      </property>
     </widget>
     <addaction name="separator"/>
@@ -597,7 +597,7 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionAboutRsync"/>
@@ -636,11 +636,11 @@
   </widget>
   <action name="actionAbout">
    <property name="icon">
-    <iconset theme="help-about" resource="../resources/icons.qrc">
+    <iconset theme="help-about">
      <normaloff>:/icons/menu/help/about</normaloff>:/icons/menu/help/about</iconset>
    </property>
    <property name="text">
-    <string>About</string>
+    <string>&amp;About</string>
    </property>
    <property name="toolTip">
     <string>Show details about Qync.</string>
@@ -651,7 +651,7 @@
   </action>
   <action name="actionAboutRsync">
    <property name="text">
-    <string>About rsync</string>
+    <string>About &amp;rsync</string>
    </property>
    <property name="toolTip">
     <string>Show details about rsync.</string>
@@ -663,7 +663,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
    <property name="toolTip">
     <string>Save the current settings to the selected preset.</string>
@@ -678,7 +678,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Save as</string>
+    <string>Sa&amp;ve as</string>
    </property>
    <property name="toolTip">
     <string>Save the current settings as a new preset with a new name.</string>
@@ -689,11 +689,11 @@
   </action>
   <action name="actionRemove">
    <property name="icon">
-    <iconset theme="list-remove" resource="../resources/icons.qrc">
+    <iconset theme="list-remove">
      <normaloff>:/icons/menu/presets/remove</normaloff>:/icons/menu/presets/remove</iconset>
    </property>
    <property name="text">
-    <string>Remove</string>
+    <string>&amp;Remove</string>
    </property>
    <property name="toolTip">
     <string>Remove the selected preset.</string>
@@ -704,11 +704,11 @@
   </action>
   <action name="actionImport">
    <property name="icon">
-    <iconset theme="document-import" resource="../resources/icons.qrc">
+    <iconset theme="document-import">
      <normaloff>:/icons/menu/presets/import</normaloff>:/icons/menu/presets/import</iconset>
    </property>
    <property name="text">
-    <string>Import</string>
+    <string>&amp;Import</string>
    </property>
    <property name="toolTip">
     <string>Load a preset from a previously exported file.</string>
@@ -716,11 +716,11 @@
   </action>
   <action name="actionExport">
    <property name="icon">
-    <iconset theme="document-export" resource="../resources/icons.qrc">
+    <iconset theme="document-export">
      <normaloff>:/icons/menu/presets/export</normaloff>:/icons/menu/presets/export</iconset>
    </property>
    <property name="text">
-    <string>Export</string>
+    <string>&amp;Export</string>
    </property>
    <property name="toolTip">
     <string>Save a preset to a separate file.</string>
@@ -728,11 +728,11 @@
   </action>
   <action name="actionSimulate">
    <property name="icon">
-    <iconset theme="document-edit-verify" resource="../resources/icons.qrc">
+    <iconset theme="document-edit-verify">
      <normaloff>:/icons/menu/file/simulate</normaloff>:/icons/menu/file/simulate</iconset>
    </property>
    <property name="text">
-    <string>Simulate</string>
+    <string>&amp;Simulate</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Perform a dry-run (simulation) of synchronisation using the current settings.&lt;/p&gt;&lt;p&gt;This can be useful to test settings to see if they are viable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -740,11 +740,11 @@
   </action>
   <action name="actionSync">
    <property name="icon">
-    <iconset theme="media-playback-start" resource="../resources/icons.qrc">
+    <iconset theme="media-playback-start">
      <normaloff>:/icons/menu/file/execute</normaloff>:/icons/menu/file/execute</iconset>
    </property>
    <property name="text">
-    <string>Synchronise</string>
+    <string>S&amp;ynchronise</string>
    </property>
    <property name="toolTip">
     <string>Run rsync with the current settings.</string>
@@ -759,7 +759,7 @@
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
-    <string>Preferences</string>
+    <string>&amp;Preferences</string>
    </property>
    <property name="toolTip">
     <string>Edit the application preferences.</string>
@@ -770,11 +770,11 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset theme="document-new" resource="../resources/icons.qrc">
+    <iconset theme="document-new">
      <normaloff>:/icons/toolbar/new</normaloff>:/icons/toolbar/new</iconset>
    </property>
    <property name="text">
-    <string>New</string>
+    <string>&amp;New</string>
    </property>
    <property name="toolTip">
     <string>Create a new preset.</string>
@@ -788,7 +788,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Simple UI</string>
+    <string>&amp;Simple UI</string>
    </property>
    <property name="toolTip">
     <string>Use the simple user interface, suitable for making simple backups.</string>
@@ -802,7 +802,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Full UI</string>
+    <string>&amp;Full UI</string>
    </property>
    <property name="toolTip">
     <string>Use the full user interface with advanced options.</string>
@@ -816,13 +816,13 @@
   <customwidget>
    <class>Qync::ProcessWidget</class>
    <extends>QWidget</extends>
-   <header>src/processwidget.h</header>
+   <header>processwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Qync::SourceDestinationWidget</class>
    <extends>QWidget</extends>
-   <header>src/sourcedestinationwidget.h</header>
+   <header>sourcedestinationwidget.h</header>
    <container>1</container>
    <slots>
     <signal>sourceChanged(QString)</signal>
@@ -834,28 +834,26 @@
   <customwidget>
    <class>Qync::SynchroniseWhatCombo</class>
    <extends>QComboBox</extends>
-   <header>src/synchronisewhatcombo.h</header>
+   <header>synchronisewhatcombo.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::PresetCombo</class>
    <extends>QComboBox</extends>
-   <header>src/presetcombo.h</header>
+   <header>presetcombo.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::PresetMenu</class>
    <extends>QMenu</extends>
-   <header>src/presetmenu.h</header>
+   <header>presetmenu.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::NotificationWidget</class>
    <extends>QWidget</extends>
-   <header>src/notificationwidget.h</header>
+   <header>notificationwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../resources/icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>chooseLogFile</sender>
