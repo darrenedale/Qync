@@ -1,4 +1,6 @@
 build/*
 dist/*.deb
 dist/linux/bin
+dist/linux/*.deb
+dist/pacman/qync*
 docs/system/*
