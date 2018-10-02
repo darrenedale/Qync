@@ -28,7 +28,7 @@
 #include <QProcess>
 #include <QStandardPaths>
 
-#include "aliases.h"
+//#include "aliases.h"
 #include "mainwindow.h"
 #include "preset.h"
 #include "process.h"

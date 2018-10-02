@@ -283,29 +283,29 @@ namespace Qync {
 				QString v = xml.readElementText();
 				auto value = parseBooleanText(v);
 
-				if(value.has_value()) {
-					setUseSimpleUi(value.value());
+				if(value) {
+					setUseSimpleUi(*value);
 				}
 			}
 			else if("presetstoolbar" == xml.name()) {
 				auto value = parseBooleanText(xml.readElementText());
 
-				if(value.has_value()) {
-					setShowPresetsToolBar(value.value());
+				if(value) {
+					setShowPresetsToolBar(*value);
 				}
 			}
 			else if("synchronisetoolbar" == xml.name()) {
 				auto value = parseBooleanText(xml.readElementText());
 
-				if(value.has_value()) {
-					setShowSynchroniseToolBar(value.value());
+				if(value) {
+					setShowSynchroniseToolBar(*value);
 				}
 			}
 			else if("toolbarbuttonstyle" == xml.name()) {
 				auto value = GuiPreferences::parseToolButtonStyleText(xml.readElementText());
 
 				if(value) {
-					this->setToolBarButtonStyle(value.value());
+					this->setToolBarButtonStyle(*value);
 				}
 			}
 			else {
