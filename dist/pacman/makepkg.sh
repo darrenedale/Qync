@@ -1,19 +1,19 @@
 #!/bin/sh --
-# Basic makepkg which just creates a package for qonvince
+# Basic makepkg which just creates a package for qync
 #
 # just bail if any command fails for any reason.
 set +o errexit
 
 startdir=$PWD
 pkgdir=$startdir/pkg
-pkgname=$(basename "${startdir}")
+pkgname=qync
 pkgnamesuffix=-git
 pkgurl=https://bitcraft.eu
-pkgdesc=
+pkgdesc="A file backup/synchronisation utility."
 pkgrel=1
 arch=$(uname -m)
 pkgver=1.1.0
-pkgdepends=
+pkgdepends="qt5-base hicolor-icon-theme desktop-file-utils"
 pkgmakedepends=
 
 while [ "" != "$1" ]; do
