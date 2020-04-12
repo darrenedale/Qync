@@ -1,6 +1,6 @@
 # Maintainer: Darren Edale <darren@equituk.net>
 pkgname=qync-git
-pkgver=r75.f16f3af
+pkgver=r76.b58e697
 pkgrel=1
 pkgdesc="A simple file backup utility."
 arch=('x86_64' 'i686')

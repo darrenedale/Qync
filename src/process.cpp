@@ -320,7 +320,7 @@ namespace Qync {
 
 		m_stdoutConnection = connect(m_process.get(), &QProcess::readyReadStandardOutput, this, &Process::parseStdout);
 		//		connect(m_process.get(), &QProcess::readyReadStandardError, this, &Process::parseStderr);
-		connect(m_process.get(), static_cast<void (QProcess::*)(int)>(&QProcess::finished), this, &Process::onProcessFinished);
+		connect(m_process.get(), qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, &Process::onProcessFinished);
 		Q_EMIT started();
 	}
 
