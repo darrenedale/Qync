@@ -1,0 +1,52 @@
+# Maintainer: Darren Edale <darren@equituk.net>
+pkgname=qync-git
+pkgver=r75.f16f3af
+pkgrel=1
+pkgdesc="A simple file backup utility."
+arch=('x86_64' 'i686')
+url=""
+license=('unknown')
+groups=()
+depends=()
+makedepends=('git' 'cmake' 'clamav' 'qt5-base')
+provides=("${pkgname%-VCS}")
+conflicts=("${pkgname%-VCS}")
+replaces=()
+backup=()
+options=()
+install=
+source=('git+https://github.com/darrenedale/Qync.git')
+noextract=()
+md5sums=('SKIP')
+
+pkgver() {
+# 	cd "$srcdir/${pkgname%-VCS}"
+	cd "$srcdir/Qync"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+# prepare() {
+# 	cd "$srcdir/${pkgname%-VCS}"
+# 	patch -p1 -i "$srcdir/${pkgname%-VCS}.patch"
+# }
+
+build() {
+# 	cd "$srcdir/${pkgname%-VCS}"
+	cd "$srcdir/Qync"
+	rm -rf build
+	mkdir build && cd build
+	cmake ../ -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_BUILD_TYPE=Release ../
+	# TODO work out the best value for -j
+	cmake --build ./ --target qync --config Release -- -j 4
+}
+
+#check() {
+#	cd "$srcdir/${pkgname%-VCS}"
+#	make -k check
+#}
+
+package() {
+# 	cd "$srcdir/${pkgname%-VCS}"
+	cd "$srcdir/Qync/build"
+	DESTDIR="$pkgdir/" cmake --install ./
+}

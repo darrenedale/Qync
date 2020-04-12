@@ -816,13 +816,13 @@
   <customwidget>
    <class>Qync::ProcessWidget</class>
    <extends>QWidget</extends>
-   <header>processwidget.h</header>
+   <header>src/processwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Qync::SourceDestinationWidget</class>
    <extends>QWidget</extends>
-   <header>sourcedestinationwidget.h</header>
+   <header>src/sourcedestinationwidget.h</header>
    <container>1</container>
    <slots>
     <signal>sourceChanged(QString)</signal>
@@ -834,22 +834,22 @@
   <customwidget>
    <class>Qync::SynchroniseWhatCombo</class>
    <extends>QComboBox</extends>
-   <header>synchronisewhatcombo.h</header>
+   <header>src/synchronisewhatcombo.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::PresetCombo</class>
    <extends>QComboBox</extends>
-   <header>presetcombo.h</header>
+   <header>src/presetcombo.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::PresetMenu</class>
    <extends>QMenu</extends>
-   <header>presetmenu.h</header>
+   <header>src/presetmenu.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::NotificationWidget</class>
    <extends>QWidget</extends>
-   <header>notificationwidget.h</header>
+   <header>src/notificationwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
