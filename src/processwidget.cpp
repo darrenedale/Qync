@@ -14,7 +14,7 @@
 #include "process.h"
 #include "units.h"
 
-using namespace Qync {
+using namespace Qync;
 
 /**
  * @class ProcessWidget

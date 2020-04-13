@@ -20,7 +20,7 @@ class QString;
 
 namespace Qync {
 	void parseUnknownElementXml(QXmlStreamReader &);
-    static std::optional<bool> parseBooleanText(const QString &);
+    std::optional<bool> parseBooleanText(const QString &);
 };
 
 #endif  // QYNC_FUNCTIONS_H
