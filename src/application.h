@@ -114,6 +114,6 @@ namespace Qync {
 
 }  // namespace Qync
 
-#define qyncApp (static_cast<Qync::Application *>(QApplication::instance()))
+#define qyncApp (dynamic_cast<Qync::Application *>(QApplication::instance()))
 
 #endif  // QYNC_APPLICATION_H

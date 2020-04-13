@@ -102,8 +102,6 @@ Project {
         Group {
             name: "Documentation"
             files: [
-                "docs/license.txt",
-                "docs/cwrsync-license.txt",
                 "docs/mainpage.dox",
                 "docs/license_cwrsync.dox",
                 "docs/license_rsync.dox",
