@@ -4,3 +4,6 @@ dist/linux/bin
 dist/linux/*.deb
 dist/pacman/qync*
 docs/system/*
+/build-kdevelop/
+/cmake-build-*/
+/qync.qbs.user*
