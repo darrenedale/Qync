@@ -9,11 +9,11 @@
  * \dep
  * - processdialogue.h
  * - processdialogue.ui
- * - QDebug
- * - QString
- * - QStringList
- * - QCloseEvent
- * - QFileDialog
+ * - QtCore/QDebug
+ * - QtCore/QString
+ * - QtCore/QStringList
+ * - QtGui/QCloseEvent
+ * - QtWidgets/QFileDialog
  * - application.h
  * - process.h
  * - functions.h
@@ -22,11 +22,11 @@
 #include "processdialogue.h"
 #include "ui_processdialogue.h"
 
-#include <QDebug>
-#include <QString>
-#include <QStringList>
-#include <QCloseEvent>
-#include <QFileDialog>
+#include <QtCore/QDebug>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtGui/QCloseEvent>
+#include <QtWidgets/QFileDialog>
 
 #include "application.h"
 #include "process.h"
@@ -95,6 +95,7 @@ namespace Qync {
 	 * \brief Destroy the ProcessDialogue
 	 */
 	ProcessDialogue::~ProcessDialogue() {
+	    qDebug() << "Destroying ProcessDialogue.";
 		m_ui->detailsButton->disconnect(this);
 		m_saveButton = nullptr;
 		m_abortButton = nullptr;

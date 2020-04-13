@@ -9,14 +9,14 @@
  * \dep
  * - mainwindow.h
  * - mainwindow.ui
- * - QDebug
- * - QDir
- * - QString
- * - QIcon
- * - QMessageBox
- * - QFileDialog
- * - QInputDialog
- * - QStandardPaths
+ * - QtCore/QDebug
+ * - QtCore/QDir
+ * - QtCore/QString
+ * - QtGui/QIcon
+ * - QtWidgets/QMessageBox
+ * - QtWidgets/QFileDialog
+ * - QtWidgets/QInputDialog
+ * - QtCore/QStandardPaths
  * - application.h
  * - guipreferences.h
  * - preset.h
@@ -29,22 +29,25 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
-#include <QDir>
-#include <QString>
-#include <QIcon>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QInputDialog>
-#include <QStandardPaths>
-#include <QStringBuilder>
-#include <QPropertyAnimation>
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QString>
+#include <QtGui/QIcon>
+#include <QtWidgets/QActionGroup>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
+#include <QtWidgets/QInputDialog>
+#include <QtCore/QStandardPaths>
+#include <QtCore/QStringBuilder>
+#include <QtCore/QPropertyAnimation>
 #include "application.h"
 #include "guipreferences.h"
 #include "preset.h"
 #include "process.h"
 #include "processdialogue.h"
 #include "preferencesdialogue.h"
+#include "synchronisewhatcombo.h"
 #include "aboutdialogue.h"
 #include "functions.h"
 #include "types.h"
@@ -129,7 +132,7 @@ namespace Qync {
 
 		// group is owned by MainWindow and will be deleted when QWidget
 		// base class destructor is called
-		QActionGroup * uiSwitchGroup = new QActionGroup(this);
+		auto * uiSwitchGroup = new QActionGroup(this);
 		uiSwitchGroup->addAction(m_ui->actionSimpleUi);
 		uiSwitchGroup->addAction(m_ui->actionFullUi);
 
@@ -606,9 +609,21 @@ namespace Qync {
 		else {
 			// dialogue shares ownership of the process
 			// dialogue deletes itself on closure
-			ProcessDialogue * w = new ProcessDialogue(process, this);
-			w->setWindowTitle(tr("%1 %2: %3").arg(qyncApp->applicationDisplayName(), (process->isDryRun() ? tr("simulation") : tr("synchronisation")), m_ui->presets->currentText()));
-			w->show();
+			auto * dlg = new ProcessDialogue(process, this);
+
+			QString presetName = m_ui->presets->currentText();
+
+			if (!presetName.isEmpty()) {
+                dlg->setWindowTitle(tr("%1 %2: %3").arg(qyncApp->applicationDisplayName(),
+                                                        (process->isDryRun() ? tr("simulation") : tr("synchronisation")),
+                                                        presetName));
+            } else {
+                dlg->setWindowTitle(tr("%1 %2").arg(qyncApp->applicationDisplayName(),
+                                                        (process->isDryRun() ? tr("simulation") : tr("synchronisation"))));
+			}
+
+			connect(dlg, &ProcessDialogue::finished, dlg, &ProcessDialogue::deleteLater);
+            dlg->show();
 		}
 
 		process->start();
