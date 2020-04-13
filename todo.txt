@@ -2,3 +2,4 @@ x 2020-04-13 (1) 2017-09-22 Add the preset name to the sync dialogue window titl
 (3) 2017-09-22 If possible, make it so that a sync cannot be restarted while it is already running.
 x 2017-09-22 (2) 2017-09-22 Put all classes in the Qync namespace.
 (3) 2020-04-13 Consider ways the notification widget can avoid overriding non-virtual base class methods
+(2) 2020-04-13 Output a useful status message while rsync is working out what needs to sync
