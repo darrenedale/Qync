@@ -8,11 +8,11 @@
  *
  * \dep
  * - memory
- * - QObject
- * - QString
- * - QStringList
- * - QFile
- * - QMetaObject
+ * - QtCore/QObject
+ * - QtCore/QString
+ * - QtCore/QStringList
+ * - QtCore/QFile
+ * - QtCore/QMetaObject
  */
 
 #ifndef QYNC_PROCESS_H
@@ -20,11 +20,11 @@
 
 #include <memory>
 
-#include <QObject>
-#include <QString>
-#include <QStringList>
-#include <QFile>
-#include <QMetaObject>
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QFile>
+#include <QtCore/QMetaObject>
 
 class QProcess;
 
@@ -67,9 +67,9 @@ namespace Qync {
 			DryRun,
 		};
 
-		Process(const Preset & preset, RunType type = RunType::Normal);
-		Process(const QString & cmd, const Preset & preset, RunType type = RunType::Normal);
-		virtual ~Process();
+		explicit Process(const Preset & preset, RunType type = RunType::Normal);
+		Process(QString cmd, const Preset & preset, RunType type = RunType::Normal);
+		~Process() override;
 
 		inline RunType runType() const {
 			return m_runType;

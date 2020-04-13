@@ -25,12 +25,12 @@
 
 #include <map>
 
-#include <QDebug>
-#include <QProcess>
-#include <QHash>
-#include <QFile>
-#include <QRegularExpression>
-#include <QtGlobal>
+#include <QtCore/QDebug>
+#include <QtCore/QProcess>
+#include <QtCore/QHash>
+#include <QtCore/QFile>
+#include <QtCore/QRegularExpression>
+#include <QtCore/QtGlobal>
 
 #include "preset.h"
 #include "application.h"
@@ -105,7 +105,7 @@ namespace Qync {
 	 * preferences.
 	 */
 	Process::Process(const Preset & preset, RunType type)
-	: Process(qyncApp->preferences().rsyncPath(), preset, type) {
+	:   Process(qyncApp->preferences().rsyncPath(), preset, type) {
 	}
 
 
@@ -121,11 +121,12 @@ namespace Qync {
 	 * everything a normal run of rsync would do, except make any actual changes to
 	 * the destination. This run type is generally used for simulations.
 	 */
-	Process::Process(const QString & cmd, const Preset & preset, RunType type)
-	: QObject(),
-	  m_process(new QProcess),
-	  m_command(cmd),
-	  m_runType(type) {
+	Process::Process(QString cmd, const Preset & preset, RunType type)
+	:   QObject(),
+	    m_process(std::make_unique<QProcess>()),
+        m_command(std::move(cmd)),
+        m_runType(type)
+    {
 		m_logFileName = preset.logFile();
 
 		if(RunType::DryRun == type) {

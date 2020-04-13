@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.8.0)	# required for c++17
 
 project(Qync)
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5 5.7 REQUIRED COMPONENTS Core Widgets)
 
@@ -28,18 +32,9 @@ add_executable(qync
 	resources/toolbaricons.qrc
 )
 
-set_target_properties(qync PROPERTIES
-	OUTPUT_NAME qync
-	CXX_STANDARD 17
-	CXX_STANDARD_REQUIRED ON
-	CXX_EXTENSIONS OFF
-	AUTOMOC ON
-	AUTOUIC ON
-	AUTOUIC_SEARCH_PATHS "ui"
-	AUTORCC ON
-)
-
+target_compile_features(qync PRIVATE cxx_std_17)
 target_link_libraries(qync Qt5::Core Qt5::Widgets)
+set_target_properties(qync PROPERTIES CXX_EXTENSIONS OFF)
 
 # cpack
 include(InstallRequiredSystemLibraries)
