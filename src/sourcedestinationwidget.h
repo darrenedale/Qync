@@ -28,22 +28,22 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		explicit SourceDestinationWidget(QWidget * parent = nullptr);
+		explicit SourceDestinationWidget(QWidget * = nullptr);
 		~SourceDestinationWidget();
 
 		QString source() const;
 		QString destination() const;
 
-		void setSourceLabel(const QString & label);
-		void setDestinationLabel(const QString & label);
+		void setSourceLabel(const QString &);
+		void setDestinationLabel(const QString &);
 
 	Q_SIGNALS:
 		void sourceChanged(const QString &);
 		void destinationChanged(const QString &);
 
 	public Q_SLOTS:
-		void setSource(const QString & src);
-		void setDestination(const QString & dest);
+		void setSource(const QString &);
+		void setDestination(const QString &);
 
 		void swapSourceAndDestination();
 

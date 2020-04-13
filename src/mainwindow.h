@@ -40,7 +40,7 @@ namespace Qync {
 		MainWindow();
 		virtual ~MainWindow();
 
-		void showNotification(const QString & title, const QString & msg, NotificationType type = NotificationType::Information);
+		void showNotification(const QString &, const QString &, NotificationType = NotificationType::Information);
 
 	public Q_SLOTS:
 		//		void refreshPresets();
@@ -65,7 +65,7 @@ namespace Qync {
 		void aboutRsync();
 
 	private Q_SLOTS:
-		void showPreset(const Preset & preset);
+		void showPreset(const Preset &);
 		void onPreferencesChanged();
 
 	protected:

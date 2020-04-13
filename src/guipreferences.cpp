@@ -103,7 +103,7 @@ namespace Qync {
 	 *
 	 * \return The toolbar button style.
 	 */
-	optional<Qt::ToolButtonStyle> GuiPreferences::parseToolButtonStyleText(const QString & style) {
+	std::optional<Qt::ToolButtonStyle> GuiPreferences::parseToolButtonStyleText(const QString & style) {
 		auto myStyle = style.trimmed();
 
 		if(0 == myStyle.compare("icononly", Qt::CaseInsensitive)) {

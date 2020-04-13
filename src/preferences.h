@@ -14,24 +14,7 @@
 #define QYNC_PREFERENCES_H
 
 #include <QString>
-
-#if __cplusplus >= 201703L
-
 #include <optional>
-
-namespace Qync {
-	using std::optional;
-}
-
-#else
-
-#include <equit/optional>
-
-namespace Qync {
-	using Equit::optional;
-}
-
-#endif
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
@@ -63,7 +46,7 @@ namespace Qync {
 		bool rsyncPathIsValid() const;
 
 	protected:
-		static optional<bool> parseBooleanText(const QString & boolString);
+		static std::optional<bool> parseBooleanText(const QString & boolString);
 		virtual void setDefaults();
 		virtual bool parseXmlStream(QXmlStreamReader & xml);
 		virtual bool parseXmlElement(QXmlStreamReader & xml);

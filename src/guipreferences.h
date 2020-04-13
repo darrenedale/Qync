@@ -17,7 +17,7 @@
 #define QYNC_GUIPREFERENCES_H
 
 #include "preferences.h"
-
+#include <optional>
 #include <QString>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -64,7 +64,7 @@ namespace Qync {
 		}
 
 	protected:
-		static optional<Qt::ToolButtonStyle> parseToolButtonStyleText(const QString & style);
+		static std::optional<Qt::ToolButtonStyle> parseToolButtonStyleText(const QString & style);
 
 		virtual void setDefaults() override;
 		virtual bool parseXmlElement(QXmlStreamReader & xml) override;

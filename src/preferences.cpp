@@ -140,7 +140,7 @@ namespace Qync {
 	 * parsed from the string; if not set the provided string could not be
 	 * parsed.
 	 */
-	optional<bool> Preferences::parseBooleanText(const QString & boolString) {
+	std::optional<bool> Preferences::parseBooleanText(const QString & boolString) {
 		if(0 == QString::compare("true", boolString.trimmed(), Qt::CaseInsensitive)) {
 			return true;
 		}

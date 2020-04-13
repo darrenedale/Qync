@@ -34,17 +34,17 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		explicit NotificationWidget(QWidget * parent = nullptr);
+		explicit NotificationWidget(QWidget * = nullptr);
 		~NotificationWidget();
 
 		QString message() const;
-		void setMessage(const QString & message);
+		void setMessage(const QString &);
 
 		inline NotificationType type() const {
 			return m_type;
 		}
 
-		void setType(NotificationType type);
+		void setType(NotificationType);
 
 	public Q_SLOTS:
 		void show();

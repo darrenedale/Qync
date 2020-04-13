@@ -22,7 +22,11 @@ add_executable(qync
 	src/processwidget.cpp
 	src/presetcombo.cpp
 	src/presetmenu.cpp
-	src/notificationwidget.cpp)
+	src/notificationwidget.cpp
+	
+	resources/icons.qrc
+	resources/toolbaricons.qrc
+)
 
 set_target_properties(qync PROPERTIES
 	OUTPUT_NAME qync
@@ -32,7 +36,8 @@ set_target_properties(qync PROPERTIES
 	AUTOMOC ON
 	AUTOUIC ON
 	AUTOUIC_SEARCH_PATHS "ui"
-	AUTORCC ON)
+	AUTORCC ON
+)
 
 target_link_libraries(qync Qt5::Core Qt5::Widgets)
 

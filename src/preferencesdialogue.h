@@ -29,7 +29,7 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		explicit PreferencesDialogue(QWidget * parent = nullptr);
+		explicit PreferencesDialogue(QWidget * = nullptr);
 		~PreferencesDialogue();
 
 	private Q_SLOTS:

@@ -79,11 +79,15 @@ namespace Qync {
 
 		auto * tempProcess = process.get();
 		connect(tempProcess, &Process::started, this, &ProcessDialogue::onProcessStarted);
-		connect(tempProcess, static_cast<void (Process::*)(QString)>(&Process::finished), this, &ProcessDialogue::onProcessFinished);
+		connect(tempProcess, qOverload<QString>(&Process::finished), this, &ProcessDialogue::onProcessFinished);
 		connect(tempProcess, &Process::interrupted, this, &ProcessDialogue::onProcessInterrupted);
 		connect(tempProcess, &Process::failed, this, &ProcessDialogue::onProcessFailed);
 		connect(tempProcess, &Process::newItemStarted, this, &ProcessDialogue::appendToDetails);
 		connect(m_ui->detailsButton, &QPushButton::clicked, this, &ProcessDialogue::toggleDetailedText);
+
+		connect(m_ui->controls, &QDialogButtonBox::accepted, this, &ProcessDialogue::accept);
+		connect(m_ui->controls, &QDialogButtonBox::rejected, this, &ProcessDialogue::reject);
+
 	}
 
 

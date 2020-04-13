@@ -816,13 +816,13 @@
   <customwidget>
    <class>Qync::ProcessWidget</class>
    <extends>QWidget</extends>
-   <header>processwidget.h</header>
+   <header>src/processwidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Qync::SourceDestinationWidget</class>
    <extends>QWidget</extends>
-   <header>sourcedestinationwidget.h</header>
+   <header>src/sourcedestinationwidget.h</header>
    <container>1</container>
    <slots>
     <signal>sourceChanged(QString)</signal>
@@ -834,290 +834,28 @@
   <customwidget>
    <class>Qync::SynchroniseWhatCombo</class>
    <extends>QComboBox</extends>
-   <header>synchronisewhatcombo.h</header>
+   <header>src/synchronisewhatcombo.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::PresetCombo</class>
    <extends>QComboBox</extends>
-   <header>presetcombo.h</header>
+   <header>src/presetcombo.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::PresetMenu</class>
    <extends>QMenu</extends>
-   <header>presetmenu.h</header>
+   <header>src/presetmenu.h</header>
   </customwidget>
   <customwidget>
    <class>Qync::NotificationWidget</class>
    <extends>QWidget</extends>
-   <header>notificationwidget.h</header>
+   <header>src/notificationwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>chooseLogFile</sender>
-   <signal>clicked()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>chooseLogFile()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>90</x>
-     <y>132</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>706</x>
-     <y>266</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionAbout</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>about()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionAboutRsync</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>aboutRsync()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionExport</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>exportPreset()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionImport</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>importPreset()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionNew</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>newPreset()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionPreferences</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>showPreferences()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionRemove</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>removeCurrentPreset()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSave</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>saveSettingsToCurrentPreset()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSaveAs</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>newPresetFromSettings()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSimulate</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>simulate()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSync</sender>
-   <signal>triggered()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>synchronise()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>231</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>preferences</sender>
-   <signal>clicked()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>showPreferences()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>29</x>
-     <y>388</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>69</x>
-     <y>472</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>quitButton</sender>
-   <signal>clicked()</signal>
-   <receiver>Qync::MainWindow</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>703</x>
-     <y>388</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>640</x>
-     <y>490</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>synchroniseButton</sender>
-   <signal>clicked()</signal>
-   <receiver>actionSync</receiver>
-   <slot>trigger()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>569</x>
-     <y>377</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
- <slots>
-  <slot>showPreset(int)</slot>
-  <slot>chooseSourceDirectory()</slot>
-  <slot>chooseDestinationDirectory()</slot>
-  <slot>chooseSourceFile()</slot>
-  <slot>chooseDestinationFile()</slot>
-  <slot>chooseLogFile()</slot>
-  <slot>switchSourceAndDestination()</slot>
-  <slot>showPreferences()</slot>
-  <slot>importPreset()</slot>
-  <slot>exportPreset()</slot>
-  <slot>about()</slot>
-  <slot>aboutQt()</slot>
-  <slot>aboutRsync()</slot>
-  <slot>newPreset()</slot>
-  <slot>removeCurrentPreset()</slot>
-  <slot>saveSettingsToCurrentPreset()</slot>
-  <slot>newPresetFromSettings()</slot>
-  <slot>simulate()</slot>
-  <slot>synchronise()</slot>
-  <slot>onIncludeInSynchronisationChanged(int)</slot>
- </slots>
+ <connections/>
+ <slots/>
  <buttongroups>
   <buttongroup name="simpleBackupType"/>
  </buttongroups>

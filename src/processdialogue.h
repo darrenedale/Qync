@@ -39,7 +39,7 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		explicit ProcessDialogue(const std::shared_ptr<Process> & process, QWidget * parent = nullptr);
+		explicit ProcessDialogue(const std::shared_ptr<Process> &, QWidget * = nullptr);
 		virtual ~ProcessDialogue();
 
 	public Q_SLOTS:
@@ -52,12 +52,12 @@ namespace Qync {
 		void saveOutput();
 
 		void onProcessStarted();
-		void onProcessFinished(const QString & msg = {});
-		void onProcessInterrupted(const QString & msg = {});
-		void onProcessFailed(const QString & msg = {});
+		void onProcessFinished(const QString & = QStringLiteral(""));
+		void onProcessInterrupted(const QString & = QStringLiteral(""));
+		void onProcessFailed(const QString & = QStringLiteral(""));
 
 	protected:
-		virtual void closeEvent(QCloseEvent *) override;
+		void closeEvent(QCloseEvent *) override;
 
 	private:
 		std::unique_ptr<Ui::ProcessDialogue> m_ui;

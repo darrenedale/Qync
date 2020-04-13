@@ -62,7 +62,7 @@ namespace Qync {
 		// is destroyed; fsMOdel destroyed when completer destroyed
 		auto * completer = new QCompleter(this);
 		auto * fsModel = new QFileSystemModel(completer);
-		fsModel->setRootPath("");
+		fsModel->setRootPath(QStringLiteral(""));
 		completer->setModel(fsModel);
 		m_ui->source->setCompleter(completer);
 		completer->setCaseSensitivity(Qt::CaseInsensitive);
@@ -71,15 +71,17 @@ namespace Qync {
 		// ...ditto...
 		completer = new QCompleter(this);
 		fsModel = new QFileSystemModel(completer);
-		fsModel->setRootPath("");
+		fsModel->setRootPath(QStringLiteral(""));
 		completer->setModel(fsModel);
 		m_ui->destination->setCompleter(completer);
 		completer->setCaseSensitivity(Qt::CaseInsensitive);
 		completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
 
-		/* designer/.ui file can't yet connect signals to signals */
 		connect(m_ui->source, &QLineEdit::textEdited, this, &SourceDestinationWidget::sourceChanged);
 		connect(m_ui->destination, &QLineEdit::textEdited, this, &SourceDestinationWidget::destinationChanged);
+
+		connect(m_ui->chooseSource, &QToolButton::clicked, this, &SourceDestinationWidget::chooseSourceDirectory);
+		connect(m_ui->chooseDestination, &QToolButton::clicked, this, &SourceDestinationWidget::chooseDestinationDirectory);
 	}
 
 

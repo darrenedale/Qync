@@ -100,42 +100,6 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>chooseSource</sender>
-   <signal>clicked()</signal>
-   <receiver>Qync::SourceDestinationWidget</receiver>
-   <slot>chooseSourceDirectory()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>466</x>
-     <y>19</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>445</x>
-     <y>82</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>chooseDestination</sender>
-   <signal>clicked()</signal>
-   <receiver>Qync::SourceDestinationWidget</receiver>
-   <slot>chooseDestinationDirectory()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>476</x>
-     <y>38</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>503</x>
-     <y>56</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
- <slots>
-  <slot>chooseSourceDirectory()</slot>
-  <slot>chooseDestinationDirectory()</slot>
- </slots>
+ <connections/>
+ <slots/>
 </ui>

@@ -29,7 +29,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include <QDebug>
 #include <QDir>
 #include <QString>
@@ -40,7 +39,6 @@
 #include <QStandardPaths>
 #include <QStringBuilder>
 #include <QPropertyAnimation>
-
 #include "application.h"
 #include "guipreferences.h"
 #include "preset.h"
@@ -51,9 +49,7 @@
 #include "functions.h"
 #include "types.h"
 
-
 namespace Qync {
-
 
 	/**
 	 * \class MainWindow
@@ -109,7 +105,6 @@ namespace Qync {
 	 * slot.
 	 */
 
-
 	/**
 	 * \brief Create a new MainWindow.
 	 */
@@ -143,10 +138,25 @@ namespace Qync {
 		setWindowTitle(appDisplayName);
 		setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 
-		connect(m_ui->actionSimpleUi, &QAction::toggled, [this](bool useSimple) {
-			useSimpleUi(useSimple);
-		});
+		connect(m_ui->actionSimpleUi, &QAction::toggled, this, &MainWindow::useSimpleUi);
 
+		connect(m_ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
+		connect(m_ui->actionAboutRsync, &QAction::triggered, this, &MainWindow::aboutRsync);
+		connect(m_ui->actionExport, &QAction::triggered, this, &MainWindow::exportPreset);
+		connect(m_ui->actionImport, &QAction::triggered, this, &MainWindow::importPreset);
+		connect(m_ui->actionNew, &QAction::triggered, this, &MainWindow::newPreset);
+		connect(m_ui->actionPreferences, &QAction::triggered, this, &MainWindow::showPreferences);
+		connect(m_ui->actionRemove, &QAction::triggered, this, &MainWindow::removeCurrentPreset);
+		connect(m_ui->actionSave, &QAction::triggered, this, &MainWindow::saveSettingsToCurrentPreset);
+		connect(m_ui->actionSaveAs, &QAction::triggered, this, &MainWindow::newPresetFromSettings);
+		connect(m_ui->actionSimulate, &QAction::triggered, this, &MainWindow::simulate);
+		connect(m_ui->actionSync, &QAction::triggered, this, &MainWindow::synchronise);
+
+		connect(m_ui->chooseLogFile, &QToolButton::clicked, this, &MainWindow::chooseLogFile);
+		connect(m_ui->preferences, &QToolButton::clicked, m_ui->actionPreferences, &QAction::trigger);
+		connect(m_ui->quitButton, &QPushButton::clicked, this, &MainWindow::close);
+		connect(m_ui->synchroniseButton, &QPushButton::clicked, m_ui->actionSync, &QAction::trigger);
+		
 		connect(m_ui->presets, &PresetCombo::currentPresetChanged, this, &MainWindow::showPreset);
 		connect(m_ui->menuMyPresets, &PresetMenu::presetIndexTriggered, m_ui->presets, &QComboBox::setCurrentIndex);
 
@@ -167,7 +177,6 @@ namespace Qync {
 		}
 	}
 
-
 	/**
 	 * \brief Show an unobtrusive notification in the main window.
 	 *
@@ -181,26 +190,25 @@ namespace Qync {
 	 * notification: yellow for warnings, red for errors, and the standard
 	 * UI background colour for all others.
 	 */
-	void MainWindow::showNotification(const QString & title, const QString & msg, NotificationType type) {
+	void MainWindow::showNotification(const QString & title, const QString & message, NotificationType type)
+	{
 		QString content;
 
 		if(!title.isEmpty()) {
 			content = "<strong>" % title % "</strong> ";
 		}
 
-		content = content % msg;
+		content = content % message;
 		m_ui->notification->setMaximumHeight(0);
 		m_ui->notification->setMessage(content);
 		m_ui->notification->setType(type);
 		m_ui->notification->show();
 	}
 
-
 	/**
 	 * \brief Destroy the MainWindow.
 	 */
 	MainWindow::~MainWindow() = default;
-
 
 	/**
 	 * \brief Show the details of a preset from the application.
@@ -256,7 +264,6 @@ namespace Qync {
 		m_ui->actionRemove->setEnabled(true);
 	}
 
-
 	/**
 	 * \brief (Re)read the preferences from the application.
 	 *
@@ -267,7 +274,6 @@ namespace Qync {
 		useSimpleUi(qyncApp->preferences().useSimpleUi());
 	}
 
-
 	/**
 	 * \brief Disconnect the application's signals from the window's slots.
 	 */
@@ -275,14 +281,12 @@ namespace Qync {
 		qyncApp->disconnect(this);
 	}
 
-
 	/**
 	 * \brief Connect the application's signals to the window's slots.
 	 */
 	void MainWindow::connectApplication() {
 		connect(qyncApp, &Application::preferencesChanged, this, &MainWindow::onPreferencesChanged);
 	}
-
 
 	/**
 	 * \brief Choose between the simple and full UIs.
@@ -318,7 +322,6 @@ namespace Qync {
 		}
 	}
 
-
 	/**
 	 * \brief Choose a local file for the rsycn output log.
 	 *
@@ -334,7 +337,6 @@ namespace Qync {
 		}
 	}
 
-
 	/**
 	 * \brief Switch the content of the source and destination line edits.
 	 */
@@ -342,7 +344,6 @@ namespace Qync {
 		m_ui->sourceAndDestination->swapSourceAndDestination();
 		m_ui->simpleSourceAndDestination->swapSourceAndDestination();
 	}
-
 
 	/**
 	 * \brief Save the current settings to the currently-selected preset.
@@ -362,7 +363,6 @@ namespace Qync {
 		myPreset.save();
 	}
 
-
 	/**
 	 * \brief Remove the currently selected preset.
 	 *
@@ -380,7 +380,6 @@ namespace Qync {
 		}
 	}
 
-
 	/**
 	 * \brief Create a new preset.
 	 *
@@ -391,7 +390,6 @@ namespace Qync {
 	void MainWindow::newPresetFromSettings() {
 		newPreset(true);
 	}
-
 
 	/**
 	 * \brief Create a new preset.
@@ -421,7 +419,6 @@ namespace Qync {
 		m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
 	}
 
-
 	/**
 	 * \brief Import a preset from a file.
 	 *
@@ -445,7 +442,6 @@ namespace Qync {
 
 		m_ui->presets->setCurrentIndex(m_ui->presets->count() - 1);
 	}
-
 
 	/**
 	 * \brief Export a preset to a file.
@@ -493,7 +489,6 @@ namespace Qync {
 			showNotification(tr("%1 Warning").arg(qyncApp->applicationDisplayName()), tr("The %1 preset could not be exported to the file \"%2\".").arg(qyncApp->applicationDisplayName()).arg(fileName), NotificationType::Warning);
 		}
 	}
-
 
 	/**
 	 * \brief Fill a preset with the current settings.
@@ -577,7 +572,6 @@ namespace Qync {
 		}
 	}
 
-
 	/**
 	 * \brief Helper for synchronise() and simulate().
 	 *
@@ -621,7 +615,6 @@ namespace Qync {
 		return true;
 	}
 
-
 	/**
 	 * \brief Start a simulation based on the current settings.
 	 *
@@ -640,7 +633,6 @@ namespace Qync {
 		}
 	}
 
-
 	/**
 	 * \brief Start a synchronisation based on the current settings.
 	 *
@@ -657,7 +649,6 @@ namespace Qync {
 		}
 	}
 
-
 	/**
 	 * \brief Show the preferences dialogue.
 	 */
@@ -666,7 +657,6 @@ namespace Qync {
 		m_prefsWindow->raise();
 		m_prefsWindow->activateWindow();
 	}
-
 
 	/**
 	 * \brief Show the about Qync dialogue.
@@ -677,7 +667,6 @@ namespace Qync {
 		m_aboutDialogue->activateWindow();
 	}
 
-
 	/**
 	 * \brief Show the about rsync dialogue.
 	 *
@@ -686,6 +675,5 @@ namespace Qync {
 	void MainWindow::aboutRsync() {
 		QMessageBox::information(this, tr("Qync - About rsync"), qyncApp->rsyncVersionText());
 	}
-
 
 }  // namespace Qync
