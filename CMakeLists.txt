@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.8.0)	# required for c++17
 
-project(Qync)
+project(Qync LANGUAGES CXX VERSION 1.1.0)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 find_package(Qt5 5.7 REQUIRED COMPONENTS Core Widgets)
 
 add_executable(qync
@@ -34,7 +35,10 @@ add_executable(qync
 
 target_compile_features(qync PRIVATE cxx_std_17)
 target_link_libraries(qync Qt5::Core Qt5::Widgets)
-set_target_properties(qync PROPERTIES CXX_EXTENSIONS OFF)
+set_target_properties(qync PROPERTIES
+		PROJECT_LABEL Qync
+		AUTOUIC_SEARCH_PATHS src/ui
+		)
 
 # cpack
 include(InstallRequiredSystemLibraries)

@@ -87,7 +87,6 @@ namespace Qync {
 
 		connect(m_ui->controls, &QDialogButtonBox::accepted, this, &ProcessDialogue::accept);
 		connect(m_ui->controls, &QDialogButtonBox::rejected, this, &ProcessDialogue::reject);
-
 	}
 
 
@@ -95,7 +94,6 @@ namespace Qync {
 	 * \brief Destroy the ProcessDialogue
 	 */
 	ProcessDialogue::~ProcessDialogue() {
-	    qDebug() << "Destroying ProcessDialogue.";
 		m_ui->detailsButton->disconnect(this);
 		m_saveButton = nullptr;
 		m_abortButton = nullptr;
