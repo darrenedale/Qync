@@ -1,16 +1,10 @@
 /**
- * \file application.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file application.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the Application class.
- *
- * \dep
- * - memory
- * - vector
- * - QApplication
- * - QString
+ * @brief Declaration of the Application class.
  */
 
 #ifndef QYNC_APPLICATION_H
@@ -19,8 +13,8 @@
 #include <memory>
 #include <vector>
 
-#include <QApplication>
-#include <QString>
+#include <QtWidgets/QApplication>
+#include <QtCore/QString>
 
 #include "guipreferences.h"
 #include "mainwindow.h"

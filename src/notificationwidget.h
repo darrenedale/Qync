@@ -1,21 +1,16 @@
 /**
- * \file notificationwidget.h
- * \author Darren Edale
- * \date October, 2017
- * \version 1.1.0
+ * @file notificationwidget.h
+ * @author Darren Edale
+ * @date April, 2020
+ * @version 1.1.1
  *
- * \brief Definition of the NotificationWidget class.
- *
- * \dep
- * - QWidget
- * - memory
- * - types.h
+ * @brief Definition of the NotificationWidget class.
  */
 
 #ifndef QYNC_NOTIFICATIONWIDGET_H
 #define QYNC_NOTIFICATIONWIDGET_H
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 
 #include <memory>
 
@@ -35,9 +30,9 @@ namespace Qync {
 
 	public:
 		explicit NotificationWidget(QWidget * = nullptr);
-		~NotificationWidget();
+		~NotificationWidget() override;
 
-		QString message() const;
+		[[nodiscard]] QString message() const;
 		void setMessage(const QString &);
 
 		inline NotificationType type() const {
@@ -56,7 +51,6 @@ namespace Qync {
 		std::unique_ptr<QPropertyAnimation> m_hideAnim;
 		NotificationType m_type;
 	};
-
 
 }  // namespace Qync
 

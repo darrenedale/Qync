@@ -1,14 +1,10 @@
 /**
- * \file aboutdialogue.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file aboutdialogue.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the AboutDialogue class.
- *
- * \dep
- * - memory
- * - QDialog
+ * @brief Declaration of the AboutDialogue class.
  */
 
 #ifndef QYNC_ABOUTDIALOGUE_H
@@ -16,7 +12,7 @@
 
 #include <memory>
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 class QString;
 
@@ -32,7 +28,7 @@ namespace Qync {
 
 	public:
 		AboutDialogue();
-		~AboutDialogue();
+		~AboutDialogue() override;
 
 	private:
 		static QString & processPlaceholders(QString && content);

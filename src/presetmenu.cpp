@@ -1,12 +1,12 @@
 /**
- * \file presetmenu.cpp
- * \author Darren Edale
- * \date September, 2017
- * \version 1.1.0
+ * @file presetmenu.cpp
+ * @author Darren Edale
+ * @date April, 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the PresetMenu class.
+ * @brief Declaration of the PresetMenu class.
  *
- * \dep
+ * @dep
  * - presetmenu.h
  * - application.h
  * - preset.h
@@ -22,12 +22,12 @@ namespace Qync {
 
 
 	/**
-	 * \class PresetMenu
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class PresetMenu
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief A combo menu specialised for selecting a sync preset.
+	 * @brief A combo menu specialised for selecting a sync preset.
 	 *
 	 * The menu listens for changes in the list of presets stored in the
 	 * Application and updates as required. You can manually trigger the
@@ -49,9 +49,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a PresetMenu.
+	 * @brief Create a PresetMenu.
 	 *
-	 * \param parent The owning parent widget.
+	 * @param parent The owning parent widget.
 	 */
 	PresetMenu::PresetMenu(QWidget * parent)
 	: QMenu(parent) {
@@ -67,7 +67,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Refresh the list of presets available in the menu.
+	 * @brief Refresh the list of presets available in the menu.
 	 *
 	 * On a call to this method the Application object is queried for the
 	 * presets, and the menu items are replaced with those representing

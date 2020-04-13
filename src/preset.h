@@ -1,12 +1,12 @@
 /**
- * \file preset.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file preset.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the Preset class.
+ * @brief Declaration of the Preset class.
  *
- * \dep
+ * @dep
  * - QString
  *
  * In an ideal world the implementation here would be de-coupled from Qt.

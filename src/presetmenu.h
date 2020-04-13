@@ -1,12 +1,12 @@
 /**
- * \file presetmenu.h
- * \author Darren Edale
- * \date September, 2017
- * \version 1.1.0
+ * @file presetmenu.h
+ * @author Darren Edale
+ * @date April, 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the PresetMenu class.
+ * @brief Declaration of the PresetMenu class.
  *
- * \dep
+ * @dep
  * - QMenu
  */
 

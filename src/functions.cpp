@@ -1,27 +1,21 @@
 /**
- * \file functions.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file functions.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Qync free-standing functions implementation file.
- *
- * \dep
- * - functions.h
- * - QDebug
- * - QXmlStreamReader
+ * @brief Qync free-standing functions implementation file.
  */
 
 #include "functions.h"
 
-#include <QDebug>
-#include <QXmlStreamReader>
-
+#include <QtCore/QDebug>
+#include <QtCore/QXmlStreamReader>
 
 /**
- * \namespace Qync
+ * @namespace Qync
  *
- * \brief Namespace for functions and types for the Qync application.
+ * @brief Namespace for functions and types for the Qync application.
  *
  * The Qync namespace is reserved for all functions and typedefs available to
  * the Qync application and its classes. Its main purpose is to avoid pollution
@@ -29,11 +23,10 @@
  */
 namespace Qync {
 
-
 	/**
-	 * \brief Completely parses an XML element.
+	 * @brief Completely parses an XML element.
 	 *
-	 * \param xml is the stream from which to parse the XML element.
+	 * @param xml is the stream from which to parse the XML element.
 	 *
 	 * Given an XML stream positioned on a start element, this function will
 	 * read and discard the entire content of the element, leaving the stream
@@ -66,6 +59,5 @@ namespace Qync {
 			}
 		}
 	}
-
 
 }  // namespace Qync

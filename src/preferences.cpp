@@ -1,12 +1,12 @@
 /**
- * \file preferences.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file preferences.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Implementation of the Preferences class.
+ * @brief Implementation of the Preferences class.
  *
- * \dep
+ * @dep
  * - preferences.h
  * - QDebug
  * - QXmlStreamWriter
@@ -33,15 +33,15 @@ namespace Qync {
 
 
 	/**
-	 * \class Preferences
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class Preferences
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief Base class representing the core Qync preferences.
+	 * @brief Base class representing the core Qync preferences.
 	 *
 	 * This class represents the core preferences for a Qync application. At present
-	 * it has only one setting, which is the path of the \b rsync executable file.
+	 * it has only one setting, which is the path of the @b rsync executable file.
 	 * This is set using setRsyncPath(), read using rsyncPath() and its validity can
 	 * be assessed using rsyncPathIsValid().
 	 *
@@ -68,7 +68,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new Preferences object.
+	 * @brief Create a new Preferences object.
 	 *
 	 * The preferences will be set to default and there will be no file
 	 * name, so load() and save() will fail (use loadFrom() or saveAs()
@@ -82,9 +82,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new Preferences object.
+	 * @brief Create a new Preferences object.
 	 *
-	 * \param fileName is the path to the file from which to load the
+	 * @param fileName is the path to the file from which to load the
 	 * preferences.
 	 *
 	 * The preferences will be loaded from the provided file name, if
@@ -98,9 +98,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the default values for all settings.
+	 * @brief Set the default values for all settings.
 	 *
-	 * By default, the rsync path is set to \b /usr/bin/rsync.
+	 * By default, the rsync path is set to @b /usr/bin/rsync.
 	 *
 	 * Reimplementations should call this base class method to ensure that
 	 * defaults for core settings are also set.
@@ -124,19 +124,19 @@ namespace Qync {
 
 
 	/**
-	 * \brief Convert the text representation of a boolean value to an
-	 * actual \b bool.
+	 * @brief Convert the text representation of a boolean value to an
+	 * actual @b bool.
 	 *
-	 * \param boolString is the boolean text to convert.
+	 * @param boolString is the boolean text to convert.
 	 *
 	 * This is a helper method to parse the content of a boolean text from
-	 * the preferences file. A valid \b bool is always returned - callers
-	 * must provide an \b ok parameter and check its content when the method
+	 * the preferences file. A valid @b bool is always returned - callers
+	 * must provide an @b ok parameter and check its content when the method
 	 * returns if they need to check whether the returned value represents
 	 * the text provided or is just a default value because the text was not
 	 * valid.
 	 *
-	 * \return An optional boolean. If set, it is set to the boolean value
+	 * @return An optional boolean. If set, it is set to the boolean value
 	 * parsed from the string; if not set the provided string could not be
 	 * parsed.
 	 */
@@ -153,11 +153,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Read all settings from an XML stream.
+	 * @brief Read all settings from an XML stream.
 	 *
-	 * \param xml is the stream from which to read.
+	 * @param xml is the stream from which to read.
 	 *
-	 * \return \b true if the settings were read, \b false otherwise.
+	 * @return @b true if the settings were read, @b false otherwise.
 	 */
 	bool Preferences::parseXmlStream(QXmlStreamReader & xml) {
 		Q_ASSERT_X(xml.isStartElement() && "qyncpreferences" == xml.name(), __PRETTY_FUNCTION__, "no XML start element or element is not qyncpreferences");
@@ -187,9 +187,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Parse an arbitrary XML element from a stream.
+	 * @brief Parse an arbitrary XML element from a stream.
 	 *
-	 * \param xml is the stream from which to read.
+	 * @param xml is the stream from which to read.
 	 *
 	 * This is a virtual method. Subclasses should reimplement this method
 	 * to ensure their own extensions to the settings file are parsed. The
@@ -197,7 +197,7 @@ namespace Qync {
 	 * class hierarchy by calling parseXmlElement() in their direct parent
 	 * class.
 	 *
-	 * \return \b true if the settings were read, \b false otherwise.
+	 * @return @b true if the settings were read, @b false otherwise.
 	 */
 	bool Preferences::parseXmlElement(QXmlStreamReader & xml) {
 		Q_ASSERT_X(xml.isStartElement(), __PRETTY_FUNCTION__, "no XML start element");
@@ -212,11 +212,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Read all the core settings from an XML stream.
+	 * @brief Read all the core settings from an XML stream.
 	 *
-	 * \param xml is the stream from which to read.
+	 * @param xml is the stream from which to read.
 	 *
-	 * \return \b true if the settings were read, \b false otherwise.
+	 * @return @b true if the settings were read, @b false otherwise.
 	 */
 	bool Preferences::parseCorePreferencesXml(QXmlStreamReader & xml) {
 		Q_ASSERT_X(xml.isStartElement() && "corepreferences" == xml.name(), __PRETTY_FUNCTION__, "no XML start element or element is not corepreferences");
@@ -250,11 +250,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Write all settings to an XML stream.
+	 * @brief Write all settings to an XML stream.
 	 *
-	 * \param xml is the stream to which to write.
+	 * @param xml is the stream to which to write.
 	 *
-	 * \return \b true if the settings were written, \b false otherwise.
+	 * @return @b true if the settings were written, @b false otherwise.
 	 */
 	bool Preferences::emitXmlStream(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("qyncpreferences");
@@ -265,9 +265,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Write all settings to an XML stream.
+	 * @brief Write all settings to an XML stream.
 	 *
-	 * \param xml is the stream to which to write.
+	 * @param xml is the stream to which to write.
 	 *
 	 * This is a virtual method. Subclasses should reimplement this method
 	 * to ensure their own extensions to the settings file are written. The
@@ -276,7 +276,7 @@ namespace Qync {
 	 * emitXmlElements() from the subclass's direct base class to ensure
 	 * that all base class settings are also written to the stream.
 	 *
-	 * \return \b true if the settings were written, \b false otherwise.
+	 * @return @b true if the settings were written, @b false otherwise.
 	 */
 	bool Preferences::emitXmlElements(QXmlStreamWriter & xml) const {
 		return emitCorePreferencesXml(xml);
@@ -284,11 +284,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Write all the core settings to an XML stream.
+	 * @brief Write all the core settings to an XML stream.
 	 *
-	 * \param xml is the stream to which to write.
+	 * @param xml is the stream to which to write.
 	 *
-	 * \return \b true if the settings were written, \b false otherwise.
+	 * @return @b true if the settings were written, @b false otherwise.
 	 */
 	bool Preferences::emitCorePreferencesXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("corepreferences");
@@ -301,12 +301,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Save the settings to the internally stored file.
+	 * @brief Save the settings to the internally stored file.
 	 *
 	 * The settings are saved tothe file set in the constructor or
 	 * using loadFrom() or saveAs().
 	 *
-	 * \return \b true if the settings were saved, \b false otherwise.
+	 * @return @b true if the settings were saved, @b false otherwise.
 	 */
 	bool Preferences::save() const {
 		if(saveCopyAs(m_fileName)) {
@@ -318,14 +318,14 @@ namespace Qync {
 
 
 	/**
-	 * \brief Save the settings to a named file.
+	 * @brief Save the settings to a named file.
 	 *
-	 * \param fileName is the path of the file to save.
+	 * @param fileName is the path of the file to save.
 	 *
 	 * If the save is successful, the internally stored file name is set
 	 * to the name of the file.
 	 *
-	 * \return \b true if the settings were saved, \b false otherwise.
+	 * @return @b true if the settings were saved, @b false otherwise.
 	 */
 	bool Preferences::saveAs(const QString & fileName) {
 		if(saveCopyAs(fileName)) {
@@ -338,14 +338,14 @@ namespace Qync {
 
 
 	/**
-	 * \brief Save a copy of the settings to a named file.
+	 * @brief Save a copy of the settings to a named file.
 	 *
-	 * \param fileName is the path of the file to save.
+	 * @param fileName is the path of the file to save.
 	 *
 	 * Regardless of whether the save is successful or not, the internally
 	 * stored file name is never altered by this method.
 	 *
-	 * \return \b true if the settings were saved, \b false otherwise.
+	 * @return @b true if the settings were saved, @b false otherwise.
 	 */
 	bool Preferences::saveCopyAs(const QString & fileName) const {
 		QFile file(fileName);
@@ -361,12 +361,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief (Re)load the settings from the internally stored file.
+	 * @brief (Re)load the settings from the internally stored file.
 	 *
 	 * The settings are loaded from the file set in the constructor or
 	 * using loadFrom() or saveAs().
 	 *
-	 * \return \b true if the settings were loaded, \b false otherwise.
+	 * @return @b true if the settings were loaded, @b false otherwise.
 	 */
 	bool Preferences::load() {
 		if(m_fileName.isEmpty()) {
@@ -379,14 +379,14 @@ namespace Qync {
 
 
 	/**
-	 * \brief Load settings from a named file.
+	 * @brief Load settings from a named file.
 	 *
-	 * \param fileName is the path of the file to load.
+	 * @param fileName is the path of the file to load.
 	 *
 	 * If the load is successful, the internally stored file name is set
 	 * to the name of the file.
 	 *
-	 * \return \b true if the settings were loaded, \b false otherwise.
+	 * @return @b true if the settings were loaded, @b false otherwise.
 	 */
 	bool Preferences::loadFrom(const QString & fileName) {
 		if(fileName.isEmpty()) {
@@ -421,12 +421,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Check whether the path to the rsync command is valid.
+	 * @brief Check whether the path to the rsync command is valid.
 	 *
 	 * The path is valid if it identifies a valid, executable file that
 	 * the current user has access to.
 	 *
-	 * \return \b true if the path is valid, \b false otherwise.
+	 * @return @b true if the path is valid, @b false otherwise.
 	 */
 	bool Preferences::rsyncPathIsValid() const {
 		QFileInfo f(rsyncPath());
@@ -435,24 +435,24 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preferences::~Preferences()
-	 * \brief Destroy the Preferences object.
+	 * @fn Preferences::~Preferences()
+	 * @brief Destroy the Preferences object.
 	 */
 
 
 	/**
-	 *\brief Get the path to the rsync command.
+	 *@brief Get the path to the rsync command.
 	 *
-	 * \return The path to the rsync command.
+	 * @return The path to the rsync command.
 	 */
 
 
 	/**
-	 *\brief Set the path to the rsync command.
+	 *@brief Set the path to the rsync command.
 	 *
-	 * \param path is the path to the rsync command.
+	 * @param path is the path to the rsync command.
 	 *
-	 * \return \b true if the path was set, \b false otherwise.
+	 * @return @b true if the path was set, @b false otherwise.
 	 */
 
 

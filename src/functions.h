@@ -1,15 +1,13 @@
 /**
- * \file functions.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file functions.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Defines free-standing functions that are available throughout
+ * @brief Defines free-standing functions that are available throughout
  * the application.
  *
  * All functions are defined in the Qync namespace.
- *
- * \nodep
  */
 
 #ifndef QYNC_FUNCTIONS_H
@@ -18,7 +16,7 @@
 class QXmlStreamReader;
 
 namespace Qync {
-	void parseUnknownElementXml(QXmlStreamReader & xml);
+	void parseUnknownElementXml(QXmlStreamReader &);
 };
 
 #endif  // QYNC_FUNCTIONS_H

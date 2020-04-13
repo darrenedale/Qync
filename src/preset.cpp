@@ -1,12 +1,12 @@
 /**
- * \file preset.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file preset.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Implementation of the Preset class.
+ * @brief Implementation of the Preset class.
  *
- * \dep
+ * @dep
  * - preset.h
  * - unordered_map
  * - QDebug
@@ -38,7 +38,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Implementation details for the Qync::Preset class.
+	 * @brief Implementation details for the Qync::Preset class.
 	 */
 	namespace Detail {
 		namespace Preset {
@@ -104,12 +104,12 @@ namespace Qync {
 
 
 	/**
-	 * \class Preset
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class Preset
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief A class to represent a preset for the rsync process.
+	 * @brief A class to represent a preset for the rsync process.
 	 *
 	 * This class basically stores all the settings that the user is able to modify
 	 * for the rsync process. At present, the following settings can be manipulated:
@@ -157,9 +157,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new Preset.
+	 * @brief Create a new Preset.
 	 *
-	 * \param name is the name for the new preset.
+	 * @param name is the name for the new preset.
 	 */
 	Preset::Preset(const QString & name) {
 		setDefaults();
@@ -168,21 +168,21 @@ namespace Qync {
 
 
 	/**
-	 * \brief Destroy a Preset.
+	 * @brief Destroy a Preset.
 	 */
 	Preset::~Preset() = default;
 
 
 	/**
-	 * \brief Load a Preset from a file.
+	 * @brief Load a Preset from a file.
 	 *
-	 * \param fileName is the path to the file to load.
+	 * @param fileName is the path to the file to load.
 	 *
 	 * If the file is a valid Preset file, the file is loaded into the preset
 	 * object. If not, the preset is reset to its default state (which is not
 	 * necessarily the same state as it was before the call).
 	 *
-	 * \return \b true if the file was loaded successfully, \b false otherwise.
+	 * @return @b true if the file was loaded successfully, @b false otherwise.
 	 */
 	bool Preset::load(const QString & fileName) {
 		setDefaults();
@@ -218,14 +218,14 @@ namespace Qync {
 
 
 	/**
-	 * \brief Save the preset to a new file.
+	 * @brief Save the preset to a new file.
 	 *
-	 * \param fileName is the name of the file to save to.
+	 * @param fileName is the name of the file to save to.
 	 *
 	 * If successful, the internally stored name of the file is set to
 	 * the provided file name.
 	 *
-	 * \return \b true if the preset file was saved, \b false otherwise.
+	 * @return @b true if the preset file was saved, @b false otherwise.
 	 */
 	bool Preset::saveAs(const QString & fileName) {
 		if(!saveCopyAs(fileName)) {
@@ -238,14 +238,14 @@ namespace Qync {
 
 
 	/**
-	 * \brief Save a copy of the preset to a new file.
+	 * @brief Save a copy of the preset to a new file.
 	 *
-	 * \param fileName is the name of the file to save to.
+	 * @param fileName is the name of the file to save to.
 	 *
 	 * The internally stored name of the file is never altered by this
 	 * method.
 	 *
-	 * \return \b true if the preset file was saved, \b false otherwise.
+	 * @return @b true if the preset file was saved, @b false otherwise.
 	 */
 	bool Preset::saveCopyAs(const QString & fileName) const {
 		QFile file(fileName);
@@ -261,11 +261,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Write the preset to an XML stream.
+	 * @brief Write the preset to an XML stream.
 	 *
-	 * \param xml is the stream to write to.
+	 * @param xml is the stream to write to.
 	 *
-	 * \return \b true if the preset was written to the stream, \b false
+	 * @return @b true if the preset was written to the stream, @b false
 	 * otherwise.
 	 */
 	bool Preset::emitXml(QXmlStreamWriter & xml) const {
@@ -280,12 +280,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Write the name of the preset to an XML stream.
+	 * @brief Write the name of the preset to an XML stream.
 	 *
-	 * \param xml is the stream to write to.
+	 * @param xml is the stream to write to.
 	 *
-	 * \return \b true if the name of the preset was written to the stream,
-	 * \b false otherwise.
+	 * @return @b true if the name of the preset was written to the stream,
+	 * @b false otherwise.
 	 */
 	bool Preset::emitNameXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("name");
@@ -296,12 +296,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Write the preset source to an XML stream.
+	 * @brief Write the preset source to an XML stream.
 	 *
-	 * \param xml is the stream to write to.
+	 * @param xml is the stream to write to.
 	 *
-	 * \return \b true if the preset source was written to the stream,
-	 * \b false otherwise.
+	 * @return @b true if the preset source was written to the stream,
+	 * @b false otherwise.
 	 */
 	bool Preset::emitSourceXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("source");
@@ -312,12 +312,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Write the preset destination to an XML stream.
+	 * @brief Write the preset destination to an XML stream.
 	 *
-	 * \param xml is the stream to write to.
+	 * @param xml is the stream to write to.
 	 *
-	 * \return \b true if the preset destination was written to the stream,
-	 * \b false otherwise.
+	 * @return @b true if the preset destination was written to the stream,
+	 * @b false otherwise.
 	 */
 	bool Preset::emitDestinationXml(QXmlStreamWriter & xml) const {
 		xml.writeStartElement("destination");
@@ -328,9 +328,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Write the preset properties to an XML stream.
+	 * @brief Write the preset properties to an XML stream.
 	 *
-	 * \param xml is the stream to write to.
+	 * @param xml is the stream to write to.
 	 *
 	 * Most of the settings in a preset are implemented using a basic properties
 	 * system. The properties are defined in a map in the PresetDetail private
@@ -339,7 +339,7 @@ namespace Qync {
 	 * to the XML stream for each with the appropriate name and type attributes,
 	 * and the value set according to the value provided by the property's getter.
 	 *
-	 * \return \b true if the properties were written to the stream, \b false
+	 * @return @b true if the properties were written to the stream, @b false
 	 * otherwise.
 	 */
 	bool Preset::emitPropertiesXml(QXmlStreamWriter & xml) const {
@@ -367,11 +367,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Read the preset from an XML stream.
+	 * @brief Read the preset from an XML stream.
 	 *
-	 * \param xml is the stream to read from.
+	 * @param xml is the stream to read from.
 	 *
-	 * \return \c true if the preset was read from the stream, \b false
+	 * @return @c true if the preset was read from the stream, @b false
 	 * otherwise.
 	 */
 	bool Preset::parseXml(QXmlStreamReader & xml) {
@@ -416,12 +416,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Read the properties for the preset from an XML stream.
+	 * @brief Read the properties for the preset from an XML stream.
 	 *
-	 * \param xml is the stream to read from.
+	 * @param xml is the stream to read from.
 	 *
-	 * \return \c true if the properties for the preset were read from the
-	 * stream, \b false otherwise.
+	 * @return @c true if the properties for the preset were read from the
+	 * stream, @b false otherwise.
 	 */
 	bool Preset::parsePropertiesXml(QXmlStreamReader & xml) {
 		Q_ASSERT_X(xml.isStartElement() && "properties" == xml.name(), __PRETTY_FUNCTION__, "XML stream is not at the start of a \"properties\" element");
@@ -455,12 +455,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Read an individual property for the preset from an XML stream.
+	 * @brief Read an individual property for the preset from an XML stream.
 	 *
-	 * \param xml is the stream to read from.
+	 * @param xml is the stream to read from.
 	 *
-	 * \return \c true if the property for the preset was read from the
-	 * stream, \b false otherwise.
+	 * @return @c true if the property for the preset was read from the
+	 * stream, @b false otherwise.
 	 */
 	bool Preset::parsePropertyXml(QXmlStreamReader & xml) {
 		Q_ASSERT_X(xml.isStartElement() && "property" == xml.name(), __PRETTY_FUNCTION__, "XML stream is not at the start of a \"property\" element");
@@ -512,7 +512,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set all settings to default values.
+	 * @brief Set all settings to default values.
 	 */
 	void Preset::setDefaults() {
 		m_name = QString();
@@ -546,9 +546,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the name of the preset.
+	 * @brief Set the name of the preset.
 	 *
-	 * \param name is the new name for the preset.
+	 * @param name is the new name for the preset.
 	 *
 	 * Presets do not need to have unique names.
 	 */
@@ -558,9 +558,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the file name of the preset.
+	 * @brief Set the file name of the preset.
 	 *
-	 * \param fileName is the new path to the file for the preset.
+	 * @param fileName is the new path to the file for the preset.
 	 *
 	 * Setting the file name does not automatically save the preset.
 	 */
@@ -570,11 +570,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the source file or directory.
+	 * @brief Set the source file or directory.
 	 *
-	 * \param source is the path to the source file or directory.
+	 * @param source is the path to the source file or directory.
 	 *
-	 * \return \b true if the source was set, \b false otherwise.
+	 * @return @b true if the source was set, @b false otherwise.
 	 */
 	bool Preset::setSource(const QString & source) {
 		m_source = source;
@@ -583,11 +583,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the destination file or directory.
+	 * @brief Set the destination file or directory.
 	 *
-	 * \param dest is the path to the destination file or directory.
+	 * @param dest is the path to the destination file or directory.
 	 *
-	 * \return \b true if the destination was set, \b false otherwise.
+	 * @return @b true if the destination was set, @b false otherwise.
 	 */
 	bool Preset::setDestination(const QString & dest) {
 		m_dest = dest;
@@ -596,11 +596,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not file timestamps should be preserved.
+	 * @brief Set whether or not file timestamps should be preserved.
 	 *
-	 * \param preserve indicates whether the timestamps should be preserved.
+	 * @param preserve indicates whether the timestamps should be preserved.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setPreserveTime(const bool & preserve) {
 		m_preserveTime = preserve;
@@ -609,12 +609,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not file permissions should be preserved.
+	 * @brief Set whether or not file permissions should be preserved.
 	 *
-	 * \param preserve indicates whether the permissions should be
+	 * @param preserve indicates whether the permissions should be
 	 * preserved.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setPreservePermissions(const bool & preserve) {
 		m_preservePerms = preserve;
@@ -623,11 +623,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not file ownership should be preserved.
+	 * @brief Set whether or not file ownership should be preserved.
 	 *
-	 * \param preserve indicates whether the ownership should be preserved.
+	 * @param preserve indicates whether the ownership should be preserved.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setPreserveOwner(const bool & preserve) {
 		m_preserveOwner = preserve;
@@ -636,12 +636,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not file group ownership should be preserved.
+	 * @brief Set whether or not file group ownership should be preserved.
 	 *
-	 * \param preserve indicates whether the group ownership should be
+	 * @param preserve indicates whether the group ownership should be
 	 * preserved.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setPreserveGroup(const bool & preserve) {
 		m_preserveGroup = preserve;
@@ -650,16 +650,16 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not Windows compatability should be used.
+	 * @brief Set whether or not Windows compatability should be used.
 	 *
-	 * \param compatible indicates whether Windows compatability should be
+	 * @param compatible indicates whether Windows compatability should be
 	 * used.
 	 *
 	 * Windows compatability means accommodating some imprecision in the
 	 * way certain filestytems on the Windows platform record file
 	 * modification timestamps.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setWindowsCompatability(const bool & compatible) {
 		m_windowsCompatability = compatible;
@@ -668,16 +668,16 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not deletions in the source directory tree
+	 * @brief Set whether or not deletions in the source directory tree
 	 * should be honoured.
 	 *
-	 * \param honour indicates whether deletions should be honoured.
+	 * @param honour indicates whether deletions should be honoured.
 	 *
 	 * Honouring deletions means that files or directories in the source
 	 * tree that have been removed since the last synchronisation will also
 	 * be removed from the destination tree.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setHonourDeletions(const bool & honour) {
 		this->m_deleteOnDestination = honour;
@@ -686,16 +686,16 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not to use checksums to compare source and
+	 * @brief Set whether or not to use checksums to compare source and
 	 * destination items.
 	 *
-	 * \param compare indicates whether checksums should be used.
+	 * @param compare indicates whether checksums should be used.
 	 *
 	 * Using checksums means that the size and modification timestamp of
 	 * files is not used as the sole indicator of whether a file needs to be
 	 * updated in the destination tree.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setAlwaysCompareChecksums(const bool & compare) {
 		m_alwaysChecksum = compare;
@@ -704,15 +704,15 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not to ignore file times.
+	 * @brief Set whether or not to ignore file times.
 	 *
-	 * \param ignore indicates whether times should be ignored.
+	 * @param ignore indicates whether times should be ignored.
 	 *
 	 * Ignoring times generally means all files will be updated in the destination,
 	 * regardless of whether the source is actually different or not. (But see
 	 * setAlwyasCompareChecksums()).
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setIgnoreTimes(const bool & ignore) {
 		m_ignoreTimes = ignore;
@@ -721,12 +721,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not device files should be preserved as such.
+	 * @brief Set whether or not device files should be preserved as such.
 	 *
-	 * \param preserve indicates whether the device files should be
+	 * @param preserve indicates whether the device files should be
 	 * preserved.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setPreserveDevices(const bool & preserve) {
 		m_preserveDevices = preserve;
@@ -735,12 +735,12 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not partially-transferred items should be kept.
+	 * @brief Set whether or not partially-transferred items should be kept.
 	 *
-	 * \param partial indicates whether partially-transferred items should be
+	 * @param partial indicates whether partially-transferred items should be
 	 * kept.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setKeepPartialTransfers(const bool & partial) {
 		m_keepParitalTransfers = partial;
@@ -749,15 +749,15 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not symbolic links should be kept as such.
+	 * @brief Set whether or not symbolic links should be kept as such.
 	 *
-	 * \param copyAsLinks indicates whether symbolic links should be kept as such.
+	 * @param copyAsLinks indicates whether symbolic links should be kept as such.
 	 *
 	 * If this setting is set, symbolic links in the source tree will be
 	 * copied as symbolic links; if not, symbolic links in the source tree
 	 * will be followed and the original file will be copied.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setCopySymlinksAsSymlinks(const bool & copyAsLinks) {
 		m_symlinksAsSymlinks = copyAsLinks;
@@ -766,16 +766,16 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not backups of the destination tree should be
+	 * @brief Set whether or not backups of the destination tree should be
 	 * made.
 	 *
-	 * \param backups indicates whether backups should be made.
+	 * @param backups indicates whether backups should be made.
 	 *
 	 * If this setting is set, backups of the pre-synchronisation entries in
 	 * the destination tree will be made; if not, destination entries will
 	 * simply be overwritten.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setMakeBackups(const bool & backups) {
 		m_makeBackups = backups;
@@ -784,15 +784,15 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not to use transfer compression.
+	 * @brief Set whether or not to use transfer compression.
 	 *
-	 * \param compress indicates whether or not to use compression.
+	 * @param compress indicates whether or not to use compression.
 	 *
 	 * If compression is used, any data transferred to the destination will
 	 * be compressed in transit. This is useful for large data sets or when
 	 * either the source or destination is remote.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setUseTransferCompression(const bool & compress) {
 		m_compressInTransit = compress;
@@ -801,10 +801,10 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not only existing destination entries should
+	 * @brief Set whether or not only existing destination entries should
 	 * be updated.
 	 *
-	 * \param existingOnly indicates whether only existing entries are
+	 * @param existingOnly indicates whether only existing entries are
 	 * updated.
 	 *
 	 * If this is set, any entries in the source tree that do not already
@@ -813,7 +813,7 @@ namespace Qync {
 	 * destination tree will result in new entries being created in the
 	 * destination tree.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setOnlyUpdateExistingEntries(const bool & existingOnly) {
 		m_onlyUpdateExisting = existingOnly;
@@ -827,10 +827,10 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not to ignore entries that already exist on
+	 * @brief Set whether or not to ignore entries that already exist on
 	 * the destination.
 	 *
-	 * \param noExisting indicates whether existing entries are ignored.
+	 * @param noExisting indicates whether existing entries are ignored.
 	 *
 	 * If this is set, any entries in the source tree that already exist
 	 * in the destination tree will be ignored; if this is not set, any
@@ -838,7 +838,7 @@ namespace Qync {
 	 * tree will be updated in the destination tree if the entry in the
 	 * source tree is different.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setDontUpdateExistingEntries(const bool & noExisting) {
 		m_dontUpdateExisting = noExisting;
@@ -852,10 +852,10 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not to use UID and GID to username and group
+	 * @brief Set whether or not to use UID and GID to username and group
 	 * name mapping.
 	 *
-	 * \param dontMap indicates whether to suppress UID and GID mapping.
+	 * @param dontMap indicates whether to suppress UID and GID mapping.
 	 *
 	 * Ordinarily, UID and GID values will be mapped to usernames and
 	 * group names so that the username and group name of destination
@@ -865,7 +865,7 @@ namespace Qync {
 	 * is remote and therefore potentially uses different UIDs and GIDs for
 	 * the same username and group name.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setDontMapUsersAndGroups(const bool & dontMap) {
 		m_dontMapUidGid = dontMap;
@@ -874,15 +874,15 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not hard links should be kept as such.
+	 * @brief Set whether or not hard links should be kept as such.
 	 *
-	 * \param copyAsLinks indicates whether hard links should be kept as such.
+	 * @param copyAsLinks indicates whether hard links should be kept as such.
 	 *
 	 * If this setting is set, hard links in the source tree will be copied
 	 * as hard links; if not, hard links in the source tree will be followed
 	 * and the original file will be copied.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setCopyHardlinksAsHardlinks(const bool & copyAsLinks) {
 		m_copyHardlinksAsHardlinks = copyAsLinks;
@@ -891,13 +891,13 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set whether or not an itemised list of changes should be
+	 * @brief Set whether or not an itemised list of changes should be
 	 * generated.
 	 *
-	 * \param show indicates whether an itemised list should be
+	 * @param show indicates whether an itemised list should be
 	 * generated.
 	 *
-	 * \return \b true if the setting was set, \b false otherwise.
+	 * @return @b true if the setting was set, @b false otherwise.
 	 */
 	bool Preset::setShowItemisedChanges(const bool & show) {
 		m_showItemisedChanges = show;
@@ -906,14 +906,14 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the log file.
+	 * @brief Set the log file.
 	 *
-	 * \param fileName is the path to the new log file.
+	 * @param fileName is the path to the new log file.
 	 *
-	 * The log file can be set to a \b null or empty string to suppress
+	 * The log file can be set to a @b null or empty string to suppress
 	 * capturing of the rsync command's standard output to a log file.
 	 *
-	 * \return \b true if the log file was set, \c false otherwise.
+	 * @return @b true if the log file was set, @c false otherwise.
 	 */
 	bool Preset::setLogFile(const QString & fileName) {
 		m_logFile = fileName;
@@ -922,207 +922,207 @@ namespace Qync {
 
 
 	/**
-	 * \fn Preset::name()
-	 * \brief Get the name of the preset.
+	 * @fn Preset::name()
+	 * @brief Get the name of the preset.
 	 *
-	 * \return The name of the preset.
+	 * @return The name of the preset.
 	 */
 
 
 	/**
-	 * \fn Preset::fileName()
-	 * \brief Get the file name of the preset.
+	 * @fn Preset::fileName()
+	 * @brief Get the file name of the preset.
 	 *
-	 * \return The current path to the file for the preset.
+	 * @return The current path to the file for the preset.
 	 */
 
 
 	/**
-	 * \fn Preset::save()
-	 * \brief Save the preset to its internally stored file name.
+	 * @fn Preset::save()
+	 * @brief Save the preset to its internally stored file name.
 	 *
-	 * \return \b true if the preset file was saved, \b false otherwise.
+	 * @return @b true if the preset file was saved, @b false otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::source()
-	 * \brief Get the source location.
+	 * @fn Preset::source()
+	 * @brief Get the source location.
 	 *
-	 * \return The source.
+	 * @return The source.
 	 */
 
 
 	/**
-	 * \fn Preset::destination()
-	 * \brief Get the destination location.
+	 * @fn Preset::destination()
+	 * @brief Get the destination location.
 	 *
-	 * \return The destination.
+	 * @return The destination.
 	 */
 
 
 	/**
-	 * \fn Preset::preserveTime()
-	 * \brief Get whether file timestamps should be preserved.
+	 * @fn Preset::preserveTime()
+	 * @brief Get whether file timestamps should be preserved.
 	 *
-	 * \return \b true if timestamps should be preserved, \b false
+	 * @return @b true if timestamps should be preserved, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::preservePermissions()
-	 * \brief Get whether file permissions should be preserved.
+	 * @fn Preset::preservePermissions()
+	 * @brief Get whether file permissions should be preserved.
 	 *
-	 * \return \b true if permissions should be preserved, \b false
+	 * @return @b true if permissions should be preserved, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::preserveOwner()
-	 * \brief Get whether file ownership should be preserved.
+	 * @fn Preset::preserveOwner()
+	 * @brief Get whether file ownership should be preserved.
 	 *
-	 * \return \b true if ownership should be preserved, \b false
+	 * @return @b true if ownership should be preserved, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::preserveGroup()
-	 * \brief Get whether file group ownership should be preserved.
+	 * @fn Preset::preserveGroup()
+	 * @brief Get whether file group ownership should be preserved.
 	 *
-	 * \return \b true if group ownership should be preserved, \b false
+	 * @return @b true if group ownership should be preserved, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::windowsCompatability()
-	 * \brief Get whether Windows compatability should be used.
+	 * @fn Preset::windowsCompatability()
+	 * @brief Get whether Windows compatability should be used.
 	 *
-	 * \return \b true if Windows compatability should be used, \b false
+	 * @return @b true if Windows compatability should be used, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::honourDeletions()
-	 * \brief Get whether source tree deletions should be honoured.
+	 * @fn Preset::honourDeletions()
+	 * @brief Get whether source tree deletions should be honoured.
 	 *
-	 * \return \b true if source tree deletions should be honoured, \b false
+	 * @return @b true if source tree deletions should be honoured, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::alwaysCompareChecksums()
-	 * \brief Get whether entry checksums should always be used.
+	 * @fn Preset::alwaysCompareChecksums()
+	 * @brief Get whether entry checksums should always be used.
 	 *
-	 * \return \b true if entry checksums should always be used, \b false
+	 * @return @b true if entry checksums should always be used, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::preserveDevices()
-	 * \brief Get whether or device files should be preserved.
+	 * @fn Preset::preserveDevices()
+	 * @brief Get whether or device files should be preserved.
 	 *
-	 * \return \b true if device files should be preserved, \b false
+	 * @return @b true if device files should be preserved, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::keepPartialTransfers()
-	 * \brief Get whether partial transfers should be kept.
+	 * @fn Preset::keepPartialTransfers()
+	 * @brief Get whether partial transfers should be kept.
 	 *
-	 * \return \b true if partial transfers should be kept, \b false
+	 * @return @b true if partial transfers should be kept, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::copySymlinksAsSymlinks()
-	 * \brief Get whether symbolic links should be copied as symbolic
+	 * @fn Preset::copySymlinksAsSymlinks()
+	 * @brief Get whether symbolic links should be copied as symbolic
 	 * links.
 	 *
-	 * \return \b true if symbolic links should be copied as symbolic links,
-	 * \b false otherwise.
+	 * @return @b true if symbolic links should be copied as symbolic links,
+	 * @b false otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::makeBackups()
-	 * \brief Get whether destination tree backups should be made.
+	 * @fn Preset::makeBackups()
+	 * @brief Get whether destination tree backups should be made.
 	 *
-	 * \return \b true if destination tree backups should be made, \b false
+	 * @return @b true if destination tree backups should be made, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::useTransferCompression()
-	 * \brief Get whether transfer compression should be used.
+	 * @fn Preset::useTransferCompression()
+	 * @brief Get whether transfer compression should be used.
 	 *
-	 * \return \b true if transfer compression should be used, \b false
+	 * @return @b true if transfer compression should be used, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::onlyUpdateExistingEntries()
-	 * \brief Get whether only existing destination entries should be
+	 * @fn Preset::onlyUpdateExistingEntries()
+	 * @brief Get whether only existing destination entries should be
 	 * updated.
 	 *
-	 * \return \b true if only existing destination should be updated,
-	 * \b false otherwise.
+	 * @return @b true if only existing destination should be updated,
+	 * @b false otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::dontUpdateExistingEntries()
-	 * \brief Get whether entries that already exist on the destination
+	 * @fn Preset::dontUpdateExistingEntries()
+	 * @brief Get whether entries that already exist on the destination
 	 * should be ignored.
 	 *
-	 * \return \b true if entries that already exist on the destination
+	 * @return @b true if entries that already exist on the destination
 	 * will be ignored.
 	 */
 
 
 	/**
-	 * \fn Preset::dontMapUsersAndGroups()
-	 * \brief Get whether UID and GID mapping should be suppressed.
+	 * @fn Preset::dontMapUsersAndGroups()
+	 * @brief Get whether UID and GID mapping should be suppressed.
 	 *
-	 * \return \b true if UID and GID mapping should be suppressed, \b false
+	 * @return @b true if UID and GID mapping should be suppressed, @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::copyHardlinksAsHardlinks()
-	 * \brief Get whether hard links should be copied as hard links.
+	 * @fn Preset::copyHardlinksAsHardlinks()
+	 * @brief Get whether hard links should be copied as hard links.
 	 *
-	 * \return \b true if hard links should be copied as hard links,
-	 * \b false otherwise.
+	 * @return @b true if hard links should be copied as hard links,
+	 * @b false otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::showItemisedChanges()
-	 * \brief Get whether a list of itemised changes should be generated.
+	 * @fn Preset::showItemisedChanges()
+	 * @brief Get whether a list of itemised changes should be generated.
 	 *
-	 * \return \b true if a list of itemised changes should be generated,
-	 * \b false
+	 * @return @b true if a list of itemised changes should be generated,
+	 * @b false
 	 * otherwise.
 	 */
 
 
 	/**
-	 * \fn Preset::logFile()
-	 * \brief Get the log file.
+	 * @fn Preset::logFile()
+	 * @brief Get the log file.
 	 *
-	 * \return The path to the log file.
+	 * @return The path to the log file.
 	 */
 
 

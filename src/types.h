@@ -1,10 +1,10 @@
 /**
- * \file types.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file types.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Declarations of various types used throughout the application.
+ * @brief Declarations of various types used throughout the application.
  */
 
 #ifndef QYNC_TYPES_H

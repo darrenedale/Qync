@@ -1,12 +1,12 @@
 /**
- * \file processdialogue.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file processdialogue.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the ProcessDialogue class.
+ * @brief Declaration of the ProcessDialogue class.
  *
- * \dep
+ * @dep
  * - memory
  * - QDialog
  * - QString

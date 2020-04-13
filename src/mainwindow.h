@@ -1,14 +1,10 @@
 /**
- * \file mainwindow.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file mainwindow.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the MainWindow class.
- *
- * \dep
- * - memory
- * - QMainWindow
+ * @brief Declaration of the MainWindow class.
  */
 
 #ifndef QYNC_MAINWINDOW_H
@@ -16,7 +12,7 @@
 
 #include <memory>
 
-#include <QMainWindow>
+#include <QtWidgets/QMainWindow>
 
 #include "types.h"
 
@@ -38,7 +34,7 @@ namespace Qync {
 
 	public:
 		MainWindow();
-		virtual ~MainWindow();
+		~MainWindow() override;
 
 		void showNotification(const QString &, const QString &, NotificationType = NotificationType::Information);
 

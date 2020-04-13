@@ -1,12 +1,12 @@
 /**
- * \file synchronisewhatcombo.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file synchronisewhatcombo.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Implementation of the SynchroniseWhatCombo widget class.
+ * @brief Implementation of the SynchroniseWhatCombo widget class.
  *
- * \dep
+ * @dep
  * - synchronisewhatcombo.h
  * - QComboBox
  */
@@ -26,12 +26,12 @@ namespace Qync {
 
 
 	/**
-	 * \class SynchroniseWhatCombo
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class SynchroniseWhatCombo
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief A custom combo box for choosing what to synchronise.
+	 * @brief A custom combo box for choosing what to synchronise.
 	 *
 	 * This widget offers the user a mutually-exclusive choice between
 	 * synchronising everything, only those files from the source that are
@@ -43,9 +43,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a "what to synchronise" combo box.
+	 * @brief Create a "what to synchronise" combo box.
 	 *
-	 * \param parent The parent of the created combo box.
+	 * @param parent The parent of the created combo box.
 	 */
 	SynchroniseWhatCombo::SynchroniseWhatCombo(QWidget * parent)
 	: QComboBox(parent) {
@@ -62,9 +62,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief The current "what to synchronise" chosen.
+	 * @brief The current "what to synchronise" chosen.
 	 *
-	 * \return The current "what to synchronise" value.
+	 * @return The current "what to synchronise" value.
 	 */
 	SynchroniseWhatCombo::What SynchroniseWhatCombo::what() const {
 		/* if not set, will return 0 which does not cast to a valid What
@@ -74,9 +74,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the current "what to synchronise".
+	 * @brief Set the current "what to synchronise".
 	 *
-	 * \param newWhat The new "what to synchronise".
+	 * @param newWhat The new "what to synchronise".
 	 */
 	void SynchroniseWhatCombo::setWhat(const SynchroniseWhatCombo::What & newWhat) {
 		if(newWhat != what()) {

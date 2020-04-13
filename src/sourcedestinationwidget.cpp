@@ -1,12 +1,12 @@
 /**
- * \file sourcedestinationwidget.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file sourcedestinationwidget.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Implementation of the SourceDestinationWidget class.
+ * @brief Implementation of the SourceDestinationWidget class.
  *
- * \dep
+ * @dep
  * - sourcedestinationwidget.h
  * - sourcedestinationwidget.ui
  * - QFileDialog
@@ -26,12 +26,12 @@ namespace Qync {
 
 
 	/**
-	 * \class SourceDestinationWidget
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class SourceDestinationWidget
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief A custom widget to enable the user to set the source and destination
+	 * @brief A custom widget to enable the user to set the source and destination
 	 * for a sync.
 	 *
 	 * The user can manually type the source and destination, or use the file-select
@@ -46,9 +46,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a SourceDestinationWidget.
+	 * @brief Create a SourceDestinationWidget.
 	 *
-	 * \param parent The owning parent widget.
+	 * @param parent The owning parent widget.
 	 */
 	SourceDestinationWidget::SourceDestinationWidget(QWidget * parent)
 	: QWidget(parent),
@@ -86,9 +86,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Fetch the current source.
+	 * @brief Fetch the current source.
 	 *
-	 * \return The source.
+	 * @return The source.
 	 */
 	QString SourceDestinationWidget::source() const {
 		return m_ui->source->text();
@@ -96,9 +96,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the current source.
+	 * @brief Set the current source.
 	 *
-	 * \param src The source.
+	 * @param src The source.
 	 */
 	void SourceDestinationWidget::setSource(const QString & src) {
 		if(src != m_ui->source->text()) {
@@ -110,9 +110,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Fetch the current destination.
+	 * @brief Fetch the current destination.
 	 *
-	 * \return The destination.
+	 * @return The destination.
 	 */
 	QString SourceDestinationWidget::destination() const {
 		return m_ui->destination->text();
@@ -120,9 +120,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the current destination.
+	 * @brief Set the current destination.
 	 *
-	 * \param dest The destination.
+	 * @param dest The destination.
 	 */
 	void SourceDestinationWidget::setDestination(const QString & dest) {
 		if(dest != m_ui->destination->text()) {
@@ -134,9 +134,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the label for the source widget.
+	 * @brief Set the label for the source widget.
 	 *
-	 * \param label The source widget label.
+	 * @param label The source widget label.
 	 */
 	void SourceDestinationWidget::setSourceLabel(const QString & label) {
 		m_ui->sourceLabel->setText(label);
@@ -144,9 +144,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the label for the destination widget.
+	 * @brief Set the label for the destination widget.
 	 *
-	 * \param label The destination widget label.
+	 * @param label The destination widget label.
 	 */
 	void SourceDestinationWidget::setDestinationLabel(const QString & label) {
 		m_ui->destinationLabel->setText(label);
@@ -154,7 +154,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Swap the source and destination. */
+	 * @brief Swap the source and destination. */
 	void SourceDestinationWidget::swapSourceAndDestination() {
 		QString t = m_ui->source->text();
 		m_ui->source->setText(m_ui->destination->text());
@@ -162,12 +162,12 @@ namespace Qync {
 	}
 
 
-	/** \brief Destroy the SourceDestinationWidget. */
+	/** @brief Destroy the SourceDestinationWidget. */
 	SourceDestinationWidget::~SourceDestinationWidget() = default;
 
 
 	//	/**
-	//	 * \brief Choose a local file for the rsync source.
+	//	 * @brief Choose a local file for the rsync source.
 	//	 *
 	//	 * A local file browser is presented for the user to to choose a source
 	//	 * for rsync. If the user does not cancel the dialogue, the chosen file
@@ -183,7 +183,7 @@ namespace Qync {
 
 
 	//	/**
-	//	 * \brief Choose a local file for the rsync destination.
+	//	 * @brief Choose a local file for the rsync destination.
 	//	 *
 	//	 * A local file browser is presented for the user to to choose a
 	//	 * destination for rsync. If the user does not cancel the dialogue, the
@@ -199,7 +199,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Choose a local directory for the rsync source.
+	 * @brief Choose a local directory for the rsync source.
 	 *
 	 * A local directory browser is presented for the user to to choose a
 	 * source for rsync. If the user does not cancel the dialogue, the
@@ -219,7 +219,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Choose a local directory for the rsync destination.
+	 * @brief Choose a local directory for the rsync destination.
 	 *
 	 * A local directory browser is presented for the user to to choose a
 	 * destination for rsync. If the user does not cancel the dialogue, the

@@ -1,12 +1,12 @@
 /**
- * \file processwidget.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file processwidget.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Implementation of the ProcessWidget class.
+ * @brief Implementation of the ProcessWidget class.
  *
- * \dep
+ * @dep
  * - processwidget.h
  * - processwidget.ui
  * - application.h
@@ -26,19 +26,19 @@ namespace Qync {
 
 
 	/**
-	 * \class ProcessWidget
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class ProcessWidget
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief A custom widget to present the progress of a Qync process.
+	 * @brief A custom widget to present the progress of a Qync process.
 	 */
 
 
 	/**
-	 * \brief Create a ProcessWidget object.
-	 * \param parent The parent for the widget.
-	 * \param process The process to represent.
+	 * @brief Create a ProcessWidget object.
+	 * @param parent The parent for the widget.
+	 * @param process The process to represent.
 	 *
 	 * Shared ownership of the process provided is taken. The provided shared_ptr is
 	 * copied and kept for the lifetime of the ProcessWidget, until the process
@@ -58,9 +58,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Set the process the widget is representing.
+	 * @brief Set the process the widget is representing.
 	 *
-	 * \param process The process to represent.
+	 * @param process The process to represent.
 	 *
 	 * Shared ownership of the process provided is taken. The provided shared_ptr is
 	 * copied and kept for the lifetime of the ProcessWidget, until the process
@@ -94,14 +94,14 @@ namespace Qync {
 	}
 
 
-	/** \brief Destroy the process widget. */
+	/** @brief Destroy the process widget. */
 	ProcessWidget::~ProcessWidget() = default;
 
 
 	/**
-	 * \brief Updates the item progress.
+	 * @brief Updates the item progress.
 	 *
-	 * \param pc is the percent progress for the current item.
+	 * @param pc is the percent progress for the current item.
 	 *
 	 * The current item progress bar is updated to the value provided.
 	 */
@@ -112,9 +112,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Changes the current item in progress.
+	 * @brief Changes the current item in progress.
 	 *
-	 * \param item is the path of the new current item.
+	 * @param item is the path of the new current item.
 	 *
 	 * The current item line edit is updated to show the new item path.
 	 */
@@ -124,9 +124,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Updates the overall progress.
+	 * @brief Updates the overall progress.
 	 *
-	 * \param pc is the percent overall progress.
+	 * @param pc is the percent overall progress.
 	 *
 	 * The overall progress bar is updated to the value provided.
 	 */
@@ -137,7 +137,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Updates the display of the transfer speed.
+	 * @brief Updates the display of the transfer speed.
 	 *
 	 * @param speed The transfer speed to display, in bytes per second.
 	 *
@@ -166,7 +166,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate to the dialogue that the process has started.
+	 * @brief Indicate to the dialogue that the process has started.
 	 *
 	 * The progress widgets are reset and the stop button is enabled.
 	 */
@@ -181,7 +181,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate that the process has successfully completed.
+	 * @brief Indicate that the process has successfully completed.
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.
@@ -208,7 +208,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate that the process was interrupted.
+	 * @brief Indicate that the process was interrupted.
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.
@@ -229,9 +229,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate that the process has unsuccessfully completed.
+	 * @brief Indicate that the process has unsuccessfully completed.
 	 *
-	 * \param msg is the error message to display.
+	 * @param msg is the error message to display.
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.

@@ -1,15 +1,15 @@
 /**
- * \file process.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file process.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Implementation of the Process class.
+ * @brief Implementation of the Process class.
  *
- * \note This class uses some C++17 features:
+ * @note This class uses some C++17 features:
  * - initialisations statements in if
  *
- * \dep
+ * @dep
  * - map
  * - process.h
  * - QDebug
@@ -41,12 +41,12 @@ namespace Qync {
 
 
 	/**
-	 * \class Process
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class Process
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief Wraps the rsync process.
+	 * @brief Wraps the rsync process.
 	 *
 	 * The QProcess for the rsync command is wrapped inside an object of this class.
 	 * The command, arguments and optional log file are set in the constructor from
@@ -91,10 +91,10 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new Process.
+	 * @brief Create a new Process.
 	 *
-	 * \param preset is the preset from which to create the process.
-	 * \param type The type of rsync process to create.
+	 * @param preset is the preset from which to create the process.
+	 * @param type The type of rsync process to create.
 	 *
 	 * The type argument should be RunType::Normal (the default) for normal execution
 	 * of rsync or RunType::DryRun to perform a dry run. A dry run of rsync does
@@ -110,11 +110,11 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new Process.
+	 * @brief Create a new Process.
 	 *
-	 * \param cmd is the path to the rsync command to run.
-	 * \param preset is the preset from which to create the process.
-	 * \param type The type of rsync process to create.
+	 * @param cmd is the path to the rsync command to run.
+	 * @param preset is the preset from which to create the process.
+	 * @param type The type of rsync process to create.
 	 *
 	 * The type argument should be RunType::Normal (the default) for normal execution
 	 * of rsync or RunType::DryRun to perform a dry run. A dry run of rsync does
@@ -139,29 +139,29 @@ namespace Qync {
 
 
 	/**
-	 * \brief Destroy the Process.
+	 * @brief Destroy the Process.
 	 */
 	Process::~Process() = default;
 
 
 	/**
-	 * \brief Build a set of rsync arguments.
+	 * @brief Build a set of rsync arguments.
 	 *
-	 * \param preset is the preset from which to build the arguments.
-	 * \param forceOptions is a set of extra rsync arguments to add to the
+	 * @param preset is the preset from which to build the arguments.
+	 * @param forceOptions is a set of extra rsync arguments to add to the
 	 * returned list.
 	 *
 	 * Given a Preset object, this method will produce the set of
-	 * arguments for \b rsync that correstponds to the settings in the
+	 * arguments for @b rsync that correstponds to the settings in the
 	 * preset. The list of arguments returned is suitable for use as
-	 * the \b args parameter for a call to QProcess::start();
+	 * the @b args parameter for a call to QProcess::start();
 	 *
-	 * It is possible to force the use of certain \b rsync arguments using
+	 * It is possible to force the use of certain @b rsync arguments using
 	 * the forceOptions parameter. Any options in this list are inserted
 	 * into the returned list, even if this means an argument appears in the
 	 * list more than once.
 	 *
-	 *\return A list of arguments.
+	 *@return A list of arguments.
 	 */
 	QStringList Process::rsyncArguments(const Preset & preset, const QStringList & forceOptions) {
 		if(preset.source().isEmpty()) {
@@ -263,13 +263,13 @@ namespace Qync {
 
 
 	/**
-	 * \brief Provides a default explanation of an exit code.
+	 * @brief Provides a default explanation of an exit code.
 	 *
-	 * \param code is the exit code to explain.
+	 * @param code is the exit code to explain.
 	 *
 	 * The explanation will be a null string if the code is not valid.
 	 *
-	 * \return The explanation.
+	 * @return The explanation.
 	 */
 	const QString & Process::defaultExitCodeMessage(const Process::ExitCode & code) {
 		static const QString emptyString;
@@ -306,7 +306,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Start the process.
+	 * @brief Start the process.
 	 *
 	 * Once the process has started, the started() signal will be emitted
 	 * and other progress and information signals will start to be emitted.
@@ -328,7 +328,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Attempt to stop the process.
+	 * @brief Attempt to stop the process.
 	 *
 	 * If the process has been started, this will attempt to interrupt it.
 	 * If the attempt is successful, the interrupted() signal will be
@@ -345,7 +345,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Read the process's error output stream.
+	 * @brief Read the process's error output stream.
 	 *
 	 * This method is not currently used, but its intention is to read
 	 * the standard error stream of the rsync process and emit an
@@ -360,7 +360,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Parse the standard output stream of the rsync process.
+	 * @brief Parse the standard output stream of the rsync process.
 	 *
 	 * The process's output stream is captured and parsed. The following
 	 * information is gathered from the output stream:
@@ -473,7 +473,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Called when the QProcess finishes.
+	 * @brief Called when the QProcess finishes.
 	 *
 	 * This method is connected to the QProcess::finished() signal.
 	 */
@@ -519,71 +519,71 @@ namespace Qync {
 
 
 	/**
-	 * \fn Process::started()
-	 * \brief Emitted when the \b rsync process has started.
+	 * @fn Process::started()
+	 * @brief Emitted when the @b rsync process has started.
 	 *
 	 * This is usually emitted as a result of a call to the start() slot.
 	 */
 
 
 	/**
-	 * \fn Process::newItemStarted(QString)
-	 * \brief Emitted when the \b rsync has started processing a
+	 * @fn Process::newItemStarted(QString)
+	 * @brief Emitted when the @b rsync has started processing a
 	 * different file or directory.
 	 *
-	 * \param item is the path to the item whose processing has started.
+	 * @param item is the path to the item whose processing has started.
 	 *
 	 * The item path is relative to the source.
 	 */
 
 
 	/**
-	 * \fn Process::itemProgress(int)
-	 * \brief Emitted when the progress of the current item being processed
+	 * @fn Process::itemProgress(int)
+	 * @brief Emitted when the progress of the current item being processed
 	 * has changed.
 	 *
-	 * \param progress is the new progress for the item in %.
+	 * @param progress is the new progress for the item in %.
 	 */
 
 
 	/**
-	 * \fn Process::itemProgressBytes(int)
-	 * \brief Emitted when the progress of the current item being processed
+	 * @fn Process::itemProgressBytes(int)
+	 * @brief Emitted when the progress of the current item being processed
 	 * has changed.
 	 *
-	 * \param progress is the new progress for the item in bytes.
+	 * @param progress is the new progress for the item in bytes.
 	 */
 
 
 	/**
-	 * \fn Process::overallProgress(int progress);
-	 * \brief Emitted when overall progress has changed.
+	 * @fn Process::overallProgress(int progress);
+	 * @brief Emitted when overall progress has changed.
 	 *
-	 * \param progress is the new overall progress in %.
+	 * @param progress is the new overall progress in %.
 	 */
 
 
 	/**
-	 * \fn Process::transferSpeed(float)
-	 * \brief Emitted when an update to the transfer speed is available.
+	 * @fn Process::transferSpeed(float)
+	 * @brief Emitted when an update to the transfer speed is available.
 	 *
-	 * \param bytesPerSecond is the current transfer speed in bytes per second.
+	 * @param bytesPerSecond is the current transfer speed in bytes per second.
 	 */
 
 
 	/**
-	 * \fn Process::finished(Process::ExitCode)
-	 * \brief Emitted when \b rsync has finished.
+	 * @fn Process::finished(Process::ExitCode)
+	 * @brief Emitted when @b rsync has finished.
 	 *
-	 * \param code is the exit code.
+	 * @param code is the exit code.
 	 */
 
 
 	/**
-	 * \fn Process::finished(QString)
-	 * \brief Emitted when \b rsync has finished.
+	 * @fn Process::finished(QString)
+	 * @brief Emitted when @b rsync has finished.
 	 *
-	 * \param msg is a user-friendly message indicating how the process
+	 * @param msg is a user-friendly message indicating how the process
 	 * finished. It could be empty, in wich case the signal receiver is
 	 * entitled to assume the process finished completely successfully.
 	 * In most cases, the message provided is a warning that the process
@@ -592,10 +592,10 @@ namespace Qync {
 
 
 	/**
-	 * \fn Process::interrupted(QString)
-	 * \brief Emitted when \b rsync has been interrupted.
+	 * @fn Process::interrupted(QString)
+	 * @brief Emitted when @b rsync has been interrupted.
 	 *
-	 * \param msg is the reason for interruption.
+	 * @param msg is the reason for interruption.
 	 *
 	 * The source of the interruption could be a call to the stop() slot, or
 	 * some other interruption.
@@ -606,15 +606,15 @@ namespace Qync {
 	 * external interruption halted rsync; failure is defined as when rsync
 	 * itself determined it was unable to complete its task successfully.
 	 *
-	 * \sa failed()
+	 * @sa failed()
 	 */
 
 
 	/**
-	 * \fn Process::failed(QString)
-	 * \brief Emitted when \b rsync has failed.
+	 * @fn Process::failed(QString)
+	 * @brief Emitted when @b rsync has failed.
 	 *
-	 * \param msg is the reason for failure.
+	 * @param msg is the reason for failure.
 	 *
 	 * The reason for failure is not always known so the argument emitted
 	 * with this signal can be empty or null.
@@ -625,18 +625,18 @@ namespace Qync {
 	 * external interruption halted rsync; failure is defined as when rsync
 	 * itself determined it was unable to complete its task successfully.
 	 *
-	 * \sa interrupted()
+	 * @sa interrupted()
 	 */
 
 
 	/**
-	 * \fn Process::error(QString)
-	 * \brief Emitted when \b rsync has encountered an error.
+	 * @fn Process::error(QString)
+	 * @brief Emitted when @b rsync has encountered an error.
 	 *
-	 * \param err is the error message.
+	 * @param err is the error message.
 	 *
 	 * The error will be one generated by rsync, which is likely to be
-	 * fairly cryptic unless the end user is familiar with \b rsync. It
+	 * fairly cryptic unless the end user is familiar with @b rsync. It
 	 * is recommended that errors emitted by this signal are introduced
 	 * to the user gently!
 	 */

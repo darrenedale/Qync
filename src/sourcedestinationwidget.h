@@ -1,12 +1,12 @@
 /**
- * \file sourcedestinationwidget.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file sourcedestinationwidget.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the SourceDestinationWidget class.
+ * @brief Declaration of the SourceDestinationWidget class.
  *
- * \dep
+ * @dep
  * - memory
  * - QWidget
  */

@@ -1,12 +1,12 @@
 /**
- * \file processdialogue.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file processdialogue.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Implementation of the ProcessDialogue class.
+ * @brief Implementation of the ProcessDialogue class.
  *
- * \dep
+ * @dep
  * - processdialogue.h
  * - processdialogue.ui
  * - QtCore/QDebug
@@ -38,12 +38,12 @@ namespace Qync {
 
 
 	/**
-	 * \class ProcessDialogue
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class ProcessDialogue
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief The window to interact with a spawned rsync process.
+	 * @brief The window to interact with a spawned rsync process.
 	 *
 	 * The process dialogue provides an interface for the end user to monitor and
 	 * interact with a running rsync process. It provides the user with the ability
@@ -56,10 +56,10 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a new ProcessDialogue
+	 * @brief Create a new ProcessDialogue
 	 *
-	 * \param process is the process to monitor.
-	 * \param parent is the parent widget.
+	 * @param process is the process to monitor.
+	 * @param parent is the parent widget.
 	 *
 	 * The provided process is owned and will be deleted when the dialogue is
 	 * destroyed.
@@ -91,7 +91,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Destroy the ProcessDialogue
+	 * @brief Destroy the ProcessDialogue
 	 */
 	ProcessDialogue::~ProcessDialogue() {
 		m_ui->detailsButton->disconnect(this);
@@ -101,9 +101,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Handle a request to close the window.
+	 * @brief Handle a request to close the window.
 	 *
-	 * \param e is the event details.
+	 * @param e is the event details.
 	 *
 	 * The dialogue is closed as normal and is scheduled for deletion.
 	 */
@@ -115,7 +115,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Toggle the state of the detailed info text.
+	 * @brief Toggle the state of the detailed info text.
 	 *
 	 * If it is currently visible the detailed info text will be hidden; if
 	 * it is currently hiddent it will be made visible.
@@ -131,7 +131,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Show the detailed info text.
+	 * @brief Show the detailed info text.
 	 *
 	 * The detailed info text widget will be made visible.
 	 */
@@ -144,7 +144,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Hide the detailed info text.
+	 * @brief Hide the detailed info text.
 	 *
 	 * The detailed info text widget will be hidden.
 	 */
@@ -157,9 +157,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Append text to the details text widget.
+	 * @brief Append text to the details text widget.
 	 *
-	 * \param txt The text to append.
+	 * @param txt The text to append.
 	 */
 	void ProcessDialogue::appendToDetails(const QString & txt) {
 		m_ui->details->appendPlainText(txt);
@@ -167,7 +167,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Save the current content of the output widget.
+	 * @brief Save the current content of the output widget.
 	 *
 	 * A file dialogue is presented to the user, and if s/he does not cancel
 	 * the dialogue, the file chosen in overwritten with the content of
@@ -193,7 +193,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate to the dialogue that the process has started.
+	 * @brief Indicate to the dialogue that the process has started.
 	 *
 	 * The progress widgets are reset and the stop button is enabled.
 	 */
@@ -204,7 +204,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate to the dialogue that the process has successfully
+	 * @brief Indicate to the dialogue that the process has successfully
 	 * completed.
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
@@ -217,7 +217,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate to the dialogue that the process was interrupted.
+	 * @brief Indicate to the dialogue that the process was interrupted.
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.
@@ -229,10 +229,10 @@ namespace Qync {
 
 
 	/**
-	 * \brief Indicate to the dialogue that the process has unsuccessfully
+	 * @brief Indicate to the dialogue that the process has unsuccessfully
 	 * completed.
 	 *
-	 * \param msg is the error message to display.
+	 * @param msg is the error message to display.
 	 *
 	 * The progress widgets are maxed out, and the stop button is disabled.
 	 * and the save button is enabled.

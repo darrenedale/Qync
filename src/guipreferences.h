@@ -1,16 +1,10 @@
 /**
- * \file guipreferences.h
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file guipreferences.h
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the GuiPreferences class.
- *
- * \dep
- * - preferences.h
- * - QString
- * - QXmlStreamReader
- * - QXmlStreamWriter
+ * @brief Declaration of the GuiPreferences class.
  */
 
 #ifndef QYNC_GUIPREFERENCES_H
@@ -18,43 +12,50 @@
 
 #include "preferences.h"
 #include <optional>
-#include <QString>
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
+#include <QtCore/QString>
+#include <QtCore/QXmlStreamReader>
+#include <QtCore/QXmlStreamWriter>
 
 namespace Qync {
 
 	class GuiPreferences
-	: public Preferences {
+	:   public Preferences {
 	public:
-		explicit GuiPreferences(const QString & fileName = {});
-		virtual ~GuiPreferences();
+		explicit GuiPreferences(const QString & = QStringLiteral());
+		~GuiPreferences() override;
 
-		inline bool useSimpleUi() const {
+		[[nodiscard]] inline bool useSimpleUi() const
+		{
 			return m_simpleUi;
 		}
 
-		inline void setUseSimpleUi(bool use) {
+		inline void setUseSimpleUi(bool use)
+		{
 			m_simpleUi = use;
 		}
 
-		inline bool showPresetsToolBar() const {
+		[[nodiscard]] inline bool showPresetsToolBar() const
+		{
 			return m_presetsToolbar;
 		}
 
-		inline bool showSynchroniseToolBar() const {
+		[[nodiscard]] inline bool showSynchroniseToolBar() const
+		{
 			return m_syncToolbar;
 		}
 
-		inline void setShowPresetsToolBar(bool show) {
+		inline void setShowPresetsToolBar(bool show)
+		{
 			m_presetsToolbar = show;
 		}
 
-		inline void setShowSynchroniseToolBar(bool show) {
+		inline void setShowSynchroniseToolBar(bool show)
+		{
 			m_syncToolbar = show;
 		}
 
-		inline Qt::ToolButtonStyle toolBarButtonStyle() const {
+		[[nodiscard]] inline Qt::ToolButtonStyle toolBarButtonStyle() const
+		{
 			return m_toolButtonStyle;
 		}
 
@@ -64,17 +65,17 @@ namespace Qync {
 		}
 
 	protected:
-		static std::optional<Qt::ToolButtonStyle> parseToolButtonStyleText(const QString & style);
+		static std::optional<Qt::ToolButtonStyle> parseToolButtonStyleText(const QString &);
 
-		virtual void setDefaults() override;
-		virtual bool parseXmlElement(QXmlStreamReader & xml) override;
-		bool parseGuiPreferencesXml(QXmlStreamReader & xml);
+		void setDefaults() override;
+		bool parseXmlElement(QXmlStreamReader &) override;
+		bool parseGuiPreferencesXml(QXmlStreamReader &);
 
-		virtual bool emitXmlElements(QXmlStreamWriter & xml) const override;
-		bool emitSimpleUiXml(QXmlStreamWriter & xml) const;
-		bool emitPresetsToolbarXml(QXmlStreamWriter & xml) const;
-		bool emitSynchroniseToolbarXml(QXmlStreamWriter & xml) const;
-		bool emitToolBarButtonStyleXml(QXmlStreamWriter & xml) const;
+		bool emitXmlElements(QXmlStreamWriter &) const override;
+		bool emitSimpleUiXml(QXmlStreamWriter &) const;
+		bool emitPresetsToolbarXml(QXmlStreamWriter &) const;
+		bool emitSynchroniseToolbarXml(QXmlStreamWriter &) const;
+		bool emitToolBarButtonStyleXml(QXmlStreamWriter &) const;
 
 	private:
 		bool m_simpleUi;

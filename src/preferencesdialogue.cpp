@@ -1,12 +1,12 @@
 /**
- * \file preferencesdialogue.cpp
- * \author Darren Edale
- * \date October 2017
- * \version 1.1.0
+ * @file preferencesdialogue.cpp
+ * @author Darren Edale
+ * @date April 2020
+ * @version 1.1.1
  *
- * \brief Implementation of the PreferencesDialogue class.
+ * @brief Implementation of the PreferencesDialogue class.
  *
- * \dep
+ * @dep
  * - preferencesdialogue.h
  * - preferencesdialogue.ui
  * - QString
@@ -35,12 +35,12 @@ namespace Qync {
 
 
 	/**
-	 * \class PreferencesDialogue
-	 * \author Darren Edale
-	 * \date October 2017
-	 * \version 1.1.0
+	 * @class PreferencesDialogue
+	 * @author Darren Edale
+	 * @date April 2020
+	 * @version 1.1.1
 	 *
-	 * \brief The preferences window of the Qync GUI.
+	 * @brief The preferences window of the Qync GUI.
 	 *
 	 * The PreferencesDialogue class is a QDialog subclass that enables the
 	 * user to modify the current application and GUI settings. It is based on the
@@ -59,9 +59,9 @@ namespace Qync {
 
 
 	/**
-	 * \brief Create a preferences dialogue.
+	 * @brief Create a preferences dialogue.
 	 *
-	 * \param parent The owning parent widget.
+	 * @param parent The owning parent widget.
 	 */
 	PreferencesDialogue::PreferencesDialogue(QWidget * parent)
 	: QDialog(parent),
@@ -81,12 +81,12 @@ namespace Qync {
 	}
 
 
-	/** \brief Destroy the preferences dialogue. */
+	/** @brief Destroy the preferences dialogue. */
 	PreferencesDialogue::~PreferencesDialogue() = default;
 
 
 	/**
-	 * \brief Update all the widgets in the preferences window.
+	 * @brief Update all the widgets in the preferences window.
 	 *
 	 * All the widgets in the preferences window are updated to reflect the
 	 * state of the preferences in the manager.
@@ -125,7 +125,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Apply the current preferences.
+	 * @brief Apply the current preferences.
 	 *
 	 * The applications's preferences object is updated.
 	 */
@@ -166,7 +166,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Apply the current preferences.
+	 * @brief Apply the current preferences.
 	 *
 	 * The applications's preferences object is updated.
 	 */
@@ -180,7 +180,7 @@ namespace Qync {
 
 
 	/**
-	 * \brief Choose the path to the rsync executable file.
+	 * @brief Choose the path to the rsync executable file.
 	 *
 	 * A local file browser is presented for the user to to choose the rsync
 	 * executable. If the user does not cancel the dialogue, the chosen file

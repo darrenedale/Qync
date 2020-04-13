@@ -1,12 +1,12 @@
 /**
- * \file presetcombo.h
- * \author Darren Edale
- * \date September, 2017
- * \version 1.1.0
+ * @file presetcombo.h
+ * @author Darren Edale
+ * @date April, 2020
+ * @version 1.1.1
  *
- * \brief Declaration of the PresetCombo class.
+ * @brief Declaration of the PresetCombo class.
  *
- * \dep
+ * @dep
  * - QComboBox
  */
 
