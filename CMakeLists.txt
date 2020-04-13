@@ -11,7 +11,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5 5.7 REQUIRED COMPONENTS Core Widgets)
 
 add_executable(qync
-	src/qync.cpp
+        src/main.cpp
 	src/functions.cpp
 	src/application.cpp
 	src/guipreferences.cpp

@@ -5,15 +5,12 @@
  * @version 1.1.1
  *
  * @brief Declaration of the SynchroniseWhatCombo widget class.
- *
- * @dep
- * - QComboBox
  */
 
 #ifndef QYNC_SYNCHRONISEWHATCOMBO_H
 #define QYNC_SYNCHRONISEWHATCOMBO_H
 
-#include <QComboBox>
+#include <QtWidgets/QComboBox>
 
 namespace Qync {
 
@@ -28,9 +25,9 @@ namespace Qync {
 			OnlyNonExistant,
 		};
 
-		explicit SynchroniseWhatCombo(QWidget * parent = nullptr);
+		explicit SynchroniseWhatCombo(QWidget * = nullptr);
 
-		What what() const;
+		[[nodiscard]] What what() const;
 
 	public Q_SLOTS:
 		void setWhat(const What & newWhat);

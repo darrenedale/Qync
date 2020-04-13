@@ -6,9 +6,6 @@
  *
  * @brief Declaration of the Preset class.
  *
- * @dep
- * - QString
- *
  * In an ideal world the implementation here would be de-coupled from Qt.
  * Moving to std::string would be simple, but the use of Qt's XML reading
  * and writing makes it harder. It would be possible to use a different
@@ -28,7 +25,7 @@
 #ifndef QYNC_PRESET_H
 #define QYNC_PRESET_H
 
-#include <QString>
+#include <QtCore/QString>
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
@@ -37,136 +34,136 @@ namespace Qync {
 
 	class Preset final {
 	public:
-		explicit Preset(const QString & name = {});
-		Preset(const Preset & other) = delete;
-		Preset(Preset && other) = default;
+		explicit Preset(const QString & = QStringLiteral());
+		Preset(const Preset &) = delete;
+		Preset(Preset &&) = default;
 
-		void operator=(const Preset & other) = delete;
-		Preset & operator=(Preset && other) = default;
+		void operator=(const Preset &) = delete;
+		Preset & operator=(Preset &&) = default;
 
 		~Preset();
 
 		void setDefaults();
-		bool load(const QString & fileName);
+		bool load(const QString &);
 
 		inline bool save() const {
 			return saveCopyAs(m_fileName);
 		}
 
-		bool saveAs(const QString & fileName);
-		bool saveCopyAs(const QString & fileName) const;
+		bool saveAs(const QString &);
+		bool saveCopyAs(const QString &) const;
 
-		void setName(const QString & name);
+		void setName(const QString &);
 
-		inline QString name() const {
+		[[nodiscard]] inline const QString & name() const {
 			return m_name;
 		}
 
-		void setFileName(const QString & fileName);
+		void setFileName(const QString &);
 
-		inline QString fileName() const {
+		[[nodiscard]] inline const QString & fileName() const {
 			return m_fileName;
 		}
 
-		bool setSource(const QString & source);
-		bool setDestination(const QString & dest);
-		bool setPreserveTime(const bool & preserve);
-		bool setPreservePermissions(const bool & preserve);
-		bool setPreserveOwner(const bool & preserve);
-		bool setPreserveGroup(const bool & preserve);
-		bool setWindowsCompatability(const bool & compatible);
-		bool setHonourDeletions(const bool & honour);
-		bool setAlwaysCompareChecksums(const bool & checksums);
-		bool setIgnoreTimes(const bool & ignore);
-		bool setPreserveDevices(const bool & preserve);
-		bool setKeepPartialTransfers(const bool & keep);
-		bool setCopySymlinksAsSymlinks(const bool & links);
-		bool setMakeBackups(const bool & backup);
-		bool setUseTransferCompression(const bool & compress);
-		bool setOnlyUpdateExistingEntries(const bool & onlyExisting);
-		bool setDontUpdateExistingEntries(const bool & noExisting);
-		bool setDontMapUsersAndGroups(const bool & dontMap);
-		bool setCopyHardlinksAsHardlinks(const bool & links);
-		bool setShowItemisedChanges(const bool & itemise);
-		bool setLogFile(const QString & fileName);
+		bool setSource(const QString &);
+		bool setDestination(const QString &);
+		bool setPreserveTime(const bool &);
+		bool setPreservePermissions(const bool &);
+		bool setPreserveOwner(const bool &);
+		bool setPreserveGroup(const bool &);
+		bool setWindowsCompatability(const bool &);
+		bool setHonourDeletions(const bool &);
+		bool setAlwaysCompareChecksums(const bool &);
+		bool setIgnoreTimes(const bool &);
+		bool setPreserveDevices(const bool &);
+		bool setKeepPartialTransfers(const bool &);
+		bool setCopySymlinksAsSymlinks(const bool &);
+		bool setMakeBackups(const bool &);
+		bool setUseTransferCompression(const bool &);
+		bool setOnlyUpdateExistingEntries(const bool &);
+		bool setDontUpdateExistingEntries(const bool &);
+		bool setDontMapUsersAndGroups(const bool &);
+		bool setCopyHardlinksAsHardlinks(const bool &);
+		bool setShowItemisedChanges(const bool &);
+		bool setLogFile(const QString &);
 
-		inline QString source() const {
+		[[nodiscard]] inline const QString & source() const {
 			return m_source;
 		}
 
-		inline QString destination() const {
+		[[nodiscard]] inline const QString & destination() const {
 			return m_dest;
 		}
 
-		inline const bool & preserveTime() const {
+		[[nodiscard]] inline const bool & preserveTime() const {
 			return m_preserveTime;
 		}
 
-		inline const bool & preservePermissions() const {
+		[[nodiscard]] inline const bool & preservePermissions() const {
 			return m_preservePerms;
 		}
 
-		inline const bool & preserveOwner() const {
+		[[nodiscard]] inline const bool & preserveOwner() const {
 			return m_preserveOwner;
 		}
 
-		inline const bool & preserveGroup() const {
+		[[nodiscard]] inline const bool & preserveGroup() const {
 			return m_preserveGroup;
 		}
 
-		inline const bool & windowsCompatability() const {
+		[[nodiscard]] inline const bool & windowsCompatability() const {
 			return m_windowsCompatability;
 		}
 
-		inline const bool & honourDeletions() const {
+		[[nodiscard]] inline const bool & honourDeletions() const {
 			return m_deleteOnDestination;
 		}
 
-		inline const bool & alwaysCompareChecksums() const {
+		[[nodiscard]] inline const bool & alwaysCompareChecksums() const {
 			return m_alwaysChecksum;
 		}
 
-		inline const bool & ignoreTimes() const {
+		[[nodiscard]] inline const bool & ignoreTimes() const {
 			return m_ignoreTimes;
 		}
 
-		inline const bool & preserveDevices() const {
+		[[nodiscard]] inline const bool & preserveDevices() const {
 			return m_preserveDevices;
 		}
 
-		inline const bool & keepPartialTransfers() const {
+		[[nodiscard]] inline const bool & keepPartialTransfers() const {
 			return m_keepParitalTransfers;
 		}
 
-		inline const bool & copySymlinksAsSymlinks() const {
+		[[nodiscard]] inline const bool & copySymlinksAsSymlinks() const {
 			return m_symlinksAsSymlinks;
 		}
 
-		inline const bool & makeBackups() const {
+		[[nodiscard]] inline const bool & makeBackups() const {
 			return m_makeBackups;
 		}
 
-		inline const bool & useTransferCompression() const {
+		[[nodiscard]] inline const bool & useTransferCompression() const {
 			return m_compressInTransit;
 		}
 
-		inline const bool & onlyUpdateExistingEntries() const {
+		[[nodiscard]] inline const bool & onlyUpdateExistingEntries() const {
 			return m_onlyUpdateExisting;
 		}
 
-		inline const bool & dontUpdateExistingEntries() const {
+		[[nodiscard]] inline const bool & dontUpdateExistingEntries() const {
 			return m_dontUpdateExisting;
 		}
 
-		inline const bool & dontMapUsersAndGroups() const {
+		[[nodiscard]] inline const bool & dontMapUsersAndGroups() const {
 			return m_dontMapUidGid;
 		}
 
-		inline const bool & copyHardlinksAsHardlinks() const {
+		[[nodiscard]] inline const bool & copyHardlinksAsHardlinks() const {
 			return m_copyHardlinksAsHardlinks;
 		}
 
-		inline const bool & showItemisedChanges() const {
+		[[nodiscard]] inline const bool & showItemisedChanges() const {
 			return m_showItemisedChanges;
 		}
 

@@ -1,6 +1,6 @@
 # Maintainer: Darren Edale <darren@equituk.net>
 pkgname=qync-git
-pkgver=r83.1c050b0
+pkgver=r84.2dbc318
 pkgrel=1
 pkgdesc="A file backup/synchronisation utility."
 arch=('x86_64')

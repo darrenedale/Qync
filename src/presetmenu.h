@@ -13,7 +13,7 @@
 #ifndef QYNC_PRESETMENU_H
 #define QYNC_PRESETMENU_H
 
-#include <QMenu>
+#include <QtWidgets/QMenu>
 
 namespace Qync {
 
@@ -24,7 +24,7 @@ namespace Qync {
 		Q_OBJECT
 
 	public:
-		explicit PresetMenu(QWidget * parent = nullptr);
+		explicit PresetMenu(QWidget * = nullptr);
 
 		void addAction() = delete;
 		void addActions() = delete;

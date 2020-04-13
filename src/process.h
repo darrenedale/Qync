@@ -5,14 +5,6 @@
  * @version 1.1.1
  *
  * @brief Declaration of the Process class.
- *
- * @dep
- * - memory
- * - QtCore/QObject
- * - QtCore/QString
- * - QtCore/QStringList
- * - QtCore/QFile
- * - QtCore/QMetaObject
  */
 
 #ifndef QYNC_PROCESS_H
@@ -71,27 +63,27 @@ namespace Qync {
 		Process(QString cmd, const Preset & preset, RunType type = RunType::Normal);
 		~Process() override;
 
-		inline RunType runType() const {
+		[[nodiscard]] inline RunType runType() const {
 			return m_runType;
 		}
 
-		inline bool isDryRun() const {
+		[[nodiscard]] inline bool isDryRun() const {
 			return RunType::DryRun == m_runType;
 		}
 
 	Q_SIGNALS:
 		void started();
-		void newItemStarted(QString item);
-		void itemProgress(int progress);
-		void itemProgressBytes(int progress);
-		void itemSecondsRemaining(int seconds);
-		void overallProgress(int progress);
-		void transferSpeed(float bytesPerSecond);
-		void finished(Process::ExitCode code);
-		void finished(QString msg);
-		void interrupted(QString msg);
-		void failed(QString msg);
-		void error(QString err);
+		void newItemStarted(QString);
+		void itemProgress(int);
+		void itemProgressBytes(int);
+		void itemSecondsRemaining(int);
+		void overallProgress(int);
+		void transferSpeed(float);
+		void finished(Process::ExitCode);
+		void finished(QString);
+		void interrupted(QString);
+		void failed(QString);
+		void error(QString);
 
 	public Q_SLOTS:
 		void start();
@@ -103,8 +95,8 @@ namespace Qync {
 		void onProcessFinished();
 
 	protected:
-		static QStringList rsyncArguments(const Preset & preset, const QStringList & forceOptions = {});
-		static const QString & defaultExitCodeMessage(const Process::ExitCode & code);
+		static QStringList rsyncArguments(const Preset &, const QStringList & = {});
+		static const QString & defaultExitCodeMessage(const Process::ExitCode &);
 
 	private:
 		std::unique_ptr<QProcess> m_process;

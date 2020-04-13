@@ -5,15 +5,12 @@
  * @version 1.1.1
  *
  * @brief Declaration of the Preferences class.
- *
- * @dep
- * - QString
  */
 
 #ifndef QYNC_PREFERENCES_H
 #define QYNC_PREFERENCES_H
 
-#include <QString>
+#include <QtCore/QString>
 #include <optional>
 
 class QXmlStreamReader;
@@ -24,29 +21,27 @@ namespace Qync {
 	class Preferences {
 	public:
 		Preferences();
-		explicit Preferences(const QString & fileName);
+		explicit Preferences(QString);
 		virtual ~Preferences() = default;
 
 		bool save() const;
-		bool saveAs(const QString & fileName);
-		bool saveCopyAs(const QString & fileName) const;
+		bool saveAs(const QString &);
+		bool saveCopyAs(const QString &) const;
 
 		bool load();
 		bool loadFrom(const QString & fileName);
 
-		inline QString rsyncPath() const {
+		[[nodiscard]] inline QString rsyncPath() const {
 			return m_rsyncBinary;
 		}
 
-		inline bool setRsyncPath(const QString & path) {
+		inline void setRsyncPath(const QString & path) {
 			m_rsyncBinary = path;
-			return true;
 		}
 
-		bool rsyncPathIsValid() const;
+		[[nodiscard]] bool rsyncPathIsValid() const;
 
 	protected:
-		static std::optional<bool> parseBooleanText(const QString & boolString);
 		virtual void setDefaults();
 		virtual bool parseXmlStream(QXmlStreamReader & xml);
 		virtual bool parseXmlElement(QXmlStreamReader & xml);

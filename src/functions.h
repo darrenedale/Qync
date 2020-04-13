@@ -13,10 +13,14 @@
 #ifndef QYNC_FUNCTIONS_H
 #define QYNC_FUNCTIONS_H
 
+#include <optional>
+
 class QXmlStreamReader;
+class QString;
 
 namespace Qync {
 	void parseUnknownElementXml(QXmlStreamReader &);
+    static std::optional<bool> parseBooleanText(const QString &);
 };
 
 #endif  // QYNC_FUNCTIONS_H

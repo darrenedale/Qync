@@ -5,10 +5,6 @@
  * @version 1.1.1
  *
  * @brief Declaration of the PreferencesDialogue class.
- *
- * @dep
- * - memory
- * - QDialog
  */
 
 #ifndef QYNC_PREFERENCESDIALOGUE_H
@@ -16,7 +12,7 @@
 
 #include <memory>
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Qync {
 
@@ -30,7 +26,7 @@ namespace Qync {
 
 	public:
 		explicit PreferencesDialogue(QWidget * = nullptr);
-		~PreferencesDialogue();
+		~PreferencesDialogue() override;
 
 	private Q_SLOTS:
 		void apply();

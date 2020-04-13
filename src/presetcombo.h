@@ -5,15 +5,12 @@
  * @version 1.1.1
  *
  * @brief Declaration of the PresetCombo class.
- *
- * @dep
- * - QComboBox
  */
 
 #ifndef QYNC_PRESETCOMBO_H
 #define QYNC_PRESETCOMBO_H
 
-#include <QComboBox>
+#include <QtWidgets/QComboBox>
 
 namespace Qync {
 
@@ -33,8 +30,8 @@ namespace Qync {
 		void removeItem() = delete;
 		void clear() = delete;
 
-		bool currentItemIsNewPreset() const;
-		Preset & currentPreset() const;
+		[[nodiscard]] bool currentItemIsNewPreset() const;
+		[[nodiscard]] Preset & currentPreset() const;
 
 	Q_SIGNALS:
 		void currentPresetChanged(Preset &);

@@ -5,10 +5,6 @@
  * @version 1.1.1
  *
  * @brief Declaration of the SourceDestinationWidget class.
- *
- * @dep
- * - memory
- * - QWidget
  */
 
 #ifndef QYNC_SOURCEDESTINATIONWIDGET_H
@@ -16,7 +12,7 @@
 
 #include <memory>
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 
 namespace Qync {
 	namespace Ui {
@@ -29,10 +25,10 @@ namespace Qync {
 
 	public:
 		explicit SourceDestinationWidget(QWidget * = nullptr);
-		~SourceDestinationWidget();
+		~SourceDestinationWidget() override;
 
-		QString source() const;
-		QString destination() const;
+		[[nodiscard]] QString source() const;
+		[[nodiscard]] QString destination() const;
 
 		void setSourceLabel(const QString &);
 		void setDestinationLabel(const QString &);
@@ -55,6 +51,6 @@ namespace Qync {
 		std::unique_ptr<Ui::SourceDestinationWidget> m_ui;
 	};
 
-
 }  // namespace Qync
+
 #endif  // QYNC_SOURCEDESTINATIONWIDGET_H

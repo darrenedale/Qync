@@ -3,8 +3,8 @@
  *
  * @brief Definition of user-defined literals for digital sizes.
  *
- * The following user-defined literal types are provided, for both unsigned long
- * long (i.e. integer) and long double (i.e. floating point) literals:
+ * The following user-defined literal types are provided, for both unsigned long long (i.e. integer) and long double
+ * (i.e. floating point) literals:
  * - @b _gib (IEC Gibibytes, 1024 Mibibytes)
  * - @b _mib (IEC Mibibytes, 1024 Kibibytes)
  * - @b _kib (IEC Kibibytes, 1024 bytes)

@@ -40,7 +40,7 @@ namespace Qync {
 
 	public:
 		explicit ProcessDialogue(const std::shared_ptr<Process> &, QWidget * = nullptr);
-		virtual ~ProcessDialogue();
+		~ProcessDialogue() override;
 
 	public Q_SLOTS:
 		void toggleDetailedText();
@@ -52,9 +52,9 @@ namespace Qync {
 		void saveOutput();
 
 		void onProcessStarted();
-		void onProcessFinished(const QString & = QStringLiteral(""));
-		void onProcessInterrupted(const QString & = QStringLiteral(""));
-		void onProcessFailed(const QString & = QStringLiteral(""));
+		void onProcessFinished(const QString & = QStringLiteral());
+		void onProcessInterrupted(const QString & = QStringLiteral());
+		void onProcessFailed(const QString & = QStringLiteral());
 
 	protected:
 		void closeEvent(QCloseEvent *) override;
