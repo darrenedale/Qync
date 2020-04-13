@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8.0)	# required for c++17
 
-project(Qync LANGUAGES CXX VERSION 1.1.0)
+project(Qync LANGUAGES CXX VERSION 1.1.1)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -11,7 +11,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5 5.7 REQUIRED COMPONENTS Core Widgets)
 
 add_executable(qync
-        src/main.cpp
+	src/main.cpp
 	src/functions.cpp
 	src/application.cpp
 	src/guipreferences.cpp
@@ -68,7 +68,7 @@ set(CPACK_PACKAGE_DESCRIPTION "A file backup/synchronisation utility.")
 #set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/dist/gplv3.txt")
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "1")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_PACKAGE_VERSION_PATCH "1")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "Qync ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}")
 
 if(WIN32 AND NOT UNIX)
